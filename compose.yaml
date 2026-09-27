@@ -1,0 +1,36 @@
+services:
+  webphin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      - '127.0.0.1:3000:3000'
+
+    environment:
+      NODE_ENV: production
+      NITRO_HOST: 0.0.0.0
+      NITRO_PORT: 3000
+
+    restart: unless-stopped
+    init: true
+
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:3000/api/health').then(r => process.exit(r.status === 200 ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+        compress: 'true'
