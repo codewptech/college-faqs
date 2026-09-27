@@ -5,12 +5,12 @@ services:
       dockerfile: Dockerfile
 
     ports:
-      - '127.0.0.1:3000:3000'
+      - '127.0.0.1:3002:3002'
 
     environment:
       NODE_ENV: production
       NITRO_HOST: 0.0.0.0
-      NITRO_PORT: 3000
+      NITRO_PORT: 3002
 
     restart: unless-stopped
     init: true
@@ -21,7 +21,7 @@ services:
           'CMD',
           'node',
           '-e',
-          "fetch('http://127.0.0.1:3000/api/health').then(r => process.exit(r.status === 200 ? 0 : 1)).catch(() => process.exit(1))",
+          "fetch('http://127.0.0.1:3002/api/health').then(r => process.exit(r.status === 200 ? 0 : 1)).catch(() => process.exit(1))",
         ]
       interval: 30s
       timeout: 5s
