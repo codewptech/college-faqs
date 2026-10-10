@@ -1,0 +1,209 @@
+@use '../abstracts/mixins' as *;
+
+.site-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface-subtle);
+  color: var(--color-text);
+}
+
+.site-footer__main {
+  display: grid;
+  gap: var(--space-10);
+  padding-top: var(--space-12);
+  padding-bottom: var(--space-12);
+}
+
+.site-footer__brand-column {
+  max-width: 34rem;
+}
+
+.site-footer__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+
+  @include focus-ring;
+}
+
+.site-footer__brand-mark {
+  display: inline-grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-700);
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+}
+
+.site-footer__brand-text {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.site-footer__brand-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+.site-footer__brand-tagline {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-body);
+}
+
+.site-footer__description {
+  margin-top: var(--space-5);
+  max-width: 31rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.site-footer__navigation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8) var(--space-6);
+}
+
+.site-footer__group {
+  min-width: 0;
+}
+
+.site-footer__heading {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.02em;
+}
+
+.site-footer__links,
+.site-footer__legal {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer__links {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.site-footer__link,
+.site-footer__legal-link {
+  display: inline-flex;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+
+  @include focus-ring;
+}
+
+.site-footer__link {
+  padding: 0.125rem 0;
+  font-size: var(--font-size-sm);
+}
+
+.site-footer__link:hover,
+.site-footer__legal-link:hover {
+  color: var(--color-primary-700);
+}
+
+.site-footer__bottom {
+  border-top: 1px solid var(--color-border);
+}
+
+.site-footer__bottom-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-top: var(--space-5);
+  padding-bottom: var(--space-5);
+}
+
+.site-footer__copyright {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.site-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+
+.site-footer__legal-link {
+  font-size: var(--font-size-xs);
+}
+
+
+.site-footer__credit {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.site-footer__credit-inner {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-3);
+}
+
+.site-footer__credit-text {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  text-align: center;
+}
+
+.site-footer__credit-link {
+  display: inline-flex;
+  margin-left: 0.25rem;
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: color var(--duration-fast) var(--ease-standard);
+
+  @include focus-ring;
+}
+
+.site-footer__credit-link:hover {
+  color: var(--color-primary-700);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+@include respond-to(md) {
+  .site-footer__navigation {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .site-footer__bottom-inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@include respond-to(lg) {
+  .site-footer__main {
+    grid-template-columns: minmax(16rem, 1.05fr) minmax(0, 1.7fr);
+    align-items: start;
+    gap: var(--space-12);
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-16);
+  }
+}

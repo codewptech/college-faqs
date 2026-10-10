@@ -1,0 +1,23 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.container {
+  width: min(calc(100% - (2 * var(--container-gutter))), var(--container-max));
+  margin-inline: auto;
+}
+
+.container--narrow {
+  max-width: var(--content-max);
+}
+
+@include respond-to(md) {
+  :root {
+    --container-gutter: 1.5rem;
+  }
+}
+
+@include respond-to(lg) {
+  :root {
+    --container-gutter: 2rem;
+  }
+}

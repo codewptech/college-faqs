@@ -1,0 +1,82 @@
+@use '../abstracts/mixins' as *;
+
+.btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.6875rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  @include interactive-transition(background-color, border-color, color, box-shadow, transform);
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+.btn:active:not(:disabled):not([aria-disabled='true']) {
+  transform: translateY(1px);
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.btn--primary {
+  background: var(--color-primary-700);
+  color: var(--color-white);
+}
+
+.btn--primary:hover {
+  background: var(--color-primary-800);
+  color: var(--color-white);
+}
+
+.btn--secondary {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.btn--secondary:hover {
+  border-color: var(--color-gray-400);
+  background: var(--color-surface-subtle);
+  color: var(--color-text);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-link);
+}
+
+.btn--ghost:hover {
+  background: var(--color-primary-50);
+  color: var(--color-link-hover);
+}
+
+.btn--sm {
+  min-height: 2.25rem;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--font-size-xs);
+}
+
+.btn--lg {
+  min-height: 3.125rem;
+  padding: 0.8125rem 1.25rem;
+  font-size: var(--font-size-base);
+}
+
+.btn--block {
+  width: 100%;
+}

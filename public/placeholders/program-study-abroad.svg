@@ -1,0 +1,8 @@
+<svg width="640" height="420" viewBox="0 0 640 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="420" fill="#EFF6FF"/>
+  <circle cx="290" cy="200" r="120" fill="white" stroke="#BFDBFE" stroke-width="4"/>
+  <ellipse cx="290" cy="200" rx="56" ry="120" stroke="#2563EB" stroke-width="8"/>
+  <path d="M170 200H410M192 140H388M192 260H388" stroke="#2563EB" stroke-width="8" stroke-linecap="round"/>
+  <path d="M410 126L500 176L410 226L434 182L410 126Z" fill="#1D4ED8"/>
+  <text x="320" y="382" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#334155">Study Abroad</text>
+</svg>

@@ -1,0 +1,116 @@
+@use '../abstracts/mixins' as *;
+
+.success-dialog {
+  width: min(calc(100% - 2rem), 32rem);
+  max-width: none;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: transparent;
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  max-height: calc(100dvh - var(--space-8));
+  overflow-y: auto;
+}
+
+body.dialog-open {
+  overflow: hidden;
+}
+
+.success-dialog::backdrop {
+  background: rgb(15 23 42 / 0.52);
+  backdrop-filter: blur(3px);
+}
+
+.success-dialog__panel {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-5);
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-white);
+  text-align: center;
+}
+
+.success-dialog__close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-gray-100);
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: var(--font-size-xl);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.success-dialog__close:hover {
+  background: var(--color-gray-200);
+  color: var(--color-text);
+}
+
+.success-dialog__close:focus-visible {
+  @include focus-ring;
+}
+
+.success-dialog__icon {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(240 253 244);
+  color: var(--color-success);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.success-dialog__content {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 26rem;
+}
+
+.success-dialog__content h2 {
+  color: var(--color-text);
+  font-size: var(--font-size-2xl);
+}
+
+.success-dialog__content p {
+  color: var(--color-text-secondary);
+}
+
+.success-dialog__actions {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.success-dialog__actions .btn {
+  min-width: 8rem;
+}
+
+@media (max-width: 35.999rem) {
+  .success-dialog {
+    width: min(calc(100% - 1rem), 32rem);
+  }
+
+  .success-dialog__panel {
+    padding:
+      var(--space-8)
+      var(--space-5)
+      var(--space-5);
+  }
+}

@@ -1,0 +1,111 @@
+.section {
+  padding-block: var(--space-16);
+}
+
+.section--subtle {
+  background: var(--color-surface-subtle);
+}
+
+/*
+ * Vertical content rhythm.
+ *
+ * This intentionally uses flex gap instead of sibling margins. Several
+ * components reset child margins (for example lists with `margin: 0`), which
+ * can otherwise cancel the spacing between a heading and the content that
+ * follows it. Gap keeps the rhythm reliable regardless of child margin rules.
+ */
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--flow-space, var(--space-5));
+}
+
+/* Buttons inside a flow should keep their intrinsic CTA width rather than
+ * stretching across the full flex container. */
+.flow > .btn {
+  align-self: flex-start;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--space-4));
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cluster-gap, var(--space-3));
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+/*
+ * Shared numbered markers.
+ *
+ * `number-badge` is for numbered content where the number is simply an index.
+ * `step-indicator` is reserved for true sequences/processes. It intentionally
+ * uses a compact circular marker with the number alone: the ordered-list
+ * structure already communicates that these are steps, so repeating the word
+ * "Step" adds visual noise and makes the marker feel like a stray label.
+ */
+.number-badge {
+  display: inline-grid;
+  min-width: 3rem;
+  height: 3rem;
+  flex: 0 0 auto;
+  place-items: center;
+  padding-inline: var(--space-3);
+  border: 1px solid rgb(37 99 235 / 0.1);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.step-indicator {
+  display: inline-grid;
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 3rem;
+  place-items: center;
+  border: 1px solid rgb(37 99 235 / 0.22);
+  border-radius: 50%;
+  background: var(--color-primary-700);
+  box-shadow: 0 0 0 0.25rem var(--color-primary-50);
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (min-width: 48rem) {
+  .section {
+    padding-block: var(--space-20);
+  }
+}
+
+@media (min-width: 64rem) {
+  .section {
+    padding-block: var(--space-24);
+  }
+}

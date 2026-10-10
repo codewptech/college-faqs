@@ -1,0 +1,7 @@
+<svg width="640" height="420" viewBox="0 0 640 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="420" fill="#F8FAFC"/>
+  <circle cx="320" cy="210" r="118" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="4"/>
+  <circle cx="320" cy="210" r="48" fill="#2563EB"/>
+  <path d="M320 76V128M320 292V344M186 210H238M402 210H454M225 115L262 152M378 268L415 305M415 115L378 152M262 268L225 305" stroke="#1D4ED8" stroke-width="18" stroke-linecap="round"/>
+  <text x="320" y="386" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#334155">Engineering</text>
+</svg>
