@@ -53,14 +53,14 @@ A normal section can be entered directly in a data file without changing a Vue t
 ```ts
 sections: [
   {
-    id: 'section-slug',
-    title: 'Public section heading',
+    id: "section-slug",
+    title: "Public section heading",
     blocks: [
-      { type: 'paragraph', text: 'Publication-approved paragraph.' },
-      { type: 'list', items: ['First approved item', 'Second approved item'] },
+      { type: "paragraph", text: "Publication-approved paragraph." },
+      { type: "list", items: ["First approved item", "Second approved item"] },
     ],
   },
-]
+];
 ```
 
 For rich inline text, plain strings are sufficient in most cases; the `ContentText` segment form exists only when a paragraph needs a safe link or bold segment. Keep `ready: false` while a page is incomplete, then set it to `true` when its public content is ready to publish. Country files contain their full empty object explicitly so each guide can be populated in place.

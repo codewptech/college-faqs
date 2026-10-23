@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import type { NuxtError } from '#app'
+import type { NuxtError } from "#app";
 
-const props = defineProps<{ error: NuxtError }>()
-const isNotFound = computed(() => props.error.statusCode === 404)
+const props = defineProps<{ error: NuxtError }>();
+const isNotFound = computed(() => props.error.statusCode === 404);
 
 useSeoMeta({
-  title: () => `${isNotFound.value ? 'Page not found' : 'Something went wrong'} | College FAQs`,
-  description: 'Return to College FAQs and explore college programs, admission guidance and FAQs.',
-  robots: 'noindex, nofollow',
-})
+  title: () =>
+    `${isNotFound.value ? "Page not found" : "Something went wrong"} | College FAQs`,
+  description:
+    "Return to College FAQs and explore college programs, admission guidance and FAQs.",
+  robots: "noindex, nofollow",
+});
 
 function recover() {
-  clearError({ redirect: '/' })
+  clearError({ redirect: "/" });
 }
 </script>
 
@@ -19,12 +21,24 @@ function recover() {
   <NuxtLayout name="default">
     <section class="section section--subtle">
       <div class="container container--narrow error-content flow">
-        <p class="mba-page-eyebrow">College FAQs · {{ isNotFound ? '404' : 'Error' }}</p>
-        <h1>{{ isNotFound ? 'We couldn’t find that page.' : 'Something went wrong.' }}</h1>
-        <p>
-          {{ isNotFound ? 'The address may have changed, or the page may no longer be available.' : 'Please try again, or return home to continue exploring.' }}
+        <p class="mba-page-eyebrow">
+          College FAQs · {{ isNotFound ? "404" : "Error" }}
         </p>
-        <button class="btn btn--primary btn--lg" type="button" @click="recover">Back to Home</button>
+        <h1>
+          {{
+            isNotFound ? "We couldn’t find that page." : "Something went wrong."
+          }}
+        </h1>
+        <p>
+          {{
+            isNotFound
+              ? "The address may have changed, or the page may no longer be available."
+              : "Please try again, or return home to continue exploring."
+          }}
+        </p>
+        <button class="btn btn--primary btn--lg" type="button" @click="recover">
+          Back to Home
+        </button>
         <nav aria-label="Helpful pages" class="error-navigation flow">
           <h2>Continue exploring</h2>
           <div class="cluster">

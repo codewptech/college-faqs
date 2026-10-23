@@ -1,11 +1,11 @@
 <script setup lang="ts">
 defineProps<{
-  title: string
-  description: string
-  to: string
-  icon: string
-  featured?: boolean
-}>()
+  title: string;
+  description: string;
+  to: string;
+  icon: string;
+  featured?: boolean;
+}>();
 </script>
 
 <template>
@@ -24,7 +24,7 @@ defineProps<{
 </template>
 
 <style scoped lang="scss">
-@use '~~/app/assets/scss/abstracts/mixins' as *;
+@use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .mba-tool-card {
   display: grid;
@@ -39,7 +39,12 @@ defineProps<{
   color: var(--color-text);
   text-decoration: none;
   box-shadow: var(--shadow-sm);
-  @include interactive-transition(border-color, box-shadow, transform, background-color);
+  @include interactive-transition(
+    border-color,
+    box-shadow,
+    transform,
+    background-color
+  );
 }
 
 .mba-tool-card:hover {
@@ -53,7 +58,11 @@ defineProps<{
 
 .mba-tool-card--featured {
   border-color: var(--color-primary-100);
-  background: linear-gradient(145deg, var(--color-white), var(--color-primary-50));
+  background: linear-gradient(
+    145deg,
+    var(--color-white),
+    var(--color-primary-50)
+  );
 }
 
 .mba-tool-card__icon {

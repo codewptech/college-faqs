@@ -1,81 +1,81 @@
 <script setup lang="ts">
-import SuccessDialog from '~~/app/components/ui/SuccessDialog.vue'
-import FormDisclosure from '~~/app/components/ui/FormDisclosure.vue'
-import { useFormPreview } from '~~/app/composables/useFormPreview'
+import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
+import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
+import { useFormPreview } from "~~/app/composables/useFormPreview";
 useSeoMeta({
-  title: 'Engineering Admission Guidance | College FAQs',
+  title: "Engineering Admission Guidance | College FAQs",
   description:
-    'Explore Engineering admission guidance, branch and college-selection factors, application support, and personal counselling with College FAQs.',
-})
+    "Explore Engineering admission guidance, branch and college-selection factors, application support, and personal counselling with College FAQs.",
+});
 
 const decisionFactors = [
   {
-    number: '01',
-    title: 'Branch & academic interest',
+    number: "01",
+    title: "Branch & academic interest",
     description:
-      'Start with the fields you are interested in and understand how branch choice may shape the academic experience you are looking for.',
+      "Start with the fields you are interested in and understand how branch choice may shape the academic experience you are looking for.",
   },
   {
-    number: '02',
-    title: 'College & location',
+    number: "02",
+    title: "College & location",
     description:
-      'Compare institutions and locations by looking at the environment, accessibility, campus preferences, and the factors important to your family.',
+      "Compare institutions and locations by looking at the environment, accessibility, campus preferences, and the factors important to your family.",
   },
   {
-    number: '03',
-    title: 'Fees & affordability',
+    number: "03",
+    title: "Fees & affordability",
     description:
-      'Consider the complete financial picture instead of looking only at the headline tuition amount.',
+      "Consider the complete financial picture instead of looking only at the headline tuition amount.",
   },
   {
-    number: '04',
-    title: 'Admission route',
+    number: "04",
+    title: "Admission route",
     description:
-      'Understand which admission pathway applies to the colleges you are considering and what information or documents you may need next.',
+      "Understand which admission pathway applies to the colleges you are considering and what information or documents you may need next.",
   },
   {
-    number: '05',
-    title: 'Campus & student experience',
+    number: "05",
+    title: "Campus & student experience",
     description:
-      'Look beyond a single ranking or claim and compare the overall environment in which you would spend the next several years.',
+      "Look beyond a single ranking or claim and compare the overall environment in which you would spend the next several years.",
   },
   {
-    number: '06',
-    title: 'Career direction',
+    number: "06",
+    title: "Career direction",
     description:
-      'Use placement information and career outcomes as part of the decision, while keeping your own skills and long-term interests in view.',
+      "Use placement information and career outcomes as part of the decision, while keeping your own skills and long-term interests in view.",
   },
-]
+];
 
 const supportAreas = [
   {
-    title: 'Talk to a mentor',
+    title: "Talk to a mentor",
     description:
-      'Discuss your current options, questions, and admission situation before deciding what to do next.',
-    action: 'Request guidance',
-    href: '#engineering-enquiry',
+      "Discuss your current options, questions, and admission situation before deciding what to do next.",
+    action: "Request guidance",
+    href: "#engineering-enquiry",
   },
   {
-    title: 'College-selection guidance',
+    title: "College-selection guidance",
     description:
-      'Organize the factors that matter to you instead of comparing colleges only by name or popularity.',
-    action: 'See decision factors',
-    href: '#engineering-decisions',
+      "Organize the factors that matter to you instead of comparing colleges only by name or popularity.",
+    action: "See decision factors",
+    href: "#engineering-decisions",
   },
   {
-    title: 'Application support',
+    title: "Application support",
     description:
-      'Keep track of the practical steps involved once you know which institutions you want to consider.',
-    action: 'Discuss your application',
-    href: '#engineering-enquiry',
+      "Keep track of the practical steps involved once you know which institutions you want to consider.",
+    action: "Discuss your application",
+    href: "#engineering-enquiry",
   },
-]
+];
 
-const successDialogOpen = ref(false)
-const { formRef, errors, validate, clearError } = useFormPreview()
+const successDialogOpen = ref(false);
+const { formRef, errors, validate, clearError } = useFormPreview();
 
 function submitPreview() {
-  if (validate()) successDialogOpen.value = true
+  if (validate()) successDialogOpen.value = true;
 }
 </script>
 
@@ -91,23 +91,17 @@ function submitPreview() {
           </h1>
 
           <p class="engineering-hero__lead">
-            Explore the factors that matter, organize your college choices,
-            and discuss your admission questions with a mentor when you need
+            Explore the factors that matter, organize your college choices, and
+            discuss your admission questions with a mentor when you need
             personal guidance.
           </p>
 
           <div class="engineering-hero__actions">
-            <a
-              class="btn btn--primary btn--lg"
-              href="#engineering-enquiry"
-            >
+            <a class="btn btn--primary btn--lg" href="#engineering-enquiry">
               Talk to a mentor
             </a>
 
-            <a
-              class="btn btn--secondary btn--lg"
-              href="#engineering-decisions"
-            >
+            <a class="btn btn--secondary btn--lg" href="#engineering-decisions">
               Compare decision factors
             </a>
           </div>
@@ -117,16 +111,13 @@ function submitPreview() {
           </p>
         </div>
 
-        <div
-          class="engineering-hero__visual"
-          aria-hidden="true"
-        >
+        <div class="engineering-hero__visual" aria-hidden="true">
           <img
             src="/placeholders/engineering-guidance.svg"
             alt=""
             width="760"
             height="600"
-          >
+          />
         </div>
       </div>
     </section>
@@ -136,7 +127,9 @@ function submitPreview() {
       aria-labelledby="engineering-support-title"
     >
       <div class="container">
-        <div class="engineering-section-heading engineering-section-heading--compact">
+        <div
+          class="engineering-section-heading engineering-section-heading--compact"
+        >
           <div class="flow">
             <p class="engineering-eyebrow">Start where you are</p>
 
@@ -162,10 +155,7 @@ function submitPreview() {
               <p>{{ area.description }}</p>
             </div>
 
-            <a
-              class="engineering-inline-link"
-              :href="area.href"
-            >
+            <a class="engineering-inline-link" :href="area.href">
               {{ area.action }}
               <span aria-hidden="true">→</span>
             </a>
@@ -191,15 +181,12 @@ function submitPreview() {
 
           <p>
             The right comparison depends on your priorities. These are useful
-            starting points for organizing that discussion before narrowing
-            your choices.
+            starting points for organizing that discussion before narrowing your
+            choices.
           </p>
         </div>
 
-        <ol
-          class="engineering-decisions__grid"
-          role="list"
-        >
+        <ol class="engineering-decisions__grid" role="list">
           <li
             v-for="factor in decisionFactors"
             :key="factor.number"
@@ -221,7 +208,10 @@ function submitPreview() {
       </div>
     </section>
 
-    <section class="section engineering-process" aria-labelledby="engineering-process-title">
+    <section
+      class="section engineering-process"
+      aria-labelledby="engineering-process-title"
+    >
       <div class="container engineering-process__grid">
         <div class="engineering-process__content flow">
           <p class="engineering-eyebrow">A simpler process</p>
@@ -232,8 +222,8 @@ function submitPreview() {
 
           <p>
             Start by sharing what you already know: your academic situation,
-            preferred branch or field, location preferences, budget range,
-            and the colleges you are currently considering.
+            preferred branch or field, location preferences, budget range, and
+            the colleges you are currently considering.
           </p>
 
           <p>
@@ -248,7 +238,10 @@ function submitPreview() {
             <span class="step-indicator" aria-hidden="true">01</span>
             <div>
               <h3>Share your situation</h3>
-              <p>Tell us what you have already considered and where you are unsure.</p>
+              <p>
+                Tell us what you have already considered and where you are
+                unsure.
+              </p>
             </div>
           </li>
 
@@ -264,7 +257,10 @@ function submitPreview() {
             <span class="step-indicator" aria-hidden="true">03</span>
             <div>
               <h3>Decide the next action</h3>
-              <p>Move toward a shortlist, application step, or further discussion.</p>
+              <p>
+                Move toward a shortlist, application step, or further
+                discussion.
+              </p>
             </div>
           </li>
         </ol>
@@ -285,7 +281,8 @@ function submitPreview() {
           </h2>
 
           <p>
-            Share your Engineering admission questions and the options you are considering.
+            Share your Engineering admission questions and the options you are
+            considering.
           </p>
 
           <div class="engineering-enquiry__note">
@@ -320,10 +317,23 @@ function submitPreview() {
                   autocomplete="name"
                   required
                   placeholder="Your name"
-                  :aria-invalid="errors['engineering-name'] ? 'true' : undefined"
-                  :aria-describedby="errors['engineering-name'] ? 'engineering-name-error' : undefined"
+                  :aria-invalid="
+                    errors['engineering-name'] ? 'true' : undefined
+                  "
+                  :aria-describedby="
+                    errors['engineering-name']
+                      ? 'engineering-name-error'
+                      : undefined
+                  "
+                />
+                <p
+                  v-if="errors['engineering-name']"
+                  id="engineering-name-error"
+                  class="form-error"
+                  role="alert"
                 >
-                <p v-if="errors['engineering-name']" id="engineering-name-error" class="form-error" role="alert">{{ errors['engineering-name'] }}</p>
+                  {{ errors["engineering-name"] }}
+                </p>
               </div>
 
               <div class="form-field">
@@ -340,10 +350,23 @@ function submitPreview() {
                   autocomplete="tel"
                   required
                   placeholder="Your phone number"
-                  :aria-invalid="errors['engineering-phone'] ? 'true' : undefined"
-                  :aria-describedby="errors['engineering-phone'] ? 'engineering-phone-error' : undefined"
+                  :aria-invalid="
+                    errors['engineering-phone'] ? 'true' : undefined
+                  "
+                  :aria-describedby="
+                    errors['engineering-phone']
+                      ? 'engineering-phone-error'
+                      : undefined
+                  "
+                />
+                <p
+                  v-if="errors['engineering-phone']"
+                  id="engineering-phone-error"
+                  class="form-error"
+                  role="alert"
                 >
-                <p v-if="errors['engineering-phone']" id="engineering-phone-error" class="form-error" role="alert">{{ errors['engineering-phone'] }}</p>
+                  {{ errors["engineering-phone"] }}
+                </p>
               </div>
             </div>
 
@@ -360,10 +383,23 @@ function submitPreview() {
                   type="email"
                   autocomplete="email"
                   placeholder="you@example.com"
-                  :aria-invalid="errors['engineering-email'] ? 'true' : undefined"
-                  :aria-describedby="errors['engineering-email'] ? 'engineering-email-error' : undefined"
+                  :aria-invalid="
+                    errors['engineering-email'] ? 'true' : undefined
+                  "
+                  :aria-describedby="
+                    errors['engineering-email']
+                      ? 'engineering-email-error'
+                      : undefined
+                  "
+                />
+                <p
+                  v-if="errors['engineering-email']"
+                  id="engineering-email-error"
+                  class="form-error"
+                  role="alert"
                 >
-                <p v-if="errors['engineering-email']" id="engineering-email-error" class="form-error" role="alert">{{ errors['engineering-email'] }}</p>
+                  {{ errors["engineering-email"] }}
+                </p>
               </div>
 
               <div class="form-field">
@@ -377,7 +413,7 @@ function submitPreview() {
                   class="form-control"
                   type="text"
                   placeholder="If you already have one in mind"
-                >
+                />
               </div>
             </div>
 
@@ -396,10 +432,7 @@ function submitPreview() {
             </div>
 
             <div class="form-actions">
-              <button
-                class="btn btn--primary btn--lg"
-                type="submit"
-              >
+              <button class="btn btn--primary btn--lg" type="submit">
                 Request guidance
               </button>
             </div>
@@ -409,15 +442,11 @@ function submitPreview() {
     </section>
   </div>
 
-    <SuccessDialog
-      :open="successDialogOpen"
-      @close="successDialogOpen = false"
-    />
-
+  <SuccessDialog :open="successDialogOpen" @close="successDialogOpen = false" />
 </template>
 
 <style scoped lang="scss">
-@use '~~/app/assets/scss/abstracts/mixins' as *;
+@use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .engineering-page {
   overflow: clip;
@@ -438,11 +467,7 @@ function submitPreview() {
       rgb(219 234 254 / 0.85),
       transparent 30rem
     ),
-    linear-gradient(
-      180deg,
-      var(--color-white),
-      var(--color-gray-50)
-    );
+    linear-gradient(180deg, var(--color-white), var(--color-gray-50));
 }
 
 .engineering-hero__grid {
@@ -618,12 +643,7 @@ function submitPreview() {
 }
 
 .engineering-enquiry {
-  background:
-    linear-gradient(
-      180deg,
-      var(--color-gray-50),
-      var(--color-white)
-    );
+  background: linear-gradient(180deg, var(--color-gray-50), var(--color-white));
 }
 
 .engineering-enquiry__grid {

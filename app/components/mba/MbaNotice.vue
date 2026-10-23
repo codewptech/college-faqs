@@ -1,11 +1,14 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
-  title?: string
-  tone?: 'info' | 'success'
-}>(), {
-  title: 'Good to know',
-  tone: 'info',
-})
+withDefaults(
+  defineProps<{
+    title?: string;
+    tone?: "info" | "success";
+  }>(),
+  {
+    title: "Good to know",
+    tone: "info",
+  },
+);
 </script>
 
 <template>

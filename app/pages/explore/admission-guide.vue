@@ -1,27 +1,59 @@
 <script setup lang="ts">
-import ExploreHero from '~~/app/components/explore/ExploreHero.vue'
-import EmptyState from '~~/app/components/ui/EmptyState.vue'
-import ContentText from '~~/app/components/content/ContentText.vue'
-import ContentSections from '~~/app/components/content/ContentSections.vue'
-import ContentCta from '~~/app/components/content/ContentCta.vue'
-import { admissionGuideContent as content } from '~~/app/data/content/explore/admissionGuide'
-import { hasCtaContent, hasSectionContent, hasText } from '~~/app/data/content/helpers'
+import ExploreHero from "~~/app/components/explore/ExploreHero.vue";
+import EmptyState from "~~/app/components/ui/EmptyState.vue";
+import ContentText from "~~/app/components/content/ContentText.vue";
+import ContentSections from "~~/app/components/content/ContentSections.vue";
+import ContentCta from "~~/app/components/content/ContentCta.vue";
+import { admissionGuideContent as content } from "~~/app/data/content/explore/admissionGuide";
+import {
+  hasCtaContent,
+  hasSectionContent,
+  hasText,
+} from "~~/app/data/content/helpers";
 
-const steps = computed(() => content.process.steps.filter(hasSectionContent))
-const questions = computed(() => content.shortlist.items.filter(hasText))
-const readinessItems = computed(() => content.readiness.items.filter(hasSectionContent))
-const sections = computed(() => content.sections.filter(hasSectionContent))
-const hasProcess = computed(() => steps.value.length > 0 || content.process.intro.some(hasText))
-const hasShortlistIntro = computed(() => content.shortlist.title.trim() || content.shortlist.eyebrow.trim() || content.shortlist.intro.some(hasText))
-const hasShortlist = computed(() => questions.value.length > 0 || content.shortlist.intro.some(hasText))
-const hasReadiness = computed(() => readinessItems.value.length > 0 || content.readiness.intro.some(hasText))
-const hasContent = computed(() => hasText(content.subtitle) || content.intro.some(hasText) || hasProcess.value || hasShortlist.value || hasReadiness.value || sections.value.length > 0 || hasCtaContent(content.cta))
+const steps = computed(() => content.process.steps.filter(hasSectionContent));
+const questions = computed(() => content.shortlist.items.filter(hasText));
+const readinessItems = computed(() =>
+  content.readiness.items.filter(hasSectionContent),
+);
+const sections = computed(() => content.sections.filter(hasSectionContent));
+const hasProcess = computed(
+  () => steps.value.length > 0 || content.process.intro.some(hasText),
+);
+const hasShortlistIntro = computed(
+  () =>
+    content.shortlist.title.trim() ||
+    content.shortlist.eyebrow.trim() ||
+    content.shortlist.intro.some(hasText),
+);
+const hasShortlist = computed(
+  () => questions.value.length > 0 || content.shortlist.intro.some(hasText),
+);
+const hasReadiness = computed(
+  () =>
+    readinessItems.value.length > 0 || content.readiness.intro.some(hasText),
+);
+const hasContent = computed(
+  () =>
+    hasText(content.subtitle) ||
+    content.intro.some(hasText) ||
+    hasProcess.value ||
+    hasShortlist.value ||
+    hasReadiness.value ||
+    sections.value.length > 0 ||
+    hasCtaContent(content.cta),
+);
 
 useSeoMeta({
-  title: (content.ready && content.seo.title.trim()) || 'Admission Guide | College FAQs',
-  description: (content.ready && content.seo.description.trim()) || 'Admission Guide | College FAQs',
-  robots: () => content.ready && hasContent.value ? 'index, follow' : 'noindex, follow',
-})
+  title:
+    (content.ready && content.seo.title.trim()) ||
+    "Admission Guide | College FAQs",
+  description:
+    (content.ready && content.seo.description.trim()) ||
+    "Admission Guide | College FAQs",
+  robots: () =>
+    content.ready && hasContent.value ? "index, follow" : "noindex, follow",
+});
 </script>
 
 <template>
@@ -35,7 +67,11 @@ useSeoMeta({
     >
       <template #actions>
         <div class="admission-hero-actions">
-          <a v-if="content.ready && hasProcess" class="btn btn--primary btn--lg" href="#admission-journey">
+          <a
+            v-if="content.ready && hasProcess"
+            class="btn btn--primary btn--lg"
+            href="#admission-journey"
+          >
             Admission process
           </a>
           <NuxtLink class="btn btn--secondary btn--lg" to="/#programs">
@@ -48,7 +84,10 @@ useSeoMeta({
     <template v-if="content.ready && hasContent">
       <section v-if="content.intro.some(hasText)" class="section">
         <div class="container flow">
-          <p v-for="(paragraph, index) in content.intro.filter(hasText)" :key="index">
+          <p
+            v-for="(paragraph, index) in content.intro.filter(hasText)"
+            :key="index"
+          >
             <ContentText :value="paragraph" />
           </p>
         </div>
@@ -58,26 +97,68 @@ useSeoMeta({
         v-if="hasProcess"
         id="admission-journey"
         class="section admission-journey"
-        :aria-labelledby="content.process.title.trim() ? 'admission-journey-title' : undefined"
+        :aria-labelledby="
+          content.process.title.trim() ? 'admission-journey-title' : undefined
+        "
       >
         <div class="container">
-          <div v-if="content.process.eyebrow.trim() || content.process.title.trim() || content.process.intro.some(hasText)" class="admission-section-heading">
-            <div v-if="content.process.eyebrow.trim() || content.process.title.trim()" class="flow">
-              <p v-if="content.process.eyebrow.trim()" class="admission-eyebrow">{{ content.process.eyebrow }}</p>
-              <h2 v-if="content.process.title.trim()" id="admission-journey-title">{{ content.process.title }}</h2>
+          <div
+            v-if="
+              content.process.eyebrow.trim() ||
+              content.process.title.trim() ||
+              content.process.intro.some(hasText)
+            "
+            class="admission-section-heading"
+          >
+            <div
+              v-if="
+                content.process.eyebrow.trim() || content.process.title.trim()
+              "
+              class="flow"
+            >
+              <p
+                v-if="content.process.eyebrow.trim()"
+                class="admission-eyebrow"
+              >
+                {{ content.process.eyebrow }}
+              </p>
+              <h2
+                v-if="content.process.title.trim()"
+                id="admission-journey-title"
+              >
+                {{ content.process.title }}
+              </h2>
             </div>
-            <div v-if="content.process.intro.some(hasText)" class="flow admission-section-intro">
-              <p v-for="(paragraph, index) in content.process.intro.filter(hasText)" :key="index">
+            <div
+              v-if="content.process.intro.some(hasText)"
+              class="flow admission-section-intro"
+            >
+              <p
+                v-for="(paragraph, index) in content.process.intro.filter(
+                  hasText,
+                )"
+                :key="index"
+              >
                 <ContentText :value="paragraph" />
               </p>
             </div>
           </div>
           <ol v-if="steps.length" class="admission-journey__grid" role="list">
-            <li v-for="(step, index) in steps" :key="step.id || index" class="admission-step">
-              <span class="admission-step__number step-indicator" aria-hidden="true">
-                {{ String(index + 1).padStart(2, '0') }}
+            <li
+              v-for="(step, index) in steps"
+              :key="step.id || index"
+              class="admission-step"
+            >
+              <span
+                class="admission-step__number step-indicator"
+                aria-hidden="true"
+              >
+                {{ String(index + 1).padStart(2, "0") }}
               </span>
-              <ContentSections :sections="[step]" :heading-level="content.process.title.trim() ? 3 : 2" />
+              <ContentSections
+                :sections="[step]"
+                :heading-level="content.process.title.trim() ? 3 : 2"
+              />
             </li>
           </ol>
         </div>
@@ -86,18 +167,50 @@ useSeoMeta({
       <section
         v-if="hasShortlist"
         class="section admission-shortlist"
-        :aria-labelledby="hasShortlistIntro && content.shortlist.title.trim() ? 'admission-shortlist-title' : undefined"
+        :aria-labelledby="
+          hasShortlistIntro && content.shortlist.title.trim()
+            ? 'admission-shortlist-title'
+            : undefined
+        "
       >
-        <div class="container admission-shortlist__grid" :class="{ 'admission-content-grid--single': !hasShortlistIntro || !questions.length }">
-          <div v-if="hasShortlistIntro" class="admission-shortlist__content flow">
-            <p v-if="content.shortlist.eyebrow.trim()" class="admission-eyebrow">{{ content.shortlist.eyebrow }}</p>
-            <h2 v-if="content.shortlist.title.trim()" id="admission-shortlist-title">{{ content.shortlist.title }}</h2>
-            <p v-for="(paragraph, index) in content.shortlist.intro.filter(hasText)" :key="index">
+        <div
+          class="container admission-shortlist__grid"
+          :class="{
+            'admission-content-grid--single':
+              !hasShortlistIntro || !questions.length,
+          }"
+        >
+          <div
+            v-if="hasShortlistIntro"
+            class="admission-shortlist__content flow"
+          >
+            <p
+              v-if="content.shortlist.eyebrow.trim()"
+              class="admission-eyebrow"
+            >
+              {{ content.shortlist.eyebrow }}
+            </p>
+            <h2
+              v-if="content.shortlist.title.trim()"
+              id="admission-shortlist-title"
+            >
+              {{ content.shortlist.title }}
+            </h2>
+            <p
+              v-for="(paragraph, index) in content.shortlist.intro.filter(
+                hasText,
+              )"
+              :key="index"
+            >
               <ContentText :value="paragraph" />
             </p>
           </div>
           <div v-if="questions.length" class="admission-checklist-card">
-            <component :is="content.shortlist.title.trim() ? 'h3' : 'h2'" v-if="content.shortlist.listTitle.trim()">{{ content.shortlist.listTitle }}</component>
+            <component
+              :is="content.shortlist.title.trim() ? 'h3' : 'h2'"
+              v-if="content.shortlist.listTitle.trim()"
+              >{{ content.shortlist.listTitle }}</component
+            >
             <ul class="admission-checklist" role="list">
               <li v-for="(question, index) in questions" :key="index">
                 <span aria-hidden="true">✓</span>
@@ -111,24 +224,68 @@ useSeoMeta({
       <section
         v-if="hasReadiness"
         class="section admission-readiness"
-        :aria-labelledby="content.readiness.title.trim() ? 'admission-readiness-title' : undefined"
+        :aria-labelledby="
+          content.readiness.title.trim()
+            ? 'admission-readiness-title'
+            : undefined
+        "
       >
         <div class="container">
-          <div v-if="content.readiness.eyebrow.trim() || content.readiness.title.trim() || content.readiness.intro.some(hasText)" class="admission-section-heading">
-            <div v-if="content.readiness.eyebrow.trim() || content.readiness.title.trim()" class="flow">
-              <p v-if="content.readiness.eyebrow.trim()" class="admission-eyebrow">{{ content.readiness.eyebrow }}</p>
-              <h2 v-if="content.readiness.title.trim()" id="admission-readiness-title">{{ content.readiness.title }}</h2>
+          <div
+            v-if="
+              content.readiness.eyebrow.trim() ||
+              content.readiness.title.trim() ||
+              content.readiness.intro.some(hasText)
+            "
+            class="admission-section-heading"
+          >
+            <div
+              v-if="
+                content.readiness.eyebrow.trim() ||
+                content.readiness.title.trim()
+              "
+              class="flow"
+            >
+              <p
+                v-if="content.readiness.eyebrow.trim()"
+                class="admission-eyebrow"
+              >
+                {{ content.readiness.eyebrow }}
+              </p>
+              <h2
+                v-if="content.readiness.title.trim()"
+                id="admission-readiness-title"
+              >
+                {{ content.readiness.title }}
+              </h2>
             </div>
-            <div v-if="content.readiness.intro.some(hasText)" class="flow admission-section-intro">
-              <p v-for="(paragraph, index) in content.readiness.intro.filter(hasText)" :key="index">
+            <div
+              v-if="content.readiness.intro.some(hasText)"
+              class="flow admission-section-intro"
+            >
+              <p
+                v-for="(paragraph, index) in content.readiness.intro.filter(
+                  hasText,
+                )"
+                :key="index"
+              >
                 <ContentText :value="paragraph" />
               </p>
             </div>
           </div>
           <div v-if="readinessItems.length" class="admission-readiness__grid">
-            <article v-for="(item, index) in readinessItems" :key="item.id || index" class="admission-readiness-card">
-              <div class="admission-readiness-card__mark" aria-hidden="true">✓</div>
-              <ContentSections :sections="[item]" :heading-level="content.readiness.title.trim() ? 3 : 2" />
+            <article
+              v-for="(item, index) in readinessItems"
+              :key="item.id || index"
+              class="admission-readiness-card"
+            >
+              <div class="admission-readiness-card__mark" aria-hidden="true">
+                ✓
+              </div>
+              <ContentSections
+                :sections="[item]"
+                :heading-level="content.readiness.title.trim() ? 3 : 2"
+              />
             </article>
           </div>
         </div>
@@ -145,14 +302,17 @@ useSeoMeta({
 
     <section v-else class="section">
       <div class="container">
-        <EmptyState title="Admission Guide" message="This guide is being prepared." />
+        <EmptyState
+          title="Admission Guide"
+          message="This guide is being prepared."
+        />
       </div>
     </section>
   </div>
 </template>
 
 <style scoped lang="scss">
-@use '~~/app/assets/scss/abstracts/mixins' as *;
+@use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .admission-guide-page {
   overflow: clip;
@@ -321,11 +481,7 @@ useSeoMeta({
   padding: var(--space-8);
   border-radius: var(--radius-xl);
   background:
-    radial-gradient(
-      circle at 90% 0%,
-      rgb(96 165 250 / 0.3),
-      transparent 22rem
-    ),
+    radial-gradient(circle at 90% 0%, rgb(96 165 250 / 0.3), transparent 22rem),
     var(--color-primary-800);
   color: var(--color-white);
 }

@@ -1,16 +1,24 @@
 <script setup lang="ts">
-import ContentText from '~~/app/components/content/ContentText.vue'
-import { hasText, isInternalHref, isSafeHref } from '~~/app/data/content/helpers'
-import type { ContentCta } from '~~/app/data/content/types'
+import ContentText from "~~/app/components/content/ContentText.vue";
+import {
+  hasText,
+  isInternalHref,
+  isSafeHref,
+} from "~~/app/data/content/helpers";
+import type { ContentCta } from "~~/app/data/content/types";
 
-const props = defineProps<{ cta: ContentCta }>()
-const links = computed(() => props.cta.links.filter(link => link.label.trim() && isSafeHref(link.to)))
+const props = defineProps<{ cta: ContentCta }>();
+const links = computed(() =>
+  props.cta.links.filter((link) => link.label.trim() && isSafeHref(link.to)),
+);
 </script>
 
 <template>
   <div class="content-cta">
     <div class="content-cta__copy flow">
-      <p v-if="cta.eyebrow?.trim()" class="content-cta__eyebrow">{{ cta.eyebrow }}</p>
+      <p v-if="cta.eyebrow?.trim()" class="content-cta__eyebrow">
+        {{ cta.eyebrow }}
+      </p>
       <h2 v-if="cta.title?.trim()">{{ cta.title }}</h2>
       <p v-if="hasText(cta.text)"><ContentText :value="cta.text!" /></p>
     </div>
@@ -19,14 +27,18 @@ const links = computed(() => props.cta.links.filter(link => link.label.trim() &&
       <template v-for="(link, index) in links" :key="index">
         <NuxtLink
           v-if="isInternalHref(link.to)"
-          :class="index === 0 ? 'btn btn--secondary btn--lg' : 'content-cta__link'"
+          :class="
+            index === 0 ? 'btn btn--secondary btn--lg' : 'content-cta__link'
+          "
           :to="link.to"
         >
           {{ link.label }}<span v-if="index > 0" aria-hidden="true">→</span>
         </NuxtLink>
         <a
           v-else
-          :class="index === 0 ? 'btn btn--secondary btn--lg' : 'content-cta__link'"
+          :class="
+            index === 0 ? 'btn btn--secondary btn--lg' : 'content-cta__link'
+          "
           :href="link.to"
         >
           {{ link.label }}<span v-if="index > 0" aria-hidden="true">→</span>
@@ -37,7 +49,7 @@ const links = computed(() => props.cta.links.filter(link => link.label.trim() &&
 </template>
 
 <style scoped lang="scss">
-@use '~~/app/assets/scss/abstracts/mixins' as *;
+@use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .content-cta {
   display: grid;

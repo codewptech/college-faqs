@@ -1,30 +1,31 @@
 <script setup lang="ts">
-import type { NavigationGroup, NavigationItem } from '~~/app/data/navigation'
+import type { NavigationGroup, NavigationItem } from "~~/app/data/navigation";
 
 const props = defineProps<{
-  open: boolean
-  primaryItems: NavigationItem[]
-  groups: NavigationGroup[]
-}>()
+  open: boolean;
+  primaryItems: NavigationItem[];
+  groups: NavigationGroup[];
+}>();
 
 const emit = defineEmits<{
-  close: []
-}>()
+  close: [];
+}>();
 
-const expandedGroup = ref<string | null>(null)
-const route = useRoute()
-const groupId = (label: string) => `mobile-nav-${label.toLowerCase().replace(/\s+/g, '-')}`
+const expandedGroup = ref<string | null>(null);
+const route = useRoute();
+const groupId = (label: string) =>
+  `mobile-nav-${label.toLowerCase().replace(/\s+/g, "-")}`;
 
 function toggleGroup(label: string) {
-  expandedGroup.value = expandedGroup.value === label ? null : label
+  expandedGroup.value = expandedGroup.value === label ? null : label;
 }
 
 watch(
   () => props.open,
   (open) => {
-    if (!open) expandedGroup.value = null
+    if (!open) expandedGroup.value = null;
   },
-)
+);
 </script>
 
 <template>
@@ -51,21 +52,37 @@ watch(
           <span>{{ group.label }}</span>
           <svg
             class="mobile-nav__chevron"
-            :class="{ 'mobile-nav__chevron--open': expandedGroup === group.label }"
+            :class="{
+              'mobile-nav__chevron--open': expandedGroup === group.label,
+            }"
             viewBox="0 0 20 20"
             aria-hidden="true"
           >
-            <path d="m5.5 7.5 4.5 4.5 4.5-4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" />
+            <path
+              d="m5.5 7.5 4.5 4.5 4.5-4.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.7"
+            />
           </svg>
         </button>
 
-        <div v-show="expandedGroup === group.label" :id="groupId(group.label)" class="mobile-nav__submenu">
+        <div
+          v-show="expandedGroup === group.label"
+          :id="groupId(group.label)"
+          class="mobile-nav__submenu"
+        >
           <NuxtLink
             v-for="item in group.items"
             :key="item.to"
             class="mobile-nav__sublink"
             :to="item.to"
-            :class="{ 'router-link-active': route.path === item.to || route.path.startsWith(`${item.to}/`) }"
+            :class="{
+              'router-link-active':
+                route.path === item.to || route.path.startsWith(`${item.to}/`),
+            }"
             @click="emit('close')"
           >
             {{ item.label }}

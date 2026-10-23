@@ -1,19 +1,29 @@
 <script setup lang="ts">
-import ContentSections from '~~/app/components/content/ContentSections.vue'
-import ContentText from '~~/app/components/content/ContentText.vue'
-import EmptyState from '~~/app/components/ui/EmptyState.vue'
-import { hasLegalPageContent, hasSectionContent, hasText } from '~~/app/data/content/helpers'
-import type { LegalPageContent } from '~~/app/data/content/types'
+import ContentSections from "~~/app/components/content/ContentSections.vue";
+import ContentText from "~~/app/components/content/ContentText.vue";
+import EmptyState from "~~/app/components/ui/EmptyState.vue";
+import {
+  hasLegalPageContent,
+  hasSectionContent,
+  hasText,
+} from "~~/app/data/content/helpers";
+import type { LegalPageContent } from "~~/app/data/content/types";
 
 const props = defineProps<{
-  content: LegalPageContent
-  relatedTitle: string
-  relatedTo: string
-}>()
+  content: LegalPageContent;
+  relatedTitle: string;
+  relatedTo: string;
+}>();
 
-const intro = computed(() => props.content.ready ? props.content.intro.filter(hasText) : [])
-const sections = computed(() => props.content.ready ? props.content.sections.filter(hasSectionContent) : [])
-const hasPublishedContent = computed(() => props.content.ready && hasLegalPageContent(props.content))
+const intro = computed(() =>
+  props.content.ready ? props.content.intro.filter(hasText) : [],
+);
+const sections = computed(() =>
+  props.content.ready ? props.content.sections.filter(hasSectionContent) : [],
+);
+const hasPublishedContent = computed(
+  () => props.content.ready && hasLegalPageContent(props.content),
+);
 </script>
 
 <template>
@@ -23,7 +33,10 @@ const hasPublishedContent = computed(() => props.content.ready && hasLegalPageCo
         <header class="flow">
           <p class="legal-page__eyebrow">College FAQs</p>
           <h1 id="legal-page-title">{{ content.title }}</h1>
-          <p v-if="content.ready && content.lastUpdated.trim()" class="legal-page__updated">
+          <p
+            v-if="content.ready && content.lastUpdated.trim()"
+            class="legal-page__updated"
+          >
             Last updated: {{ content.lastUpdated }}
           </p>
         </header>

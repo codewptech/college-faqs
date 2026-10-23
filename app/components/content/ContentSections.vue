@@ -1,17 +1,28 @@
 <script setup lang="ts">
-import ContentText from '~~/app/components/content/ContentText.vue'
-import { hasBlockContent, hasSectionContent, hasText } from '~~/app/data/content/helpers'
-import type { ContentSection } from '~~/app/data/content/types'
+import ContentText from "~~/app/components/content/ContentText.vue";
+import {
+  hasBlockContent,
+  hasSectionContent,
+  hasText,
+} from "~~/app/data/content/helpers";
+import type { ContentSection } from "~~/app/data/content/types";
 
-const props = withDefaults(defineProps<{
-  sections: ContentSection[]
-  headingLevel?: number
-}>(), {
-  headingLevel: 2,
-})
+const props = withDefaults(
+  defineProps<{
+    sections: ContentSection[];
+    headingLevel?: number;
+  }>(),
+  {
+    headingLevel: 2,
+  },
+);
 
-const visibleSections = computed(() => props.sections.filter(hasSectionContent))
-const headingTag = computed(() => `h${Math.min(6, Math.max(2, props.headingLevel))}`)
+const visibleSections = computed(() =>
+  props.sections.filter(hasSectionContent),
+);
+const headingTag = computed(
+  () => `h${Math.min(6, Math.max(2, props.headingLevel))}`,
+);
 </script>
 
 <template>
@@ -22,12 +33,22 @@ const headingTag = computed(() => `h${Math.min(6, Math.max(2, props.headingLevel
       :key="section.id || sectionIndex"
       class="content-section flow"
     >
-      <header v-if="section.eyebrow?.trim() || section.title?.trim()" class="content-section__header flow">
-        <p v-if="section.eyebrow?.trim()" class="content-section__eyebrow">{{ section.eyebrow }}</p>
-        <component :is="headingTag" v-if="section.title?.trim()">{{ section.title }}</component>
+      <header
+        v-if="section.eyebrow?.trim() || section.title?.trim()"
+        class="content-section__header flow"
+      >
+        <p v-if="section.eyebrow?.trim()" class="content-section__eyebrow">
+          {{ section.eyebrow }}
+        </p>
+        <component :is="headingTag" v-if="section.title?.trim()">{{
+          section.title
+        }}</component>
       </header>
 
-      <template v-for="(block, blockIndex) in section.blocks.filter(hasBlockContent)" :key="blockIndex">
+      <template
+        v-for="(block, blockIndex) in section.blocks.filter(hasBlockContent)"
+        :key="blockIndex"
+      >
         <p v-if="block.type === 'paragraph'">
           <ContentText :value="block.text" />
         </p>
@@ -37,17 +58,32 @@ const headingTag = computed(() => `h${Math.min(6, Math.max(2, props.headingLevel
           v-else-if="block.type === 'list'"
           class="content-list"
         >
-          <li v-for="(item, itemIndex) in block.items.filter(hasText)" :key="itemIndex">
+          <li
+            v-for="(item, itemIndex) in block.items.filter(hasText)"
+            :key="itemIndex"
+          >
             <ContentText :value="item" />
           </li>
         </component>
 
-        <div v-else-if="block.type === 'table'" class="content-table-wrap" tabindex="0">
+        <div
+          v-else-if="block.type === 'table'"
+          class="content-table-wrap"
+          tabindex="0"
+        >
           <table class="content-table">
-            <caption v-if="block.caption?.trim()">{{ block.caption }}</caption>
+            <caption v-if="block.caption?.trim()">
+              {{
+                block.caption
+              }}
+            </caption>
             <thead v-if="block.headers.some(hasText)">
               <tr>
-                <th v-for="(header, cellIndex) in block.headers" :key="cellIndex" scope="col">
+                <th
+                  v-for="(header, cellIndex) in block.headers"
+                  :key="cellIndex"
+                  scope="col"
+                >
                   <ContentText v-if="hasText(header)" :value="header" />
                 </th>
               </tr>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 defineProps<{
-  eyebrow: string
-  title: string
-  description?: string
-  image: string
-  imageAlt: string
-}>()
+  eyebrow: string;
+  title: string;
+  description?: string;
+  image: string;
+  imageAlt: string;
+}>();
 </script>
 
 <template>
@@ -28,19 +28,14 @@ defineProps<{
       </div>
 
       <div class="explore-hero__visual">
-        <img
-          :src="image"
-          :alt="imageAlt"
-          width="760"
-          height="600"
-        >
+        <img :src="image" :alt="imageAlt" width="760" height="600" />
       </div>
     </div>
   </section>
 </template>
 
 <style scoped lang="scss">
-@use '~~/app/assets/scss/abstracts/mixins' as *;
+@use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .explore-hero {
   border-bottom: 1px solid var(--color-border);
@@ -50,11 +45,7 @@ defineProps<{
       rgb(219 234 254 / 0.82),
       transparent 30rem
     ),
-    linear-gradient(
-      180deg,
-      var(--color-white),
-      var(--color-gray-50)
-    );
+    linear-gradient(180deg, var(--color-white), var(--color-gray-50));
 }
 
 .explore-hero__grid {

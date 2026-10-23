@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import StudyDestinationGuide from '~~/app/components/study/StudyDestinationGuide.vue'
-import { australiaGuide } from '~~/app/data/content/studyAbroad/australia'
+import StudyDestinationGuide from "~~/app/components/study/StudyDestinationGuide.vue";
+import { australiaGuide } from "~~/app/data/content/studyAbroad/australia";
 </script>
 
 <template>

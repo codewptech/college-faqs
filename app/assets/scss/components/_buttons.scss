@@ -1,4 +1,4 @@
-@use '../abstracts/mixins' as *;
+@use "../abstracts/mixins" as *;
 
 .btn {
   display: inline-flex;
@@ -15,19 +15,25 @@
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
-  @include interactive-transition(background-color, border-color, color, box-shadow, transform);
+  @include interactive-transition(
+    background-color,
+    border-color,
+    color,
+    box-shadow,
+    transform
+  );
 }
 
 .btn:hover {
   text-decoration: none;
 }
 
-.btn:active:not(:disabled):not([aria-disabled='true']) {
+.btn:active:not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(1px);
 }
 
 .btn:disabled,
-.btn[aria-disabled='true'] {
+.btn[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.55;
   pointer-events: none;

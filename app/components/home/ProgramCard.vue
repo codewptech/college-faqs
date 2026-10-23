@@ -1,11 +1,11 @@
 <script setup lang="ts">
 const props = defineProps<{
-  title: string
-  description: string
-  to: string
-  image: string
-  imageAlt: string
-}>()
+  title: string;
+  description: string;
+  to: string;
+  image: string;
+  imageAlt: string;
+}>();
 </script>
 
 <template>
@@ -18,7 +18,7 @@ const props = defineProps<{
         loading="lazy"
         width="640"
         height="420"
-      >
+      />
     </div>
 
     <div class="program-card__content">

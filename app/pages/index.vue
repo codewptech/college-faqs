@@ -1,75 +1,86 @@
 <script setup lang="ts">
-import ProgramCard from '~~/app/components/home/ProgramCard.vue'
+import ProgramCard from "~~/app/components/home/ProgramCard.vue";
 
 useSeoMeta({
-  title: 'College FAQs | MBA, Engineering & Study Abroad Guidance',
-  description: 'Explore practical guidance for MBA, Engineering, and Study Abroad decisions with College FAQs — Your College Repository.',
-})
+  title: "College FAQs | MBA, Engineering & Study Abroad Guidance",
+  description:
+    "Explore practical guidance for MBA, Engineering, and Study Abroad decisions with College FAQs — Your College Repository.",
+});
 
 const programs = [
   {
-    title: 'MBA',
-    description: 'Explore MBA options, admission support, application guidance, and resources for making a confident management education decision.',
-    to: '/programs/mba',
-    image: '/placeholders/program-mba.svg',
-    imageAlt: '',
+    title: "MBA",
+    description:
+      "Explore MBA options, admission support, application guidance, and resources for making a confident management education decision.",
+    to: "/programs/mba",
+    image: "/placeholders/program-mba.svg",
+    imageAlt: "",
   },
   {
-    title: 'Engineering',
-    description: 'Understand engineering pathways, compare options, and explore the information you need before making an admission decision.',
-    to: '/programs/engineering',
-    image: '/placeholders/program-engineering.svg',
-    imageAlt: '',
+    title: "Engineering",
+    description:
+      "Understand engineering pathways, compare options, and explore the information you need before making an admission decision.",
+    to: "/programs/engineering",
+    image: "/placeholders/program-engineering.svg",
+    imageAlt: "",
   },
   {
-    title: 'Study Abroad',
-    description: 'Start with practical guidance on destinations, profile evaluation, applications, and planning your study abroad journey.',
-    to: '/programs/study-abroad',
-    image: '/placeholders/program-study-abroad.svg',
-    imageAlt: '',
+    title: "Study Abroad",
+    description:
+      "Start with practical guidance on destinations, profile evaluation, applications, and planning your study abroad journey.",
+    to: "/programs/study-abroad",
+    image: "/placeholders/program-study-abroad.svg",
+    imageAlt: "",
   },
-]
+];
 
 const supportItems = [
   {
-    number: '01',
-    title: 'Understand your options',
-    description: 'Start with clear information that helps you make sense of programs, colleges, and the decisions ahead.',
+    number: "01",
+    title: "Understand your options",
+    description:
+      "Start with clear information that helps you make sense of programs, colleges, and the decisions ahead.",
   },
   {
-    number: '02',
-    title: 'Get personal guidance',
-    description: 'When information alone is not enough, connect with a mentor and discuss your situation more directly.',
+    number: "02",
+    title: "Get personal guidance",
+    description:
+      "When information alone is not enough, connect with a mentor and discuss your situation more directly.",
   },
   {
-    number: '03',
-    title: 'Navigate applications',
-    description: 'Use practical support for application forms, documentation, and the steps involved in the admission process.',
+    number: "03",
+    title: "Navigate applications",
+    description:
+      "Use practical support for application forms, documentation, and the steps involved in the admission process.",
   },
   {
-    number: '04',
-    title: 'Stay informed',
-    description: 'Use guides, updates, FAQs, and related resources to keep important admission information within reach.',
+    number: "04",
+    title: "Stay informed",
+    description:
+      "Use guides, updates, FAQs, and related resources to keep important admission information within reach.",
   },
-]
+];
 
 const resources = [
   {
-    title: 'Admission Guide',
-    description: 'A practical starting point for understanding the admission journey and the decisions involved.',
-    to: '/explore/admission-guide',
+    title: "Admission Guide",
+    description:
+      "A practical starting point for understanding the admission journey and the decisions involved.",
+    to: "/explore/admission-guide",
   },
   {
-    title: 'Education Loan',
-    description: 'Explore the role of education loans and the key points to consider while planning your finances.',
-    to: '/explore/education-loan',
+    title: "Education Loan",
+    description:
+      "Explore the role of education loans and the key points to consider while planning your finances.",
+    to: "/explore/education-loan",
   },
   {
-    title: 'FAQs',
-    description: 'Find clear answers to common questions students and families ask during the admission process.',
-    to: '/explore/faqs',
+    title: "FAQs",
+    description:
+      "Find clear answers to common questions students and families ask during the admission process.",
+    to: "/explore/faqs",
   },
-]
+];
 </script>
 
 <template>
@@ -77,17 +88,13 @@ const resources = [
     <section class="home-hero section">
       <div class="container home-hero__grid">
         <div class="home-hero__content flow">
-          <p class="home-eyebrow">
-            Your College Repository
-          </p>
+          <p class="home-eyebrow">Your College Repository</p>
 
-          <h1>
-            Practical guidance for your next college decision.
-          </h1>
+          <h1>Practical guidance for your next college decision.</h1>
 
           <p class="home-hero__lead">
-            Explore MBA, Engineering, and Study Abroad pathways, understand your options,
-            and get support when you need help moving forward.
+            Explore MBA, Engineering, and Study Abroad pathways, understand your
+            options, and get support when you need help moving forward.
           </p>
 
           <div class="home-hero__actions">
@@ -111,12 +118,16 @@ const resources = [
             alt=""
             width="760"
             height="600"
-          >
+          />
         </div>
       </div>
     </section>
 
-    <section id="programs" class="section home-programs" aria-labelledby="programs-title">
+    <section
+      id="programs"
+      class="section home-programs"
+      aria-labelledby="programs-title"
+    >
       <div class="container">
         <div class="home-section-heading">
           <div class="flow">
@@ -125,8 +136,9 @@ const resources = [
           </div>
 
           <p>
-            Start with the area that matches your current goal. Each program section will
-            bring together guidance, tools, and relevant admission support.
+            Start with the area that matches your current goal. Each program
+            section will bring together guidance, tools, and relevant admission
+            support.
           </p>
         </div>
 
@@ -144,16 +156,27 @@ const resources = [
       <div class="container home-support__layout">
         <div class="home-support__intro flow">
           <p class="home-eyebrow">How College FAQs helps</p>
-          <h2 id="support-title">Useful information, followed by practical support.</h2>
+          <h2 id="support-title">
+            Useful information, followed by practical support.
+          </h2>
           <p>
-            College decisions often involve more than finding a list of institutions.
-            The aim is to make the process easier to understand and easier to act on.
+            College decisions often involve more than finding a list of
+            institutions. The aim is to make the process easier to understand
+            and easier to act on.
           </p>
         </div>
 
         <ol class="home-support__list" role="list">
-          <li v-for="item in supportItems" :key="item.number" class="home-support__item">
-            <span class="home-support__number number-badge" aria-hidden="true">{{ item.number }}</span>
+          <li
+            v-for="item in supportItems"
+            :key="item.number"
+            class="home-support__item"
+          >
+            <span
+              class="home-support__number number-badge"
+              aria-hidden="true"
+              >{{ item.number }}</span
+            >
             <div class="flow">
               <h3>{{ item.title }}</h3>
               <p>{{ item.description }}</p>
@@ -168,11 +191,14 @@ const resources = [
         <div class="home-section-heading">
           <div class="flow">
             <p class="home-eyebrow">Explore resources</p>
-            <h2 id="resources-title">Start with the question in front of you.</h2>
+            <h2 id="resources-title">
+              Start with the question in front of you.
+            </h2>
           </div>
 
           <p>
-            Use the Explore section when you need focused information beyond a single program.
+            Use the Explore section when you need focused information beyond a
+            single program.
           </p>
         </div>
 
@@ -197,10 +223,15 @@ const resources = [
       <div class="container">
         <div class="home-cta__panel">
           <div class="flow">
-            <p class="home-eyebrow home-eyebrow--light">Not sure where to begin?</p>
-            <h2 id="home-cta-title">Start with the program closest to your current goal.</h2>
+            <p class="home-eyebrow home-eyebrow--light">
+              Not sure where to begin?
+            </p>
+            <h2 id="home-cta-title">
+              Start with the program closest to your current goal.
+            </h2>
             <p>
-              You can explore first and move toward personal guidance when you are ready.
+              You can explore first and move toward personal guidance when you
+              are ready.
             </p>
           </div>
 
@@ -220,7 +251,7 @@ const resources = [
 </template>
 
 <style scoped lang="scss">
-@use '~~/app/assets/scss/abstracts/mixins' as *;
+@use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .home-page {
   overflow: clip;
@@ -240,7 +271,11 @@ const resources = [
 
 .home-hero {
   background:
-    radial-gradient(circle at 85% 15%, rgb(219 234 254 / 0.9), transparent 32rem),
+    radial-gradient(
+      circle at 85% 15%,
+      rgb(219 234 254 / 0.9),
+      transparent 32rem
+    ),
     linear-gradient(180deg, var(--color-white), var(--color-gray-50));
 }
 

@@ -1,69 +1,93 @@
 <script setup lang="ts">
-import SuccessDialog from '~~/app/components/ui/SuccessDialog.vue'
-import FormDisclosure from '~~/app/components/ui/FormDisclosure.vue'
-import { useFormPreview } from '~~/app/composables/useFormPreview'
-import { studyDestinations as destinations, type StudyDestination } from '~~/app/data/studyDestinations'
-import ContentText from '~~/app/components/content/ContentText.vue'
-import ContentSections from '~~/app/components/content/ContentSections.vue'
-import ContentCta from '~~/app/components/content/ContentCta.vue'
-import { studyAbroadContent as content } from '~~/app/data/content/studyAbroad'
-import { hasCtaContent, hasSectionContent, hasText } from '~~/app/data/content/helpers'
+import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
+import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
+import { useFormPreview } from "~~/app/composables/useFormPreview";
+import {
+  studyDestinations as destinations,
+  type StudyDestination,
+} from "~~/app/data/studyDestinations";
+import ContentText from "~~/app/components/content/ContentText.vue";
+import ContentSections from "~~/app/components/content/ContentSections.vue";
+import ContentCta from "~~/app/components/content/ContentCta.vue";
+import { studyAbroadContent as content } from "~~/app/data/content/studyAbroad";
+import {
+  hasCtaContent,
+  hasSectionContent,
+  hasText,
+} from "~~/app/data/content/helpers";
 
-const supportAreas = computed(() => content.ready
-  ? content.support.items.filter(item => item.title.trim() || hasText(item.description))
-  : [])
-const guideSections = computed(() => content.ready && content.sections.some(hasSectionContent))
+const supportAreas = computed(() =>
+  content.ready
+    ? content.support.items.filter(
+        (item) => item.title.trim() || hasText(item.description),
+      )
+    : [],
+);
+const guideSections = computed(
+  () => content.ready && content.sections.some(hasSectionContent),
+);
 
-const hasPublishedContent = computed(() => content.ready && Boolean(
-  content.hero.intro.some(hasText)
-  || hasText(content.hero.note)
-  || supportAreas.value.length
-  || content.destinations.intro.some(hasText)
-  || content.guides.intro.some(hasText)
-  || content.sections.some(hasSectionContent)
-  || content.profile.intro.some(hasText)
-  || content.profile.checklist.some(hasText)
-  || content.mentor.intro.some(hasText)
-  || hasCtaContent(content.cta)
-))
+const hasPublishedContent = computed(
+  () =>
+    content.ready &&
+    Boolean(
+      content.hero.intro.some(hasText) ||
+      hasText(content.hero.note) ||
+      supportAreas.value.length ||
+      content.destinations.intro.some(hasText) ||
+      content.guides.intro.some(hasText) ||
+      content.sections.some(hasSectionContent) ||
+      content.profile.intro.some(hasText) ||
+      content.profile.checklist.some(hasText) ||
+      content.mentor.intro.some(hasText) ||
+      hasCtaContent(content.cta),
+    ),
+);
 
 useSeoMeta({
-  title: () => content.ready && content.seo.title.trim()
-    ? content.seo.title
-    : 'Study Abroad | College FAQs',
-  description: () => content.ready && content.seo.description.trim()
-    ? content.seo.description
-    : 'Study Abroad | College FAQs',
-  robots: () => hasPublishedContent.value ? 'index, follow' : 'noindex, follow',
-})
+  title: () =>
+    content.ready && content.seo.title.trim()
+      ? content.seo.title
+      : "Study Abroad | College FAQs",
+  description: () =>
+    content.ready && content.seo.description.trim()
+      ? content.seo.description
+      : "Study Abroad | College FAQs",
+  robots: () =>
+    hasPublishedContent.value ? "index, follow" : "noindex, follow",
+});
 
-const selectedDestination = ref(destinations[0]!)
-const considerations = computed(() => selectedDestination.value.considerations?.filter(item => item.trim()) ?? [])
-const profileDialogOpen = ref(false)
-const mentorDialogOpen = ref(false)
+const selectedDestination = ref(destinations[0]!);
+const considerations = computed(
+  () =>
+    selectedDestination.value.considerations?.filter((item) => item.trim()) ??
+    [],
+);
+const profileDialogOpen = ref(false);
+const mentorDialogOpen = ref(false);
 const {
   formRef: profileForm,
   errors: profileErrors,
   validate: validateProfile,
   clearError: clearProfileError,
-} = useFormPreview()
+} = useFormPreview();
 const {
   formRef: mentorForm,
   errors: mentorErrors,
   validate: validateMentor,
   clearError: clearMentorError,
-} = useFormPreview()
+} = useFormPreview();
 
 function selectDestination(destination: StudyDestination) {
-  selectedDestination.value = destination
+  selectedDestination.value = destination;
 }
 
 function submitProfilePreview() {
-  if (validateProfile()) profileDialogOpen.value = true
+  if (validateProfile()) profileDialogOpen.value = true;
 }
 
 function submitMentorPreview() {
-  if (validateMentor()) mentorDialogOpen.value = true
+  if (validateMentor()) mentorDialogOpen.value = true;
 }
 </script>
 
@@ -72,47 +96,57 @@ function submitMentorPreview() {
     <section class="study-hero section">
       <div class="container study-hero__grid">
         <div class="study-hero__content flow">
-          <p class="study-eyebrow">{{ content.ready && content.hero.eyebrow.trim() ? content.hero.eyebrow : 'Study Abroad' }}</p>
+          <p class="study-eyebrow">
+            {{
+              content.ready && content.hero.eyebrow.trim()
+                ? content.hero.eyebrow
+                : "Study Abroad"
+            }}
+          </p>
 
-          <h1>{{ content.ready && content.hero.title.trim() ? content.hero.title : 'Study Abroad' }}</h1>
+          <h1>
+            {{
+              content.ready && content.hero.title.trim()
+                ? content.hero.title
+                : "Study Abroad"
+            }}
+          </h1>
 
           <template v-if="content.ready">
-            <p v-for="(paragraph, index) in content.hero.intro.filter(hasText)" :key="index" class="study-hero__lead">
+            <p
+              v-for="(paragraph, index) in content.hero.intro.filter(hasText)"
+              :key="index"
+              class="study-hero__lead"
+            >
               <ContentText :value="paragraph" />
             </p>
           </template>
 
           <div class="study-hero__actions">
-            <a
-              class="btn btn--primary btn--lg"
-              href="#profile-evaluation"
-            >
+            <a class="btn btn--primary btn--lg" href="#profile-evaluation">
               Free profile evaluation
             </a>
 
-            <a
-              class="btn btn--secondary btn--lg"
-              href="#talk-to-mentor"
-            >
+            <a class="btn btn--secondary btn--lg" href="#talk-to-mentor">
               Talk to a mentor
             </a>
           </div>
 
-          <p v-if="content.ready && hasText(content.hero.note)" class="study-hero__note">
+          <p
+            v-if="content.ready && hasText(content.hero.note)"
+            class="study-hero__note"
+          >
             <ContentText :value="content.hero.note" />
           </p>
         </div>
 
-        <div
-          class="study-hero__visual"
-          aria-hidden="true"
-        >
+        <div class="study-hero__visual" aria-hidden="true">
           <img
             src="/placeholders/study-abroad-guidance.svg"
             alt=""
             width="760"
             height="600"
-          >
+          />
         </div>
       </div>
     </section>
@@ -120,16 +154,41 @@ function submitMentorPreview() {
     <section
       v-if="supportAreas.length"
       class="section section--compact study-support"
-      :aria-labelledby="content.support.title.trim() ? 'study-support-title' : undefined"
+      :aria-labelledby="
+        content.support.title.trim() ? 'study-support-title' : undefined
+      "
     >
       <div class="container">
-        <div v-if="content.support.eyebrow.trim() || content.support.title.trim() || content.support.intro.some(hasText)" class="study-section-heading study-section-heading--compact">
-          <div v-if="content.support.eyebrow.trim() || content.support.title.trim()" class="flow">
-            <p v-if="content.support.eyebrow.trim()" class="study-eyebrow">{{ content.support.eyebrow }}</p>
-            <h2 v-if="content.support.title.trim()" id="study-support-title">{{ content.support.title }}</h2>
+        <div
+          v-if="
+            content.support.eyebrow.trim() ||
+            content.support.title.trim() ||
+            content.support.intro.some(hasText)
+          "
+          class="study-section-heading study-section-heading--compact"
+        >
+          <div
+            v-if="
+              content.support.eyebrow.trim() || content.support.title.trim()
+            "
+            class="flow"
+          >
+            <p v-if="content.support.eyebrow.trim()" class="study-eyebrow">
+              {{ content.support.eyebrow }}
+            </p>
+            <h2 v-if="content.support.title.trim()" id="study-support-title">
+              {{ content.support.title }}
+            </h2>
           </div>
           <div v-if="content.support.intro.some(hasText)" class="flow">
-            <p v-for="(paragraph, index) in content.support.intro.filter(hasText)" :key="index"><ContentText :value="paragraph" /></p>
+            <p
+              v-for="(paragraph, index) in content.support.intro.filter(
+                hasText,
+              )"
+              :key="index"
+            >
+              <ContentText :value="paragraph" />
+            </p>
           </div>
         </div>
 
@@ -143,12 +202,18 @@ function submitMentorPreview() {
               class="study-support-card__icon number-badge"
               aria-hidden="true"
             >
-              {{ String(index + 1).padStart(2, '0') }}
+              {{ String(index + 1).padStart(2, "0") }}
             </span>
 
             <div class="flow">
-              <component :is="content.support.title.trim() ? 'h3' : 'h2'" v-if="area.title.trim()">{{ area.title }}</component>
-              <p v-if="hasText(area.description)"><ContentText :value="area.description" /></p>
+              <component
+                :is="content.support.title.trim() ? 'h3' : 'h2'"
+                v-if="area.title.trim()"
+                >{{ area.title }}</component
+              >
+              <p v-if="hasText(area.description)">
+                <ContentText :value="area.description" />
+              </p>
             </div>
           </article>
         </div>
@@ -162,15 +227,40 @@ function submitMentorPreview() {
       <div class="container">
         <div class="study-section-heading">
           <div class="flow">
-            <p v-if="content.ready && content.destinations.eyebrow.trim()" class="study-eyebrow">{{ content.destinations.eyebrow }}</p>
-            <h2 id="study-destinations-title">{{ content.ready && content.destinations.title.trim() ? content.destinations.title : 'Destinations' }}</h2>
+            <p
+              v-if="content.ready && content.destinations.eyebrow.trim()"
+              class="study-eyebrow"
+            >
+              {{ content.destinations.eyebrow }}
+            </p>
+            <h2 id="study-destinations-title">
+              {{
+                content.ready && content.destinations.title.trim()
+                  ? content.destinations.title
+                  : "Destinations"
+              }}
+            </h2>
           </div>
-          <div v-if="content.ready && content.destinations.intro.some(hasText)" class="flow">
-            <p v-for="(paragraph, index) in content.destinations.intro.filter(hasText)" :key="index"><ContentText :value="paragraph" /></p>
+          <div
+            v-if="content.ready && content.destinations.intro.some(hasText)"
+            class="flow"
+          >
+            <p
+              v-for="(paragraph, index) in content.destinations.intro.filter(
+                hasText,
+              )"
+              :key="index"
+            >
+              <ContentText :value="paragraph" />
+            </p>
           </div>
         </div>
 
-        <div class="study-destinations__tabs" role="group" aria-label="Study destinations">
+        <div
+          class="study-destinations__tabs"
+          role="group"
+          aria-label="Study destinations"
+        >
           <button
             v-for="destination in destinations"
             :key="destination.id"
@@ -188,21 +278,28 @@ function submitMentorPreview() {
           </button>
         </div>
 
-        <div id="study-destination-panel" class="study-destination-panel" :class="{ 'study-destination-panel--single': !considerations.length }" role="region" aria-labelledby="study-selected-destination-title">
+        <div
+          id="study-destination-panel"
+          class="study-destination-panel"
+          :class="{ 'study-destination-panel--single': !considerations.length }"
+          role="region"
+          aria-labelledby="study-selected-destination-title"
+        >
           <div class="study-destination-panel__content flow">
             <p class="study-eyebrow">{{ selectedDestination.name }}</p>
-            <h3 id="study-selected-destination-title">{{ selectedDestination.shortName }} Study Guide</h3>
-            <p v-if="selectedDestination.description?.trim()">{{ selectedDestination.description }}</p>
+            <h3 id="study-selected-destination-title">
+              {{ selectedDestination.shortName }} Study Guide
+            </h3>
+            <p v-if="selectedDestination.description?.trim()">
+              {{ selectedDestination.description }}
+            </p>
             <NuxtLink :to="`/programs/study-abroad/${selectedDestination.id}`">
               View the {{ selectedDestination.shortName }} guide
             </NuxtLink>
           </div>
 
           <ul v-if="considerations.length" class="study-checklist" role="list">
-            <li
-              v-for="item in considerations"
-              :key="item"
-            >
+            <li v-for="item in considerations" :key="item">
               <span aria-hidden="true">✓</span>
               {{ item }}
             </li>
@@ -215,24 +312,64 @@ function submitMentorPreview() {
       <div class="container">
         <div class="study-section-heading">
           <div class="flow">
-            <p v-if="content.ready && content.guides.eyebrow.trim()" class="study-eyebrow">{{ content.guides.eyebrow }}</p>
-            <h2 id="study-guides-title">{{ content.ready && content.guides.title.trim() ? content.guides.title : 'Destination guides' }}</h2>
+            <p
+              v-if="content.ready && content.guides.eyebrow.trim()"
+              class="study-eyebrow"
+            >
+              {{ content.guides.eyebrow }}
+            </p>
+            <h2 id="study-guides-title">
+              {{
+                content.ready && content.guides.title.trim()
+                  ? content.guides.title
+                  : "Destination guides"
+              }}
+            </h2>
           </div>
-          <div v-if="content.ready && content.guides.intro.some(hasText)" class="flow">
-            <p v-for="(paragraph, index) in content.guides.intro.filter(hasText)" :key="index"><ContentText :value="paragraph" /></p>
+          <div
+            v-if="content.ready && content.guides.intro.some(hasText)"
+            class="flow"
+          >
+            <p
+              v-for="(paragraph, index) in content.guides.intro.filter(hasText)"
+              :key="index"
+            >
+              <ContentText :value="paragraph" />
+            </p>
           </div>
         </div>
 
-        <p id="study-guides-scroll-note" class="study-guides__hint">On smaller screens, scroll to explore all nine destinations.</p>
-        <div class="study-guides__scroller" role="region" aria-label="Destination guides" aria-describedby="study-guides-scroll-note" tabindex="0">
+        <p id="study-guides-scroll-note" class="study-guides__hint">
+          On smaller screens, scroll to explore all nine destinations.
+        </p>
+        <div
+          class="study-guides__scroller"
+          role="region"
+          aria-label="Destination guides"
+          aria-describedby="study-guides-scroll-note"
+          tabindex="0"
+        >
           <ul class="study-guides__grid" role="list">
             <li v-for="destination in destinations" :key="destination.id">
-              <NuxtLink class="study-guide-card" :to="`/programs/study-abroad/${destination.id}`">
-                <img src="/placeholders/study-destination-guide.svg" alt="" width="640" height="360" loading="lazy">
+              <NuxtLink
+                class="study-guide-card"
+                :to="`/programs/study-abroad/${destination.id}`"
+              >
+                <img
+                  src="/placeholders/study-destination-guide.svg"
+                  alt=""
+                  width="640"
+                  height="360"
+                  loading="lazy"
+                />
                 <div class="study-guide-card__content flow">
                   <h3>{{ destination.shortName }}</h3>
-                  <p v-if="destination.description?.trim()">{{ destination.description }}</p>
-                  <span class="study-guide-card__link">Explore guide <span aria-hidden="true">→</span></span>
+                  <p v-if="destination.description?.trim()">
+                    {{ destination.description }}
+                  </p>
+                  <span class="study-guide-card__link"
+                    >Explore guide <span aria-hidden="true">→</span></span
+                  >
                 </div>
               </NuxtLink>
             </li>
@@ -241,10 +378,16 @@ function submitMentorPreview() {
       </div>
     </section>
 
-    <section v-if="guideSections || (content.ready && hasCtaContent(content.cta))" class="section">
+    <section
+      v-if="guideSections || (content.ready && hasCtaContent(content.cta))"
+      class="section"
+    >
       <div class="container flow">
         <ContentSections v-if="guideSections" :sections="content.sections" />
-        <ContentCta v-if="content.ready && hasCtaContent(content.cta)" :cta="content.cta!" />
+        <ContentCta
+          v-if="content.ready && hasCtaContent(content.cta)"
+          :cta="content.cta!"
+        />
       </div>
     </section>
 
@@ -255,12 +398,39 @@ function submitMentorPreview() {
     >
       <div class="container study-profile__grid">
         <div class="study-profile__intro flow">
-          <p v-if="content.ready && content.profile.eyebrow.trim()" class="study-eyebrow">{{ content.profile.eyebrow }}</p>
-          <h2 id="profile-evaluation-title">{{ content.ready && content.profile.title.trim() ? content.profile.title : 'Free profile evaluation' }}</h2>
+          <p
+            v-if="content.ready && content.profile.eyebrow.trim()"
+            class="study-eyebrow"
+          >
+            {{ content.profile.eyebrow }}
+          </p>
+          <h2 id="profile-evaluation-title">
+            {{
+              content.ready && content.profile.title.trim()
+                ? content.profile.title
+                : "Free profile evaluation"
+            }}
+          </h2>
           <template v-if="content.ready">
-            <p v-for="(paragraph, index) in content.profile.intro.filter(hasText)" :key="index"><ContentText :value="paragraph" /></p>
-            <ul v-if="content.profile.checklist.some(hasText)" class="study-checklist" role="list">
-              <li v-for="(item, index) in content.profile.checklist.filter(hasText)" :key="index">
+            <p
+              v-for="(paragraph, index) in content.profile.intro.filter(
+                hasText,
+              )"
+              :key="index"
+            >
+              <ContentText :value="paragraph" />
+            </p>
+            <ul
+              v-if="content.profile.checklist.some(hasText)"
+              class="study-checklist"
+              role="list"
+            >
+              <li
+                v-for="(item, index) in content.profile.checklist.filter(
+                  hasText,
+                )"
+                :key="index"
+              >
                 <span aria-hidden="true">✓</span>
                 <ContentText :value="item" />
               </li>
@@ -291,11 +461,21 @@ function submitMentorPreview() {
                   type="text"
                   autocomplete="name"
                   :aria-invalid="Boolean(profileErrors['profile-name'])"
-                  :aria-describedby="profileErrors['profile-name'] ? 'profile-name-error' : undefined"
+                  :aria-describedby="
+                    profileErrors['profile-name']
+                      ? 'profile-name-error'
+                      : undefined
+                  "
                   required
                   placeholder="Your name"
+                />
+                <p
+                  v-if="profileErrors['profile-name']"
+                  id="profile-name-error"
+                  class="form-error"
                 >
-                <p v-if="profileErrors['profile-name']" id="profile-name-error" class="form-error">{{ profileErrors['profile-name'] }}</p>
+                  {{ profileErrors["profile-name"] }}
+                </p>
               </div>
 
               <div class="form-field">
@@ -310,19 +490,27 @@ function submitMentorPreview() {
                   type="tel"
                   autocomplete="tel"
                   :aria-invalid="Boolean(profileErrors['profile-phone'])"
-                  :aria-describedby="profileErrors['profile-phone'] ? 'profile-phone-error' : undefined"
+                  :aria-describedby="
+                    profileErrors['profile-phone']
+                      ? 'profile-phone-error'
+                      : undefined
+                  "
                   required
                   placeholder="Your phone number"
+                />
+                <p
+                  v-if="profileErrors['profile-phone']"
+                  id="profile-phone-error"
+                  class="form-error"
                 >
-                <p v-if="profileErrors['profile-phone']" id="profile-phone-error" class="form-error">{{ profileErrors['profile-phone'] }}</p>
+                  {{ profileErrors["profile-phone"] }}
+                </p>
               </div>
             </div>
 
             <div class="study-form-row study-form-row--2">
               <div class="form-field">
-                <label class="form-label" for="profile-email">
-                  Email
-                </label>
+                <label class="form-label" for="profile-email"> Email </label>
                 <input
                   id="profile-email"
                   class="form-control"
@@ -330,10 +518,20 @@ function submitMentorPreview() {
                   type="email"
                   autocomplete="email"
                   :aria-invalid="Boolean(profileErrors['profile-email'])"
-                  :aria-describedby="profileErrors['profile-email'] ? 'profile-email-error' : undefined"
+                  :aria-describedby="
+                    profileErrors['profile-email']
+                      ? 'profile-email-error'
+                      : undefined
+                  "
                   placeholder="you@example.com"
+                />
+                <p
+                  v-if="profileErrors['profile-email']"
+                  id="profile-email-error"
+                  class="form-error"
                 >
-                <p v-if="profileErrors['profile-email']" id="profile-email-error" class="form-error">{{ profileErrors['profile-email'] }}</p>
+                  {{ profileErrors["profile-email"] }}
+                </p>
               </div>
 
               <div class="form-field">
@@ -346,12 +544,24 @@ function submitMentorPreview() {
                   class="form-control"
                   name="qualification"
                   type="text"
-                  :aria-invalid="Boolean(profileErrors['profile-qualification'])"
-                  :aria-describedby="profileErrors['profile-qualification'] ? 'profile-qualification-error' : undefined"
+                  :aria-invalid="
+                    Boolean(profileErrors['profile-qualification'])
+                  "
+                  :aria-describedby="
+                    profileErrors['profile-qualification']
+                      ? 'profile-qualification-error'
+                      : undefined
+                  "
                   required
                   placeholder="e.g. B.Tech, B.Com, Class 12"
+                />
+                <p
+                  v-if="profileErrors['profile-qualification']"
+                  id="profile-qualification-error"
+                  class="form-error"
                 >
-                <p v-if="profileErrors['profile-qualification']" id="profile-qualification-error" class="form-error">{{ profileErrors['profile-qualification'] }}</p>
+                  {{ profileErrors["profile-qualification"] }}
+                </p>
               </div>
             </div>
 
@@ -405,7 +615,7 @@ function submitMentorPreview() {
                   name="course"
                   type="text"
                   placeholder="e.g. Data Science, Finance, Engineering"
-                >
+                />
               </div>
 
               <div class="form-field">
@@ -418,7 +628,7 @@ function submitMentorPreview() {
                   name="intake"
                   type="text"
                   placeholder="e.g. Fall 2027"
-                >
+                />
               </div>
             </div>
 
@@ -436,10 +646,7 @@ function submitMentorPreview() {
             </div>
 
             <div class="form-actions">
-              <button
-                class="btn btn--primary btn--lg"
-                type="submit"
-              >
+              <button class="btn btn--primary btn--lg" type="submit">
                 Submit for evaluation
               </button>
             </div>
@@ -455,10 +662,26 @@ function submitMentorPreview() {
     >
       <div class="container study-mentor__panel">
         <div class="study-mentor__content flow">
-          <p v-if="content.ready && content.mentor.eyebrow.trim()" class="study-eyebrow study-eyebrow--light">{{ content.mentor.eyebrow }}</p>
-          <h2 id="study-mentor-title">{{ content.ready && content.mentor.title.trim() ? content.mentor.title : 'Talk to a mentor' }}</h2>
+          <p
+            v-if="content.ready && content.mentor.eyebrow.trim()"
+            class="study-eyebrow study-eyebrow--light"
+          >
+            {{ content.mentor.eyebrow }}
+          </p>
+          <h2 id="study-mentor-title">
+            {{
+              content.ready && content.mentor.title.trim()
+                ? content.mentor.title
+                : "Talk to a mentor"
+            }}
+          </h2>
           <template v-if="content.ready">
-            <p v-for="(paragraph, index) in content.mentor.intro.filter(hasText)" :key="index"><ContentText :value="paragraph" /></p>
+            <p
+              v-for="(paragraph, index) in content.mentor.intro.filter(hasText)"
+              :key="index"
+            >
+              <ContentText :value="paragraph" />
+            </p>
           </template>
         </div>
 
@@ -473,7 +696,10 @@ function submitMentorPreview() {
           >
             <FormDisclosure />
             <div class="form-field">
-              <label class="form-label study-mentor__label" for="study-mentor-name">
+              <label
+                class="form-label study-mentor__label"
+                for="study-mentor-name"
+              >
                 Name
                 <span class="form-label__required">*</span>
               </label>
@@ -484,15 +710,28 @@ function submitMentorPreview() {
                 type="text"
                 autocomplete="name"
                 :aria-invalid="Boolean(mentorErrors['study-mentor-name'])"
-                :aria-describedby="mentorErrors['study-mentor-name'] ? 'study-mentor-name-error' : undefined"
+                :aria-describedby="
+                  mentorErrors['study-mentor-name']
+                    ? 'study-mentor-name-error'
+                    : undefined
+                "
                 required
                 placeholder="Your name"
+              />
+              <p
+                v-if="mentorErrors['study-mentor-name']"
+                id="study-mentor-name-error"
+                class="form-error"
               >
-              <p v-if="mentorErrors['study-mentor-name']" id="study-mentor-name-error" class="form-error">{{ mentorErrors['study-mentor-name'] }}</p>
+                {{ mentorErrors["study-mentor-name"] }}
+              </p>
             </div>
 
             <div class="form-field">
-              <label class="form-label study-mentor__label" for="study-mentor-phone">
+              <label
+                class="form-label study-mentor__label"
+                for="study-mentor-phone"
+              >
                 Phone number
                 <span class="form-label__required">*</span>
               </label>
@@ -503,18 +742,25 @@ function submitMentorPreview() {
                 type="tel"
                 autocomplete="tel"
                 :aria-invalid="Boolean(mentorErrors['study-mentor-phone'])"
-                :aria-describedby="mentorErrors['study-mentor-phone'] ? 'study-mentor-phone-error' : undefined"
+                :aria-describedby="
+                  mentorErrors['study-mentor-phone']
+                    ? 'study-mentor-phone-error'
+                    : undefined
+                "
                 required
                 placeholder="Your phone number"
+              />
+              <p
+                v-if="mentorErrors['study-mentor-phone']"
+                id="study-mentor-phone-error"
+                class="form-error"
               >
-              <p v-if="mentorErrors['study-mentor-phone']" id="study-mentor-phone-error" class="form-error">{{ mentorErrors['study-mentor-phone'] }}</p>
+                {{ mentorErrors["study-mentor-phone"] }}
+              </p>
             </div>
 
             <div class="form-actions">
-              <button
-                class="btn btn--secondary btn--lg"
-                type="submit"
-              >
+              <button class="btn btn--secondary btn--lg" type="submit">
                 Request callback
               </button>
             </div>
@@ -527,15 +773,12 @@ function submitMentorPreview() {
       @close="profileDialogOpen = false"
     />
 
-    <SuccessDialog
-      :open="mentorDialogOpen"
-      @close="mentorDialogOpen = false"
-    />
+    <SuccessDialog :open="mentorDialogOpen" @close="mentorDialogOpen = false" />
   </div>
 </template>
 
 <style scoped lang="scss">
-@use '~~/app/assets/scss/abstracts/mixins' as *;
+@use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .study-abroad-page {
   overflow: clip;
@@ -561,11 +804,7 @@ function submitMentorPreview() {
       rgb(219 234 254 / 0.9),
       transparent 30rem
     ),
-    linear-gradient(
-      180deg,
-      var(--color-white),
-      var(--color-gray-50)
-    );
+    linear-gradient(180deg, var(--color-white), var(--color-gray-50));
 }
 
 .study-hero__grid {
@@ -806,8 +1045,12 @@ function submitMentorPreview() {
   --flow-space: var(--space-2);
   padding: var(--space-5);
 
-  h3 { font-size: var(--font-size-xl); }
-  p { color: var(--color-text-secondary); }
+  h3 {
+    font-size: var(--font-size-xl);
+  }
+  p {
+    color: var(--color-text-secondary);
+  }
 }
 
 .study-guide-card__link {
@@ -896,7 +1139,9 @@ function submitMentorPreview() {
 }
 
 @include respond-to(sm) {
-  .study-guides__hint { display: none; }
+  .study-guides__hint {
+    display: none;
+  }
 
   .study-guides__grid {
     grid-auto-flow: row;
@@ -924,7 +1169,9 @@ function submitMentorPreview() {
     padding: var(--space-8);
   }
 
-  .study-destination-panel--single { grid-template-columns: minmax(0, 1fr); }
+  .study-destination-panel--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
   .study-profile__grid {
     grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);

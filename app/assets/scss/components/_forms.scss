@@ -1,4 +1,4 @@
-@use '../abstracts/mixins' as *;
+@use "../abstracts/mixins" as *;
 
 .form-field {
   display: grid;
@@ -59,7 +59,9 @@ select.form-control {
     calc(100% - 1rem) 50%,
     calc(100% - 0.7rem) 50%;
   background-repeat: no-repeat;
-  background-size: 0.35rem 0.35rem, 0.35rem 0.35rem;
+  background-size:
+    0.35rem 0.35rem,
+    0.35rem 0.35rem;
 }
 
 .form-control:disabled {
@@ -84,12 +86,12 @@ select.form-control {
 }
 
 .form-field--error .form-control,
-.form-control[aria-invalid='true'] {
+.form-control[aria-invalid="true"] {
   border-color: var(--color-danger);
 }
 
 .form-field--error .form-control:focus,
-.form-control[aria-invalid='true']:focus {
+.form-control[aria-invalid="true"]:focus {
   box-shadow: 0 0 0 0.1875rem rgb(185 28 28 / 0.12);
 }
 

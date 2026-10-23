@@ -1,4 +1,4 @@
-@use '../abstracts/mixins' as *;
+@use "../abstracts/mixins" as *;
 
 .skip-link {
   position: fixed;
@@ -51,34 +51,50 @@
   display: grid;
   width: 2.5rem;
   height: 2.5rem;
-  flex: 0 0 auto;
+  min-width: 2.5rem;
+  flex: 0 0 2.5rem;
   place-items: center;
+  overflow: hidden;
   border-radius: var(--radius-md);
-  background: var(--color-primary-700);
-  color: var(--color-white);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: -0.02em;
+  background: transparent;
+}
+
+.site-brand__logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .site-brand__text {
   display: flex;
   min-width: 0;
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   line-height: 1.15;
 }
 
 .site-brand__name {
+  display: block;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   letter-spacing: -0.025em;
+  line-height: 1.15;
+  white-space: nowrap;
 }
 
 .site-brand__tagline {
+  display: block;
   margin-top: 0.2rem;
   color: var(--color-text-muted);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .site-nav {

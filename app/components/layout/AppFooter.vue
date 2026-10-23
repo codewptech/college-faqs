@@ -3,17 +3,21 @@ import {
   legalNavigation,
   navigationGroups,
   primaryNavigation,
-} from '~~/app/data/navigation'
+} from "~~/app/data/navigation";
 
-const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear();
 
 const programs = computed(() => {
-  return navigationGroups.find((group) => group.label === 'Programs')?.items ?? []
-})
+  return (
+    navigationGroups.find((group) => group.label === "Programs")?.items ?? []
+  );
+});
 
 const explore = computed(() => {
-  return navigationGroups.find((group) => group.label === 'Explore')?.items ?? []
-})
+  return (
+    navigationGroups.find((group) => group.label === "Explore")?.items ?? []
+  );
+});
 </script>
 
 <template>
@@ -25,17 +29,10 @@ const explore = computed(() => {
           to="/"
           aria-label="College FAQs home"
         >
-          <span
-            class="site-footer__brand-mark"
-            aria-hidden="true"
-          >
-            CF
-          </span>
+          <span class="site-footer__brand-mark" aria-hidden="true"> CF </span>
 
           <span class="site-footer__brand-text">
-            <span class="site-footer__brand-name">
-              College FAQs
-            </span>
+            <span class="site-footer__brand-name"> College FAQs </span>
 
             <span class="site-footer__brand-tagline">
               Your College Repository
@@ -44,20 +41,14 @@ const explore = computed(() => {
         </NuxtLink>
 
         <p class="site-footer__description">
-          Explore practical information and guidance for MBA,
-          Engineering, and Study Abroad decisions.
+          Explore practical information and guidance for MBA, Engineering, and
+          Study Abroad decisions.
         </p>
       </div>
 
       <div class="site-footer__navigation">
-        <nav
-          class="site-footer__group"
-          aria-labelledby="footer-programs-title"
-        >
-          <h2
-            id="footer-programs-title"
-            class="site-footer__heading"
-          >
+        <nav class="site-footer__group" aria-labelledby="footer-programs-title">
+          <h2 id="footer-programs-title" class="site-footer__heading">
             Programs
           </h2>
 
@@ -70,14 +61,8 @@ const explore = computed(() => {
           </ul>
         </nav>
 
-        <nav
-          class="site-footer__group"
-          aria-labelledby="footer-explore-title"
-        >
-          <h2
-            id="footer-explore-title"
-            class="site-footer__heading"
-          >
+        <nav class="site-footer__group" aria-labelledby="footer-explore-title">
+          <h2 id="footer-explore-title" class="site-footer__heading">
             Explore
           </h2>
 
@@ -90,14 +75,8 @@ const explore = computed(() => {
           </ul>
         </nav>
 
-        <nav
-          class="site-footer__group"
-          aria-labelledby="footer-company-title"
-        >
-          <h2
-            id="footer-company-title"
-            class="site-footer__heading"
-          >
+        <nav class="site-footer__group" aria-labelledby="footer-company-title">
+          <h2 id="footer-company-title" class="site-footer__heading">
             College FAQs
           </h2>
 

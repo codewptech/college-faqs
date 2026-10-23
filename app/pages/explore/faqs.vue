@@ -1,27 +1,45 @@
 <script setup lang="ts">
-import ExploreHero from '~~/app/components/explore/ExploreHero.vue'
-import EmptyState from '~~/app/components/ui/EmptyState.vue'
-import ContentText from '~~/app/components/content/ContentText.vue'
-import ContentSections from '~~/app/components/content/ContentSections.vue'
-import ContentCta from '~~/app/components/content/ContentCta.vue'
-import { faqContent as content } from '~~/app/data/content/explore/faqs'
-import { hasCtaContent, hasSectionContent, hasText } from '~~/app/data/content/helpers'
+import ExploreHero from "~~/app/components/explore/ExploreHero.vue";
+import EmptyState from "~~/app/components/ui/EmptyState.vue";
+import ContentText from "~~/app/components/content/ContentText.vue";
+import ContentSections from "~~/app/components/content/ContentSections.vue";
+import ContentCta from "~~/app/components/content/ContentCta.vue";
+import { faqContent as content } from "~~/app/data/content/explore/faqs";
+import {
+  hasCtaContent,
+  hasSectionContent,
+  hasText,
+} from "~~/app/data/content/helpers";
 
-const faqGroups = computed(() => [
-  { id: 'questions', title: '', items: content.items },
-  ...content.groups,
-].map(group => ({
-  ...group,
-  items: group.items.filter(item => item.question.trim() && hasSectionContent({ blocks: item.answer })),
-})).filter(group => group.items.length > 0))
-const hasIntro = computed(() => content.introTitle.trim() || content.intro.some(hasText))
-const hasContent = computed(() => hasText(content.subtitle) || content.intro.some(hasText) || faqGroups.value.length > 0 || hasCtaContent(content.cta))
+const faqGroups = computed(() =>
+  [{ id: "questions", title: "", items: content.items }, ...content.groups]
+    .map((group) => ({
+      ...group,
+      items: group.items.filter(
+        (item) =>
+          item.question.trim() && hasSectionContent({ blocks: item.answer }),
+      ),
+    }))
+    .filter((group) => group.items.length > 0),
+);
+const hasIntro = computed(
+  () => content.introTitle.trim() || content.intro.some(hasText),
+);
+const hasContent = computed(
+  () =>
+    hasText(content.subtitle) ||
+    content.intro.some(hasText) ||
+    faqGroups.value.length > 0 ||
+    hasCtaContent(content.cta),
+);
 
 useSeoMeta({
-  title: (content.ready && content.seo.title.trim()) || 'FAQs | College FAQs',
-  description: (content.ready && content.seo.description.trim()) || 'FAQs | College FAQs',
-  robots: () => content.ready && hasContent.value ? 'index, follow' : 'noindex, follow',
-})
+  title: (content.ready && content.seo.title.trim()) || "FAQs | College FAQs",
+  description:
+    (content.ready && content.seo.description.trim()) || "FAQs | College FAQs",
+  robots: () =>
+    content.ready && hasContent.value ? "index, follow" : "noindex, follow",
+});
 </script>
 
 <template>
@@ -35,10 +53,18 @@ useSeoMeta({
     >
       <template #actions>
         <div class="faq-hero-actions">
-          <a v-if="content.ready && faqGroups.length" class="btn btn--primary btn--lg" href="#faq-list">
+          <a
+            v-if="content.ready && faqGroups.length"
+            class="btn btn--primary btn--lg"
+            href="#faq-list"
+          >
             Browse questions
           </a>
-          <NuxtLink class="btn btn--secondary btn--lg" to="/explore/admission-guide">Admission Guide</NuxtLink>
+          <NuxtLink
+            class="btn btn--secondary btn--lg"
+            to="/explore/admission-guide"
+            >Admission Guide</NuxtLink
+          >
         </div>
       </template>
     </ExploreHero>
@@ -48,12 +74,24 @@ useSeoMeta({
         v-if="faqGroups.length || content.intro.some(hasText)"
         id="faq-list"
         class="section faq-content"
-        :aria-labelledby="content.introTitle.trim() ? 'faq-content-title' : undefined"
+        :aria-labelledby="
+          content.introTitle.trim() ? 'faq-content-title' : undefined
+        "
       >
-        <div class="container faq-content__layout" :class="{ 'faq-content__layout--single': !hasIntro || !faqGroups.length }">
+        <div
+          class="container faq-content__layout"
+          :class="{
+            'faq-content__layout--single': !hasIntro || !faqGroups.length,
+          }"
+        >
           <div v-if="hasIntro" class="faq-content__intro flow">
-            <h2 v-if="content.introTitle.trim()" id="faq-content-title">{{ content.introTitle }}</h2>
-            <p v-for="(paragraph, index) in content.intro.filter(hasText)" :key="index">
+            <h2 v-if="content.introTitle.trim()" id="faq-content-title">
+              {{ content.introTitle }}
+            </h2>
+            <p
+              v-for="(paragraph, index) in content.intro.filter(hasText)"
+              :key="index"
+            >
               <ContentText :value="paragraph" />
             </p>
           </div>
@@ -62,19 +100,38 @@ useSeoMeta({
               v-for="(group, groupIndex) in faqGroups"
               :key="group.id || groupIndex"
               class="faq-group"
-              :aria-labelledby="group.title?.trim() ? `faq-group-${groupIndex}` : undefined"
+              :aria-labelledby="
+                group.title?.trim() ? `faq-group-${groupIndex}` : undefined
+              "
             >
-              <component :is="content.introTitle.trim() ? 'h3' : 'h2'" v-if="group.title?.trim()" :id="`faq-group-${groupIndex}`">
+              <component
+                :is="content.introTitle.trim() ? 'h3' : 'h2'"
+                v-if="group.title?.trim()"
+                :id="`faq-group-${groupIndex}`"
+              >
                 {{ group.title }}
               </component>
               <div class="faq-group__items">
-                <details v-for="(item, itemIndex) in group.items" :key="itemIndex" class="faq-item">
+                <details
+                  v-for="(item, itemIndex) in group.items"
+                  :key="itemIndex"
+                  class="faq-item"
+                >
                   <summary>
                     <span>{{ item.question }}</span>
                     <span class="faq-item__icon" aria-hidden="true">+</span>
                   </summary>
                   <div class="faq-item__answer">
-                    <ContentSections :sections="[{ blocks: item.answer }]" :heading-level="group.title?.trim() && content.introTitle.trim() ? 4 : group.title?.trim() || content.introTitle.trim() ? 3 : 2" />
+                    <ContentSections
+                      :sections="[{ blocks: item.answer }]"
+                      :heading-level="
+                        group.title?.trim() && content.introTitle.trim()
+                          ? 4
+                          : group.title?.trim() || content.introTitle.trim()
+                            ? 3
+                            : 2
+                      "
+                    />
                   </div>
                 </details>
               </div>
@@ -89,13 +146,15 @@ useSeoMeta({
     </template>
 
     <section v-else class="section">
-      <div class="container"><EmptyState title="FAQs" message="FAQs are being prepared." /></div>
+      <div class="container">
+        <EmptyState title="FAQs" message="FAQs are being prepared." />
+      </div>
     </section>
   </div>
 </template>
 
 <style scoped lang="scss">
-@use '~~/app/assets/scss/abstracts/mixins' as *;
+@use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .faq-page {
   overflow: clip;
@@ -218,11 +277,7 @@ useSeoMeta({
   padding: var(--space-8);
   border-radius: var(--radius-xl);
   background:
-    radial-gradient(
-      circle at 90% 0%,
-      rgb(96 165 250 / 0.3),
-      transparent 22rem
-    ),
+    radial-gradient(circle at 90% 0%, rgb(96 165 250 / 0.3), transparent 22rem),
     var(--color-primary-800);
   color: var(--color-white);
 }

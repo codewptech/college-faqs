@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import SuccessDialog from '~~/app/components/ui/SuccessDialog.vue'
-import FormDisclosure from '~~/app/components/ui/FormDisclosure.vue'
-import { useFormPreview } from '~~/app/composables/useFormPreview'
-import MbaSubpageHero from '~~/app/components/mba/MbaSubpageHero.vue'
+import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
+import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
+import { useFormPreview } from "~~/app/composables/useFormPreview";
+import MbaSubpageHero from "~~/app/components/mba/MbaSubpageHero.vue";
 
 useSeoMeta({
-  title: 'Talk to an MBA Mentor | College FAQs',
+  title: "Talk to an MBA Mentor | College FAQs",
   description:
-    'Request a callback and discuss your MBA admission questions with College FAQs.',
-})
+    "Request a callback and discuss your MBA admission questions with College FAQs.",
+});
 
-const successDialogOpen = ref(false)
-const { formRef, errors, validate, clearError } = useFormPreview()
+const successDialogOpen = ref(false);
+const { formRef, errors, validate, clearError } = useFormPreview();
 
 function submitPreview() {
-  if (validate()) successDialogOpen.value = true
+  if (validate()) successDialogOpen.value = true;
 }
 </script>
 
@@ -32,66 +32,183 @@ function submitPreview() {
           <div class="mba-panel">
             <div class="mba-panel__heading">
               <h2>Request a callback</h2>
-              <p>Leave the details needed to understand what you would like to discuss.</p>
+              <p>
+                Leave the details needed to understand what you would like to
+                discuss.
+              </p>
             </div>
 
-            <form ref="formRef" class="mba-form-grid" novalidate @input="clearError" @change="clearError" @submit.prevent="submitPreview">
+            <form
+              ref="formRef"
+              class="mba-form-grid"
+              novalidate
+              @input="clearError"
+              @change="clearError"
+              @submit.prevent="submitPreview"
+            >
               <FormDisclosure />
               <div class="mba-form-row mba-form-row--2">
                 <div class="form-field">
-                  <label class="form-label" for="mentor-name">Full name <span class="form-label__required">*</span></label>
-                  <input id="mentor-name" class="form-control" type="text" autocomplete="name" required placeholder="Your name" name="fullName" :aria-invalid="errors['mentor-name'] ? 'true' : undefined" :aria-describedby="errors['mentor-name'] ? 'mentor-name-error' : undefined">
-                  <p v-if="errors['mentor-name']" id="mentor-name-error" class="form-error" role="alert">{{ errors['mentor-name'] }}</p>
+                  <label class="form-label" for="mentor-name"
+                    >Full name
+                    <span class="form-label__required">*</span></label
+                  >
+                  <input
+                    id="mentor-name"
+                    class="form-control"
+                    type="text"
+                    autocomplete="name"
+                    required
+                    placeholder="Your name"
+                    name="fullName"
+                    :aria-invalid="errors['mentor-name'] ? 'true' : undefined"
+                    :aria-describedby="
+                      errors['mentor-name'] ? 'mentor-name-error' : undefined
+                    "
+                  />
+                  <p
+                    v-if="errors['mentor-name']"
+                    id="mentor-name-error"
+                    class="form-error"
+                    role="alert"
+                  >
+                    {{ errors["mentor-name"] }}
+                  </p>
                 </div>
 
                 <div class="form-field">
-                  <label class="form-label" for="mentor-phone">Phone number <span class="form-label__required">*</span></label>
-                  <input id="mentor-phone" class="form-control" name="phone" type="tel" autocomplete="tel" required placeholder="Your phone number" :aria-invalid="errors['mentor-phone'] ? 'true' : undefined" :aria-describedby="errors['mentor-phone'] ? 'mentor-phone-error' : undefined">
-                  <p v-if="errors['mentor-phone']" id="mentor-phone-error" class="form-error" role="alert">{{ errors['mentor-phone'] }}</p>
+                  <label class="form-label" for="mentor-phone"
+                    >Phone number
+                    <span class="form-label__required">*</span></label
+                  >
+                  <input
+                    id="mentor-phone"
+                    class="form-control"
+                    name="phone"
+                    type="tel"
+                    autocomplete="tel"
+                    required
+                    placeholder="Your phone number"
+                    :aria-invalid="errors['mentor-phone'] ? 'true' : undefined"
+                    :aria-describedby="
+                      errors['mentor-phone'] ? 'mentor-phone-error' : undefined
+                    "
+                  />
+                  <p
+                    v-if="errors['mentor-phone']"
+                    id="mentor-phone-error"
+                    class="form-error"
+                    role="alert"
+                  >
+                    {{ errors["mentor-phone"] }}
+                  </p>
                 </div>
               </div>
 
               <div class="mba-form-row mba-form-row--2">
                 <div class="form-field">
                   <label class="form-label" for="mentor-email">Email</label>
-                  <input id="mentor-email" class="form-control" name="email" type="email" autocomplete="email" placeholder="you@example.com" :aria-invalid="errors['mentor-email'] ? 'true' : undefined" :aria-describedby="errors['mentor-email'] ? 'mentor-email-error' : undefined">
-                  <p v-if="errors['mentor-email']" id="mentor-email-error" class="form-error" role="alert">{{ errors['mentor-email'] }}</p>
+                  <input
+                    id="mentor-email"
+                    class="form-control"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="you@example.com"
+                    :aria-invalid="errors['mentor-email'] ? 'true' : undefined"
+                    :aria-describedby="
+                      errors['mentor-email'] ? 'mentor-email-error' : undefined
+                    "
+                  />
+                  <p
+                    v-if="errors['mentor-email']"
+                    id="mentor-email-error"
+                    class="form-error"
+                    role="alert"
+                  >
+                    {{ errors["mentor-email"] }}
+                  </p>
                 </div>
 
                 <div class="form-field">
-                  <label class="form-label" for="mentor-course">Program <span class="form-label__required">*</span></label>
-                  <select id="mentor-course" class="form-control" required name="program" :aria-invalid="errors['mentor-course'] ? 'true' : undefined" :aria-describedby="errors['mentor-course'] ? 'mentor-course-error' : undefined">
+                  <label class="form-label" for="mentor-course"
+                    >Program <span class="form-label__required">*</span></label
+                  >
+                  <select
+                    id="mentor-course"
+                    class="form-control"
+                    required
+                    name="program"
+                    :aria-invalid="errors['mentor-course'] ? 'true' : undefined"
+                    :aria-describedby="
+                      errors['mentor-course']
+                        ? 'mentor-course-error'
+                        : undefined
+                    "
+                  >
                     <option value="">Choose a program</option>
                     <option value="mba" selected>MBA</option>
                     <option value="engineering">Engineering</option>
                     <option value="study-abroad">Study Abroad</option>
                   </select>
-                  <p v-if="errors['mentor-course']" id="mentor-course-error" class="form-error" role="alert">{{ errors['mentor-course'] }}</p>
+                  <p
+                    v-if="errors['mentor-course']"
+                    id="mentor-course-error"
+                    class="form-error"
+                    role="alert"
+                  >
+                    {{ errors["mentor-course"] }}
+                  </p>
                 </div>
               </div>
 
               <div class="form-field">
-                <label class="form-label" for="mentor-message">What would you like to discuss?</label>
-                <textarea id="mentor-message" class="form-control" name="message" placeholder="Tell us about your exams, preferred colleges, application stage, or questions." rows="4"></textarea>
+                <label class="form-label" for="mentor-message"
+                  >What would you like to discuss?</label
+                >
+                <textarea
+                  id="mentor-message"
+                  class="form-control"
+                  name="message"
+                  placeholder="Tell us about your exams, preferred colleges, application stage, or questions."
+                  rows="4"
+                ></textarea>
               </div>
 
               <div class="form-actions">
-                <button class="btn btn--primary btn--lg" type="submit">Request callback</button>
+                <button class="btn btn--primary btn--lg" type="submit">
+                  Request callback
+                </button>
               </div>
             </form>
           </div>
         </div>
 
-        <aside class="mba-page-sidebar" aria-label="Preparing for your discussion">
+        <aside
+          class="mba-page-sidebar"
+          aria-label="Preparing for your discussion"
+        >
           <div class="mba-panel mba-panel--soft">
             <h3>Useful before the call</h3>
 
             <div class="mba-panel__content-gap">
               <ul class="mba-list" role="list">
-                <li><span class="mba-list__mark">✓</span><span>Your exam names and scores or percentiles</span></li>
-                <li><span class="mba-list__mark">✓</span><span>Your preferred cities or colleges</span></li>
-                <li><span class="mba-list__mark">✓</span><span>Your approximate fee or budget range</span></li>
-                <li><span class="mba-list__mark">✓</span><span>The questions you want answered first</span></li>
+                <li>
+                  <span class="mba-list__mark">✓</span
+                  ><span>Your exam names and scores or percentiles</span>
+                </li>
+                <li>
+                  <span class="mba-list__mark">✓</span
+                  ><span>Your preferred cities or colleges</span>
+                </li>
+                <li>
+                  <span class="mba-list__mark">✓</span
+                  ><span>Your approximate fee or budget range</span>
+                </li>
+                <li>
+                  <span class="mba-list__mark">✓</span
+                  ><span>The questions you want answered first</span>
+                </li>
               </ul>
             </div>
           </div>
@@ -100,9 +217,5 @@ function submitPreview() {
     </section>
   </div>
 
-    <SuccessDialog
-      :open="successDialogOpen"
-      @close="successDialogOpen = false"
-    />
-
+  <SuccessDialog :open="successDialogOpen" @close="successDialogOpen = false" />
 </template>

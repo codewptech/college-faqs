@@ -1,10 +1,10 @@
 <script setup lang="ts">
 defineProps<{
-  eyebrow: string
-  title: string
-  description: string
-  backLabel?: string
-}>()
+  eyebrow: string;
+  title: string;
+  description: string;
+  backLabel?: string;
+}>();
 </script>
 
 <template>
@@ -12,7 +12,7 @@ defineProps<{
     <div class="container mba-subhero__inner">
       <NuxtLink class="mba-subhero__back" to="/programs/mba">
         <span aria-hidden="true">←</span>
-        {{ backLabel || 'Back to MBA' }}
+        {{ backLabel || "Back to MBA" }}
       </NuxtLink>
 
       <div class="mba-subhero__content flow">
