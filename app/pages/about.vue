@@ -108,8 +108,8 @@ useSeoMeta({
           </div>
           <EmptyState
             v-if="!hasContent"
-            title="Content is being prepared."
-            message="Please check back soon."
+            variant="editorial"
+            message="Content is being prepared."
           />
         </div>
         <div class="about-hero__visual" aria-hidden="true">

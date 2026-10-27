@@ -1,8 +1,9 @@
 import { ref } from "vue";
+import type { SubmissionIssue } from "../../shared/submission-contracts";
 
 type FormControl = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
-/** Shared client-side validation for forms that do not send or store data. */
+/** Shared native validation and accessible focus handling for the existing forms. */
 export function useFormPreview() {
   const formRef = ref<HTMLFormElement | null>(null);
   const errors = ref<Record<string, string>>({});
@@ -71,7 +72,22 @@ export function useFormPreview() {
     return true;
   }
 
-  return { formRef, errors, validate, clearError, clearErrors };
+  function applyIssues(issues: SubmissionIssue[]) {
+    const customErrors: Record<string, string> = {};
+    const available = controls();
+    for (const issue of issues) {
+      const fieldName = issue.field.replace(/\.([^.[\]]+)/g, "[$1]");
+      const control =
+        available.find((item) => item.name === fieldName) ??
+        available.find((item) => item.name.startsWith(`${fieldName}[`));
+      if (control?.id && !customErrors[control.id]) {
+        customErrors[control.id] = issue.message;
+      }
+    }
+    validate(customErrors);
+  }
+
+  return { formRef, errors, validate, clearError, clearErrors, applyIssues };
 }
 
 export function hasNumericValue(value: string | number | null | undefined) {

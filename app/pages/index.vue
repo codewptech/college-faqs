@@ -13,24 +13,24 @@ const programs = [
     description:
       "Explore MBA options, admission support, application guidance, and resources for making a confident management education decision.",
     to: "/programs/mba",
-    image: "/placeholders/program-mba.svg",
-    imageAlt: "",
+    image: "https://assets.collegefaqs.com/home/mba-section.png",
+    imageAlt: "MBA Section Image",
   },
   {
     title: "Engineering",
     description:
       "Understand engineering pathways, compare options, and explore the information you need before making an admission decision.",
     to: "/programs/engineering",
-    image: "/placeholders/program-engineering.svg",
-    imageAlt: "",
+    image: "https://assets.collegefaqs.com/home/engineering-section.png",
+    imageAlt: "Engineering Section Image",
   },
   {
     title: "Study Abroad",
     description:
       "Start with practical guidance on destinations, profile evaluation, applications, and planning your study abroad journey.",
     to: "/programs/study-abroad",
-    image: "/placeholders/program-study-abroad.svg",
-    imageAlt: "",
+    image: "https://assets.collegefaqs.com/home/study-abroad-section.png",
+    imageAlt: "Study Abroad Section Image",
   },
 ];
 
@@ -114,8 +114,8 @@ const resources = [
 
         <div class="home-hero__visual" aria-hidden="true">
           <img
-            src="/placeholders/home-hero.svg"
-            alt=""
+            src="https://assets.collegefaqs.com/home/hero-image.png"
+            alt="Hero Image"
             width="760"
             height="600"
           />

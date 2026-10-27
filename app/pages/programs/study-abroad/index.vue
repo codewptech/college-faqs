@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import SubmissionFeedback from "~~/app/components/ui/SubmissionFeedback.vue";
+import { useFormSubmission } from "~~/app/composables/useFormSubmission";
 import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
 import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
 import { useFormPreview } from "~~/app/composables/useFormPreview";
@@ -65,29 +67,58 @@ const considerations = computed(
 );
 const profileDialogOpen = ref(false);
 const mentorDialogOpen = ref(false);
+const studyLevel = ref("");
+const otherStudyLevel = ref("");
 const {
   formRef: profileForm,
   errors: profileErrors,
   validate: validateProfile,
   clearError: clearProfileError,
+  clearErrors: clearProfileErrors,
+  applyIssues: applyProfileIssues,
 } = useFormPreview();
 const {
   formRef: mentorForm,
   errors: mentorErrors,
   validate: validateMentor,
   clearError: clearMentorError,
+  applyIssues: applyMentorIssues,
 } = useFormPreview();
+const {
+  pending: profilePending,
+  submissionError: profileSubmissionError,
+  submissionIssues: profileSubmissionIssues,
+  submit: submitProfile,
+} = useFormSubmission("study_abroad_profile", {
+  formRef: profileForm,
+  applyIssues: applyProfileIssues,
+});
+const {
+  pending: mentorPending,
+  submissionError: mentorSubmissionError,
+  submissionIssues: mentorSubmissionIssues,
+  submit: submitMentor,
+} = useFormSubmission("study_abroad_mentor", {
+  formRef: mentorForm,
+  applyIssues: applyMentorIssues,
+});
 
 function selectDestination(destination: StudyDestination) {
   selectedDestination.value = destination;
 }
 
-function submitProfilePreview() {
-  if (validateProfile()) profileDialogOpen.value = true;
+function onStudyLevelChange() {
+  if (studyLevel.value !== "other") otherStudyLevel.value = "";
+  clearProfileErrors("profile-level-other");
 }
 
-function submitMentorPreview() {
-  if (validateMentor()) mentorDialogOpen.value = true;
+async function submitProfileForm() {
+  if (validateProfile() && (await submitProfile()))
+    profileDialogOpen.value = true;
+}
+
+async function submitMentorForm() {
+  if (validateMentor() && (await submitMentor())) mentorDialogOpen.value = true;
 }
 </script>
 
@@ -441,9 +472,10 @@ function submitMentorPreview() {
         <div class="study-form-panel">
           <form
             ref="profileForm"
+            :aria-busy="profilePending"
             class="study-form-grid"
             novalidate
-            @submit.prevent="submitProfilePreview"
+            @submit.prevent="submitProfileForm"
             @input="clearProfileError"
             @change="clearProfileError"
           >
@@ -574,6 +606,8 @@ function submitMentorPreview() {
                   id="profile-level"
                   class="form-control"
                   name="studyLevel"
+                  v-model="studyLevel"
+                  @change="onStudyLevelChange"
                 >
                   <option value="">Choose a level</option>
                   <option value="undergraduate">Undergraduate</option>
@@ -602,6 +636,39 @@ function submitMentorPreview() {
                   </option>
                 </select>
               </div>
+            </div>
+
+            <div v-if="studyLevel === 'other'" class="form-field">
+              <label class="form-label" for="profile-level-other"
+                >Specify study level
+                <span class="form-label__required">*</span></label
+              >
+              <input
+                id="profile-level-other"
+                v-model="otherStudyLevel"
+                class="form-control"
+                name="otherStudyLevel"
+                type="text"
+                maxlength="150"
+                required
+                placeholder="Enter your intended study level"
+                :aria-invalid="
+                  profileErrors['profile-level-other'] ? 'true' : undefined
+                "
+                :aria-describedby="
+                  profileErrors['profile-level-other']
+                    ? 'profile-level-other-error'
+                    : undefined
+                "
+              />
+              <p
+                v-if="profileErrors['profile-level-other']"
+                id="profile-level-other-error"
+                class="form-error"
+                role="alert"
+              >
+                {{ profileErrors["profile-level-other"] }}
+              </p>
             </div>
 
             <div class="study-form-row study-form-row--2">
@@ -645,8 +712,17 @@ function submitMentorPreview() {
               />
             </div>
 
+            <SubmissionFeedback
+              :pending="profilePending"
+              :error="profileSubmissionError"
+              :issues="profileSubmissionIssues"
+            />
             <div class="form-actions">
-              <button class="btn btn--primary btn--lg" type="submit">
+              <button
+                class="btn btn--primary btn--lg"
+                type="submit"
+                :disabled="profilePending"
+              >
                 Submit for evaluation
               </button>
             </div>
@@ -688,9 +764,10 @@ function submitMentorPreview() {
         <div class="study-mentor__form-wrap">
           <form
             ref="mentorForm"
+            :aria-busy="mentorPending"
             class="study-mentor__form"
             novalidate
-            @submit.prevent="submitMentorPreview"
+            @submit.prevent="submitMentorForm"
             @input="clearMentorError"
             @change="clearMentorError"
           >
@@ -759,8 +836,17 @@ function submitMentorPreview() {
               </p>
             </div>
 
+            <SubmissionFeedback
+              :pending="mentorPending"
+              :error="mentorSubmissionError"
+              :issues="mentorSubmissionIssues"
+            />
             <div class="form-actions">
-              <button class="btn btn--secondary btn--lg" type="submit">
+              <button
+                class="btn btn--secondary btn--lg"
+                type="submit"
+                :disabled="mentorPending"
+              >
                 Request callback
               </button>
             </div>

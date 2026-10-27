@@ -1,8 +1,8 @@
 <template>
   <div class="form-disclosure flow">
     <p>
-      Fields marked * are required. Online submission is not enabled yet, so the
-      information entered here is not sent or saved.
+      Fields marked * are required. Submitting this form sends your information
+      to College FAQs and saves it so your enquiry can be reviewed.
     </p>
     <p>
       Please read our

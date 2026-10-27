@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import SubmissionFeedback from "~~/app/components/ui/SubmissionFeedback.vue";
+import { useFormSubmission } from "~~/app/composables/useFormSubmission";
 import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
 import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
 import {
@@ -14,7 +16,10 @@ useSeoMeta({
 });
 
 const successDialogOpen = ref(false);
-const { formRef, errors, validate, clearError, clearErrors } = useFormPreview();
+const { formRef, errors, validate, clearError, clearErrors, applyIssues } =
+  useFormPreview();
+const { pending, submissionError, submissionIssues, submit } =
+  useFormSubmission("mba_application", { formRef, applyIssues });
 const entranceExam = ref("");
 const score = ref<string | number>("");
 const percentile = ref<string | number>("");
@@ -23,7 +28,7 @@ function clearExamError() {
   clearErrors("app-exam");
 }
 
-function submitPreview() {
+async function submitForm() {
   const dependencyErrors: Record<string, string> = {};
 
   if (
@@ -34,7 +39,8 @@ function submitPreview() {
       "Enter the entrance exam for this score or percentile.";
   }
 
-  if (validate(dependencyErrors)) successDialogOpen.value = true;
+  if (validate(dependencyErrors) && (await submit()))
+    successDialogOpen.value = true;
 }
 </script>
 
@@ -52,10 +58,11 @@ function submitPreview() {
           <form
             ref="formRef"
             class="mba-panel mba-form-grid"
+            :aria-busy="pending"
             novalidate
             @input="clearError"
             @change="clearError"
-            @submit.prevent="submitPreview"
+            @submit.prevent="submitForm"
           >
             <FormDisclosure />
             <div class="mba-form-section">
@@ -365,8 +372,17 @@ function submitPreview() {
               </div>
             </div>
 
+            <SubmissionFeedback
+              :pending="pending"
+              :error="submissionError"
+              :issues="submissionIssues"
+            />
             <div class="form-actions">
-              <button class="btn btn--primary btn--lg" type="submit">
+              <button
+                class="btn btn--primary btn--lg"
+                type="submit"
+                :disabled="pending"
+              >
                 Continue with application support
               </button>
             </div>

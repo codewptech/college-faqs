@@ -38,7 +38,6 @@ const hasDocuments = computed(
 );
 const hasContent = computed(
   () =>
-    hasText(content.subtitle) ||
     content.intro.some(hasText) ||
     hasCosts.value ||
     hasGuidance.value ||
@@ -269,14 +268,14 @@ useSeoMeta({
       </section>
     </template>
 
-    <section v-else class="section">
+    <div v-else class="section section--pending">
       <div class="container">
         <EmptyState
-          title="Education Loan"
+          variant="editorial"
           message="This guide is being prepared."
         />
       </div>
-    </section>
+    </div>
   </div>
 </template>
 

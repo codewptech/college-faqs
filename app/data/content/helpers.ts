@@ -41,18 +41,12 @@ export function hasBlockContent(block: ContentBlock): boolean {
 export function hasSectionContent(
   section: Pick<ContentSection, "title" | "eyebrow" | "blocks">,
 ): boolean {
-  return Boolean(
-    section.title?.trim() ||
-    section.eyebrow?.trim() ||
-    section.blocks.some(hasBlockContent),
-  );
+  return section.blocks.some(hasBlockContent);
 }
 
 export function hasCtaContent(cta: ContentCta | null | undefined): boolean {
   if (!cta) return false;
   return Boolean(
-    cta.eyebrow?.trim() ||
-    cta.title?.trim() ||
     hasText(cta.text) ||
     cta.links.some((link) => link.label.trim() && isSafeHref(link.to)),
   );
@@ -68,7 +62,6 @@ export function hasLegalPageContent(content: LegalPageContent): boolean {
 
 export function hasCountryGuideContent(guide: CountryGuideContent): boolean {
   return Boolean(
-    guide.subtitle.trim() ||
     guide.intro.some(hasText) ||
     guide.highlights.some(hasText) ||
     guide.sections.some(hasSectionContent) ||

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import SubmissionFeedback from "~~/app/components/ui/SubmissionFeedback.vue";
+import { useFormSubmission } from "~~/app/composables/useFormSubmission";
 import MbaNotice from "~~/app/components/mba/MbaNotice.vue";
 import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
 import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
@@ -17,21 +19,33 @@ useSeoMeta({
 type ExamEntry = {
   id: number;
   exam: string;
+  otherExamName: string;
   score: string | number;
   percentile: string | number;
 };
 
 const nextId = ref(2);
 const exams = ref<ExamEntry[]>([
-  { id: 1, exam: "", score: "", percentile: "" },
+  { id: 1, exam: "", otherExamName: "", score: "", percentile: "" },
 ]);
 const successDialogOpen = ref(false);
-const { formRef, errors, validate, clearError, clearErrors } = useFormPreview();
+const specialization = ref("");
+const otherSpecialization = ref("");
+const { formRef, errors, validate, clearError, clearErrors, applyIssues } =
+  useFormPreview();
+const { pending, submissionError, submissionIssues, submit } =
+  useFormSubmission("mba_predictor", { formRef, applyIssues });
 
 function addExam() {
   if (exams.value.length >= 5) return;
   const id = nextId.value++;
-  exams.value.push({ id, exam: "", score: "", percentile: "" });
+  exams.value.push({
+    id,
+    exam: "",
+    otherExamName: "",
+    score: "",
+    percentile: "",
+  });
   nextTick(() =>
     formRef.value
       ?.querySelector<HTMLSelectElement>(`#exam-name-${id}`)
@@ -42,7 +56,12 @@ function addExam() {
 function removeExam(id: number) {
   if (exams.value.length === 1) return;
   const index = exams.value.findIndex((entry) => entry.id === id);
-  clearErrors(`exam-name-${id}`, `exam-score-${id}`, `exam-percentile-${id}`);
+  clearErrors(
+    `exam-name-${id}`,
+    `exam-other-${id}`,
+    `exam-score-${id}`,
+    `exam-percentile-${id}`,
+  );
   exams.value = exams.value.filter((exam) => exam.id !== id);
   const remainingEntry = exams.value[Math.max(0, index - 1)];
   nextTick(() =>
@@ -53,22 +72,40 @@ function removeExam(id: number) {
 }
 
 function clearRowErrors(id: number) {
-  clearErrors(`exam-name-${id}`, `exam-score-${id}`, `exam-percentile-${id}`);
+  clearErrors(
+    `exam-name-${id}`,
+    `exam-other-${id}`,
+    `exam-score-${id}`,
+    `exam-percentile-${id}`,
+  );
 }
 
-function submitPreview() {
+function onExamChange(entry: ExamEntry) {
+  if (entry.exam !== "other") entry.otherExamName = "";
+  clearErrors(`exam-other-${entry.id}`);
+}
+
+function onSpecializationChange() {
+  if (specialization.value !== "other") otherSpecialization.value = "";
+  clearErrors("predictor-specialization-other");
+}
+
+async function submitForm() {
   const rowErrors: Record<string, string> = {};
 
   for (const entry of exams.value) {
     if (!entry.exam)
       rowErrors[`exam-name-${entry.id}`] = "Select the entrance exam.";
+    if (entry.exam === "other" && !entry.otherExamName.trim()) {
+      rowErrors[`exam-other-${entry.id}`] = "Specify the entrance exam.";
+    }
     if (!hasNumericValue(entry.score) && !hasNumericValue(entry.percentile)) {
       rowErrors[`exam-score-${entry.id}`] =
         "Enter a score or percentile for this exam.";
     }
   }
 
-  if (validate(rowErrors)) successDialogOpen.value = true;
+  if (validate(rowErrors) && (await submit())) successDialogOpen.value = true;
 }
 </script>
 
@@ -86,10 +123,11 @@ function submitPreview() {
           <form
             ref="formRef"
             class="mba-panel mba-form-grid"
+            :aria-busy="pending"
             novalidate
             @input="clearError"
             @change="clearError"
-            @submit.prevent="submitPreview"
+            @submit.prevent="submitForm"
           >
             <FormDisclosure />
             <div class="mba-form-section">
@@ -235,6 +273,7 @@ function submitPreview() {
                       <select
                         :id="`exam-name-${entry.id}`"
                         v-model="entry.exam"
+                        @change="onExamChange(entry)"
                         :name="`exams[${index}][exam]`"
                         class="form-control"
                         required
@@ -344,6 +383,39 @@ function submitPreview() {
                     </div>
                   </div>
 
+                  <div v-if="entry.exam === 'other'" class="form-field">
+                    <label class="form-label" :for="`exam-other-${entry.id}`"
+                      >Specify entrance exam
+                      <span class="form-label__required">*</span></label
+                    >
+                    <input
+                      :id="`exam-other-${entry.id}`"
+                      v-model="entry.otherExamName"
+                      :name="`exams[${index}][otherExamName]`"
+                      class="form-control"
+                      type="text"
+                      maxlength="150"
+                      required
+                      placeholder="Enter the examination name"
+                      :aria-invalid="
+                        errors[`exam-other-${entry.id}`] ? 'true' : undefined
+                      "
+                      :aria-describedby="
+                        errors[`exam-other-${entry.id}`]
+                          ? `exam-other-error-${entry.id}`
+                          : undefined
+                      "
+                    />
+                    <p
+                      v-if="errors[`exam-other-${entry.id}`]"
+                      :id="`exam-other-error-${entry.id}`"
+                      class="form-error"
+                      role="alert"
+                    >
+                      {{ errors[`exam-other-${entry.id}`] }}
+                    </p>
+                  </div>
+
                   <div class="form-actions">
                     <button
                       class="btn btn--ghost btn--sm"
@@ -385,8 +457,10 @@ function submitPreview() {
                   >
                   <select
                     id="predictor-specialization"
+                    v-model="specialization"
                     class="form-control"
                     name="preferredSpecialization"
+                    @change="onSpecializationChange"
                   >
                     <option value="">No preference yet</option>
                     <option value="marketing">Marketing</option>
@@ -396,7 +470,8 @@ function submitPreview() {
                     <option value="business-analytics">
                       Business Analytics
                     </option>
-                    <option value="other-undecided">Other / Undecided</option>
+                    <option value="other">Other</option>
+                    <option value="undecided">Undecided</option>
                   </select>
                 </div>
                 <div class="form-field">
@@ -445,8 +520,50 @@ function submitPreview() {
               </div>
             </div>
 
+            <div v-if="specialization === 'other'" class="form-field">
+              <label class="form-label" for="predictor-specialization-other"
+                >Specify specialization
+                <span class="form-label__required">*</span></label
+              >
+              <input
+                id="predictor-specialization-other"
+                v-model="otherSpecialization"
+                class="form-control"
+                name="otherSpecialization"
+                type="text"
+                maxlength="150"
+                required
+                placeholder="Enter your preferred specialization"
+                :aria-invalid="
+                  errors['predictor-specialization-other'] ? 'true' : undefined
+                "
+                :aria-describedby="
+                  errors['predictor-specialization-other']
+                    ? 'predictor-specialization-other-error'
+                    : undefined
+                "
+              />
+              <p
+                v-if="errors['predictor-specialization-other']"
+                id="predictor-specialization-other-error"
+                class="form-error"
+                role="alert"
+              >
+                {{ errors["predictor-specialization-other"] }}
+              </p>
+            </div>
+
+            <SubmissionFeedback
+              :pending="pending"
+              :error="submissionError"
+              :issues="submissionIssues"
+            />
             <div class="form-actions">
-              <button class="btn btn--primary btn--lg" type="submit">
+              <button
+                class="btn btn--primary btn--lg"
+                type="submit"
+                :disabled="pending"
+              >
                 Check college possibilities
               </button>
             </div>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import SubmissionFeedback from "~~/app/components/ui/SubmissionFeedback.vue";
+import { useFormSubmission } from "~~/app/composables/useFormSubmission";
 import MbaSubpageHero from "~~/app/components/mba/MbaSubpageHero.vue";
 import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
 import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
@@ -36,7 +38,9 @@ const modules = [
       "Use mock discussions or interview practice to identify weak areas before the actual selection round.",
   },
 ];
-const { formRef, errors, validate, clearError } = useFormPreview();
+const { formRef, errors, validate, clearError, applyIssues } = useFormPreview();
+const { pending, submissionError, submissionIssues, submit } =
+  useFormSubmission("mba_gdpi", { formRef, applyIssues });
 const successDialogOpen = ref(false);
 const contactFields = [
   {
@@ -85,8 +89,8 @@ const collegeGroups = [
   },
 ];
 
-function submitPreview() {
-  if (validate()) successDialogOpen.value = true;
+async function submitForm() {
+  if (validate() && (await submit())) successDialogOpen.value = true;
 }
 </script>
 
@@ -133,10 +137,11 @@ function submitPreview() {
           <form
             ref="formRef"
             class="mba-panel mba-form-grid"
+            :aria-busy="pending"
             novalidate
             @input="clearError"
             @change="clearError"
-            @submit.prevent="submitPreview"
+            @submit.prevent="submitForm"
           >
             <div class="flow">
               <p class="mba-page-eyebrow">Your preparation plans</p>
@@ -197,9 +202,18 @@ function submitPreview() {
                 </div>
               </div>
             </fieldset>
+            <SubmissionFeedback
+              :pending="pending"
+              :error="submissionError"
+              :issues="submissionIssues"
+            />
             <div class="form-actions">
-              <button class="btn btn--primary btn--lg" type="submit">
-                Review preparation details
+              <button
+                class="btn btn--primary btn--lg"
+                type="submit"
+                :disabled="pending"
+              >
+                Submit preparation details
               </button>
             </div>
           </form>

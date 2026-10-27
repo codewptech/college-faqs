@@ -27,7 +27,6 @@ const hasIntro = computed(
 );
 const hasContent = computed(
   () =>
-    hasText(content.subtitle) ||
     content.intro.some(hasText) ||
     faqGroups.value.length > 0 ||
     hasCtaContent(content.cta),
@@ -145,11 +144,11 @@ useSeoMeta({
       </section>
     </template>
 
-    <section v-else class="section">
+    <div v-else class="section section--pending">
       <div class="container">
-        <EmptyState title="FAQs" message="FAQs are being prepared." />
+        <EmptyState variant="editorial" message="FAQs are being prepared." />
       </div>
-    </section>
+    </div>
   </div>
 </template>
 

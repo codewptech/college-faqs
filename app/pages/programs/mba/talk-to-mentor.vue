@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import SubmissionFeedback from "~~/app/components/ui/SubmissionFeedback.vue";
+import { useFormSubmission } from "~~/app/composables/useFormSubmission";
 import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
 import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
 import { useFormPreview } from "~~/app/composables/useFormPreview";
@@ -11,10 +13,12 @@ useSeoMeta({
 });
 
 const successDialogOpen = ref(false);
-const { formRef, errors, validate, clearError } = useFormPreview();
+const { formRef, errors, validate, clearError, applyIssues } = useFormPreview();
+const { pending, submissionError, submissionIssues, submit } =
+  useFormSubmission("mba_mentor", { formRef, applyIssues });
 
-function submitPreview() {
-  if (validate()) successDialogOpen.value = true;
+async function submitForm() {
+  if (validate() && (await submit())) successDialogOpen.value = true;
 }
 </script>
 
@@ -41,10 +45,11 @@ function submitPreview() {
             <form
               ref="formRef"
               class="mba-form-grid"
+              :aria-busy="pending"
               novalidate
               @input="clearError"
               @change="clearError"
-              @submit.prevent="submitPreview"
+              @submit.prevent="submitForm"
             >
               <FormDisclosure />
               <div class="mba-form-row mba-form-row--2">
@@ -175,8 +180,17 @@ function submitPreview() {
                 ></textarea>
               </div>
 
+              <SubmissionFeedback
+                :pending="pending"
+                :error="submissionError"
+                :issues="submissionIssues"
+              />
               <div class="form-actions">
-                <button class="btn btn--primary btn--lg" type="submit">
+                <button
+                  class="btn btn--primary btn--lg"
+                  type="submit"
+                  :disabled="pending"
+                >
                   Request callback
                 </button>
               </div>

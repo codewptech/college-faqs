@@ -1,0 +1,106 @@
+// Prisma ORM 6.19.3: credentials remain server-only. No driver adapter required.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model MbaMentorEnquiry {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  idempotencyKey String   @unique @db.Uuid
+  name           String   @db.VarChar(120)
+  mobile         String   @db.VarChar(16)
+  email          String?  @db.VarChar(254)
+  details        Json     @db.JsonB
+
+  @@map("mba_mentor")
+}
+
+model MbaPredictorEnquiry {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  idempotencyKey String   @unique @db.Uuid
+  name           String   @db.VarChar(120)
+  mobile         String   @db.VarChar(16)
+  email          String?  @db.VarChar(254)
+  details        Json     @db.JsonB
+
+  @@map("mba_predictor")
+}
+
+model MbaApplicationEnquiry {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  idempotencyKey String   @unique @db.Uuid
+  name           String   @db.VarChar(120)
+  mobile         String   @db.VarChar(16)
+  email          String  @db.VarChar(254)
+  details        Json     @db.JsonB
+
+  @@map("mba_application")
+}
+
+model MbaStartEnquiry {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  idempotencyKey String   @unique @db.Uuid
+  name           String   @db.VarChar(120)
+  mobile         String   @db.VarChar(16)
+  email          String?  @db.VarChar(254)
+  details        Json     @db.JsonB
+
+  @@map("mba_start")
+}
+
+model MbaGdpiEnquiry {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  idempotencyKey String   @unique @db.Uuid
+  name           String   @db.VarChar(120)
+  mobile         String   @db.VarChar(16)
+  email          String  @db.VarChar(254)
+  details        Json     @db.JsonB
+
+  @@map("mba_gdpi")
+}
+
+model EngineeringEnquiry {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  idempotencyKey String   @unique @db.Uuid
+  name           String   @db.VarChar(120)
+  mobile         String   @db.VarChar(16)
+  email          String?  @db.VarChar(254)
+  details        Json     @db.JsonB
+
+  @@map("engineering_enquiry")
+}
+
+model StudyAbroadProfileEnquiry {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  idempotencyKey String   @unique @db.Uuid
+  name           String   @db.VarChar(120)
+  mobile         String   @db.VarChar(16)
+  email          String?  @db.VarChar(254)
+  details        Json     @db.JsonB
+
+  @@map("study_abroad_profile")
+}
+
+model StudyAbroadMentorEnquiry {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  idempotencyKey String   @unique @db.Uuid
+  name           String   @db.VarChar(120)
+  mobile         String   @db.VarChar(16)
+  email          String?  @db.VarChar(254)
+  details        Json     @db.JsonB
+
+  @@map("study_abroad_mentor")
+}

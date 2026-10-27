@@ -34,7 +34,7 @@ const hasPublishedContent = computed(
           <p class="legal-page__eyebrow">College FAQs</p>
           <h1 id="legal-page-title">{{ content.title }}</h1>
           <p
-            v-if="content.ready && content.lastUpdated.trim()"
+            v-if="hasPublishedContent && content.lastUpdated.trim()"
             class="legal-page__updated"
           >
             Last updated: {{ content.lastUpdated }}
@@ -57,7 +57,7 @@ const hasPublishedContent = computed(
 
         <EmptyState
           v-else
-          title="Content being prepared"
+          variant="editorial"
           :message="`${content.title} content is being prepared.`"
         />
 

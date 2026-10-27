@@ -5,6 +5,13 @@ import {
   primaryNavigation,
 } from "~~/app/data/navigation";
 
+// Change only this URL when you want to replace the footer logo.
+// The initial URL matches the current Header logo.
+const footerLogoUrl = "https://assets.collegefaqs.com/header/logo.jpeg";
+
+// Keep the brand usable if the image URL fails to load.
+const footerLogoFailed = ref(false);
+
 const currentYear = new Date().getFullYear();
 
 const programs = computed(() => {
@@ -29,11 +36,29 @@ const explore = computed(() => {
           to="/"
           aria-label="College FAQs home"
         >
-          <span class="site-footer__brand-mark" aria-hidden="true"> CF </span>
+          <span
+            class="site-footer__brand-mark"
+            :class="{ 'site-footer__brand-mark--fallback': footerLogoFailed }"
+            aria-hidden="true"
+          >
+            <span v-if="footerLogoFailed" class="site-footer__brand-fallback">
+              CF
+            </span>
+            <img
+              v-else
+              class="site-footer__brand-logo"
+              :src="footerLogoUrl"
+              alt=""
+              width="40"
+              height="40"
+              loading="lazy"
+              decoding="async"
+              @error="footerLogoFailed = true"
+            />
+          </span>
 
           <span class="site-footer__brand-text">
-            <span class="site-footer__brand-name"> College FAQs </span>
-
+            <span class="site-footer__brand-name">College FAQs</span>
             <span class="site-footer__brand-tagline">
               Your College Repository
             </span>

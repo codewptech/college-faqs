@@ -35,7 +35,6 @@ const hasReadiness = computed(
 );
 const hasContent = computed(
   () =>
-    hasText(content.subtitle) ||
     content.intro.some(hasText) ||
     hasProcess.value ||
     hasShortlist.value ||
@@ -300,14 +299,14 @@ useSeoMeta({
       </section>
     </template>
 
-    <section v-else class="section">
+    <div v-else class="section section--pending">
       <div class="container">
         <EmptyState
-          title="Admission Guide"
+          variant="editorial"
           message="This guide is being prepared."
         />
       </div>
-    </section>
+    </div>
   </div>
 </template>
 

@@ -9,9 +9,8 @@ const props = withDefaults(
     actionLabel?: string;
   }>(),
   {
-    title: "Details ready",
-    message:
-      "Your information has been entered successfully. Online submission is not enabled yet, so nothing has been sent or saved.",
+    title: "Enquiry saved",
+    message: "Your enquiry has been saved successfully.",
     actionLabel: "Done",
   },
 );

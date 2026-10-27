@@ -2,6 +2,7 @@
 import ContentText from "~~/app/components/content/ContentText.vue";
 import ContentSections from "~~/app/components/content/ContentSections.vue";
 import ContentCta from "~~/app/components/content/ContentCta.vue";
+import EmptyState from "~~/app/components/ui/EmptyState.vue";
 import {
   hasCountryGuideContent,
   hasCtaContent,
@@ -83,17 +84,13 @@ useSeoMeta({
       </div>
     </section>
 
-    <section
-      class="section"
-      :aria-labelledby="
-        hasPublishedContent ? undefined : 'destination-guide-status'
-      "
-    >
+    <div class="section" :class="{ 'section--pending': !hasPublishedContent }">
       <div class="container destination-guide__content">
-        <div v-if="!hasPublishedContent" class="destination-guide__status flow">
-          <h2 id="destination-guide-status">Guide being prepared</h2>
-          <p>This guide is being prepared.</p>
-        </div>
+        <EmptyState
+          v-if="!hasPublishedContent"
+          variant="editorial"
+          message="This guide is being prepared."
+        />
 
         <template v-else>
           <div v-if="intro.length" class="flow">
@@ -133,7 +130,7 @@ useSeoMeta({
           >← Back to Study Abroad</NuxtLink
         >
       </div>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -213,18 +210,6 @@ useSeoMeta({
   color: var(--color-text-secondary);
 }
 
-.destination-guide__status {
-  --flow-space: var(--space-5);
-  padding: var(--space-6);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  background: var(--color-gray-50);
-
-  p {
-    color: var(--color-text-secondary);
-  }
-}
-
 .destination-guide__note {
   --flow-space: var(--space-3);
   padding-inline: var(--space-4);
@@ -244,10 +229,6 @@ useSeoMeta({
 @include respond-to(md) {
   .destination-guide__hero-grid {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  }
-
-  .destination-guide__status {
-    padding: var(--space-8);
   }
 }
 </style>

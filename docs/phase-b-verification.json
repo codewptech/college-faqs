@@ -1,0 +1,305 @@
+{
+  "date": "2026-10-24",
+  "verificationScope": "Historical original Phase B results and rateLimitRemoval delivery reports; these are not fresh test runs. Current owner setup, measured comparisons and correction-only checks are under currentCorrection.",
+  "runtime": {
+    "node": "24.18.0",
+    "npm": "11.16.0",
+    "nuxt": "4.6.2",
+    "prisma": "6.19.3",
+    "prismaClient": "6.19.3",
+    "zod": "4.6.7"
+  },
+  "tests": {
+    "command": "npm test",
+    "passed": 190,
+    "failed": 0,
+    "liveDatabaseRequired": false
+  },
+  "browser": {
+    "command": "node tests/frontend-browser.mjs (temporary playwright-core and local Chrome)",
+    "passed": 152,
+    "failed": 0,
+    "forms": 8,
+    "viewportWidths": [390, 1280],
+    "persistResponsesMocked": true,
+    "actualUnconfiguredApiStatus": 503
+  },
+  "typecheck": {
+    "command": "vue-tsc --build --pretty false",
+    "typescript": "5.9.3",
+    "vueTsc": "3.1.4",
+    "result": "passed"
+  },
+  "prismaGenerate": "passed",
+  "prismaValidate": "passed with placeholder environment; no database connection",
+  "migrationGeneratedFromEmpty": "passed; no database connection",
+  "nuxtBuild": "passed",
+  "standaloneOutput": {
+    "healthStatus": 200,
+    "ssrStatus": 200,
+    "unreachableLocalDatabaseStatus": 503,
+    "safeCode": "DATABASE_UNAVAILABLE",
+    "nativeEnginePresent": true
+  },
+  "databaseMigrationsExecuted": false,
+  "productionAccessed": false,
+  "liveNeonPersistence": "unverified; mocked storage and API tests passed",
+  "dockerCiAfterOwnerLockSync": "unverified",
+  "protectedFiles": {
+    "result": "Historical original Phase B report: all unchanged against its initial working-tree bytes. Hashes below are historical; the current lockfile is intentionally absent. See currentCorrection for current preservation evidence.",
+    "sha256": {
+      "compose.yaml": "470ea9998643fd99ec92d781e25965e25a3ca400b535275b0b2d6a6673e18a99",
+      ".dockerignore": "b3c685f33f0c31e86e9f9b760d190f712dd01ada82d53b4dbcc15795e402b69e",
+      "package-lock.json": "0fcb4ba73d7c9cff322cc6e2a68b38c9b7808a38fa9cf8bc6316065193fa59c9",
+      "Dockerfile": "5a8d5f98922278d6c895cd7a4474eea591fdc6805b032b8b4eb8e582f9f5ff86",
+      ".github/workflows/deploy-production.yml": "5553f9c9766190f827d3e5eb0f77cfbf6986bcd2d36d6e3d2a652438a3544618"
+    }
+  },
+  "baselineFiles": 111,
+  "baselineFilesMissing": [],
+  "existingTestsUnchanged": true,
+  "limitations": [
+    "Owner must resynchronize protected lockfile before npm ci.",
+    "Owner must configure Neon URLs and reviewed server environment injection.",
+    "Owner must review/apply migrations and verify live persistence.",
+    "Privacy/terms remain original unpublished owner content slots."
+  ],
+  "archive": {
+    "name": "college-faqs-v1-phase-b-full.zip",
+    "rootDirectory": "college-faqs",
+    "sourceFiles": 135,
+    "crc": "passed",
+    "extraction": "passed",
+    "allSourceHashesMatchAfterExtraction": true,
+    "allOriginalRelevantFilesPresent": true,
+    "protectedHashesMatch": true,
+    "dependenciesCachesAndBuildOutputsExcluded": true
+  },
+  "rateLimitRemoval": {
+    "date": "2026-10-24",
+    "recordType": "Historical removal delivery report; test results and archive claims below are not new correction results or a current working-tree inventory.",
+    "baselineArchive": "college-faqs-v1-phase-b-full.zip",
+    "baselineArchiveSha256": "d38612e81e36e67e17b1ee323e2fcee908e2ccad96821a0a808c13c1f755b76d",
+    "filesModified": [
+      "server/utils/submission-security.ts",
+      "server/utils/submission-service.ts",
+      "server/utils/submission-http.ts",
+      "app/composables/useFormSubmission.ts",
+      "tests/submission-api.test.mjs",
+      "tests/frontend-submission.test.mjs",
+      "docs/phase-b-implementation.md",
+      "docs/phase-b-verification.json"
+    ],
+    "filesModifiedScope": "Eight removal-related paths only; excludes owner-authorized formatting and intentional omissions. Not a complete current diff.",
+    "historicalPreservationClaim": {
+      "status": "Superseded for the current working tree by the measured currentCorrection comparison; retained as a historical claim, not verified current fact.",
+      "sourceFiles": 135,
+      "unchangedFiles": 127,
+      "protectedFiles": "all five byte-for-byte identical to supplied ZIP",
+      "formPagesContractsPrismaSchemaAndMigrations": "byte-for-byte identical to supplied ZIP",
+      "dependencies": "package.json and package-lock.json unchanged; Prisma/client 6.19.3 and Zod 4.6.7 exact"
+    },
+    "removed": "12-per-minute rule, IP tracking/hashing, counters, windows, buckets, obsolete options and RATE_LIMITED alias",
+    "concurrency": "original 16 in-flight maximum preserved; original 429/Retry-After: 1 applies only while capacity is exhausted; immediate reuse on release",
+    "tests": {
+      "command": "npm test",
+      "passed": 191,
+      "failed": 0,
+      "validRequestsWithinOneMinute": 24,
+      "successfulPersistenceMocked": true,
+      "idempotencyRepeatSubmissionsValidationBodySizeAndConcurrency": "passed"
+    },
+    "browser": {
+      "command": "node tests/frontend-browser.mjs",
+      "passed": 152,
+      "failed": 0,
+      "forms": 8,
+      "viewportWidths": [390, 1280],
+      "successfulPersistenceMocked": true,
+      "actualUnconfiguredApiStatus": 503,
+      "playwrightCore": "1.64.1"
+    },
+    "typecheck": {
+      "command": "vue-tsc --build --pretty false",
+      "typescript": "5.9.3",
+      "vueTsc": "3.3.5",
+      "result": "passed"
+    },
+    "prismaGenerate": "passed; exact matching cached native engine; no database connection",
+    "prismaValidate": "passed with placeholder environment; no database connection",
+    "nuxtBuild": "passed",
+    "builtOutput": {
+      "healthStatus": 200,
+      "ssrStatus": 200,
+      "burstRequests": 24,
+      "burstElapsedMs": 127,
+      "burstStatus": 503,
+      "burstCode": "DATABASE_UNAVAILABLE",
+      "burst429Responses": 0,
+      "burstRetryAfterHeaders": 0,
+      "stalledBodyStatus": 408,
+      "stalledBodyCode": "REQUEST_TIMEOUT",
+      "stalledBodyElapsedMs": 10012
+    },
+    "databaseMigrationsExecuted": false,
+    "liveDatabaseAccessed": false,
+    "limitations": [
+      "Live database persistence unverified; successful persistence exercised through isolated mocks.",
+      "Supplied protected lockfile has a pre-existing dependency mismatch; verification used temporary offline dependencies without changing source manifests."
+    ],
+    "archive": {
+      "evidenceScope": "Historical delivery claims about that archive, not independently reverified during this correction and not a description of the current project folder. No archive was generated during this correction.",
+      "name": "college-faqs-v1-phase-b-no-rate-limit.zip",
+      "rootDirectory": "college-faqs",
+      "sourceFiles": 135,
+      "crc": "passed",
+      "extractionAndSourceHashComparison": "passed",
+      "allOriginalFilesPresent": true,
+      "onlyListedFilesChanged": true,
+      "dependenciesCachesAndBuildOutputsExcluded": true
+    }
+  },
+  "priorIndependentAudit": {
+    "evidenceScope": "Earlier audit executed in this conversation using a disposable copy and cached dependencies; not rerun as part of this correction.",
+    "automatedTestsPassed": 191,
+    "browserAssertionsPassed": 152,
+    "typecheck": "PASS",
+    "prismaValidation": "PASS with dummy local URLs; no database connection",
+    "nuxtBuild": "PASS using matching cached Prisma engines",
+    "frequencyTest": "24 valid requests with distinct keys within one minute accepted with mocked persistence",
+    "initialEnvironmentBlocks": "Localhost HTTP tests required a permitted rerun; initial build engine download was blocked before using matching cached engines.",
+    "livePostgreSqlPersistence": "NOT VERIFIED"
+  },
+  "currentCorrection": {
+    "date": "2026-10-24",
+    "scope": "Approved concurrency feedback and documentation accuracy only",
+    "approvedConcurrencyMessage": "We're handling several enquiries right now. Please try again in a moment.",
+    "ownerConfirmedDevelopmentState": {
+      "dependenciesInstalled": false,
+      "intentionallyAbsent": ["package-lock.json", ".env", ".env.example"],
+      "environmentConfiguration": "PENDING",
+      "databaseProvisionedOrConnected": false,
+      "livePostgreSqlPersistence": "NOT VERIFIED",
+      "productionMigrationStatus": "NOT VERIFIED",
+      "authentication": "Not configured; the implemented public enquiry workflow does not require authentication",
+      "formattingChanges": "19 pre-existing owner-authorized formatting changes retained",
+      "frequencyLimit": "Removed; no replacement desired or introduced",
+      "concurrency": "Existing 16 in-flight requests, HTTP 429, TOO_MANY_REQUESTS, Retry-After: 1 and immediate release preserved",
+      "futureSetupRequirement": "Generate a synchronized lockfile and install dependencies before the existing Docker COPY/npm ci and CI npm ci steps can work; no setup files were created here"
+    },
+    "comparison": {
+      "baselineArchive": "college-faqs-v1-phase-b-full.zip",
+      "baselineArchiveSha256": "d38612e81e36e67e17b1ee323e2fcee908e2ccad96821a0a808c13c1f755b76d",
+      "baselineCrc": "PASS",
+      "baselineFiles": 135,
+      "gitHead": "f49b6f7",
+      "gitHistoryLimitation": "Three commits; backend and removal work are uncommitted. The supplied archive, not HEAD alone, isolates the pre-removal source state.",
+      "gitStatusBeforeCorrection": {
+        "modifiedTracked": 21,
+        "deletedTracked": 1,
+        "untracked": 27
+      },
+      "beforeCorrection": {
+        "byteIdentical": 106,
+        "different": 27,
+        "absent": 2,
+        "added": 0,
+        "currentProjectFiles": 133
+      },
+      "afterCorrection": {
+        "byteIdentical": 105,
+        "different": 28,
+        "absent": 2,
+        "added": 0,
+        "currentProjectFiles": 133,
+        "countChangeReason": "README now corrects directly related setup/preservation contradictions; the other four correction files already differed from the archive"
+      },
+      "intentionallyAbsentBaselineFiles": ["package-lock.json", ".env.example"],
+      "absentOutsideBaseline": [".env"],
+      "removalRelatedFiles": [
+        "server/utils/submission-security.ts",
+        "server/utils/submission-service.ts",
+        "server/utils/submission-http.ts",
+        "app/composables/useFormSubmission.ts",
+        "tests/submission-api.test.mjs",
+        "tests/frontend-submission.test.mjs",
+        "docs/phase-b-implementation.md",
+        "docs/phase-b-verification.json"
+      ],
+      "ownerAuthorizedFormattingFiles": [
+        "app/components/ui/SubmissionFeedback.vue",
+        "app/components/ui/SuccessDialog.vue",
+        "app/composables/useFormPreview.ts",
+        "app/pages/programs/engineering/index.vue",
+        "app/pages/programs/mba/application-form.vue",
+        "app/pages/programs/mba/college-predictor.vue",
+        "app/pages/programs/mba/gdpi-preparation.vue",
+        "app/pages/programs/mba/start-your-application.vue",
+        "app/pages/programs/mba/talk-to-mentor.vue",
+        "app/pages/programs/study-abroad/index.vue",
+        "app/utils/submission-payload.ts",
+        "docs/phase-b-baseline-manifest.json",
+        "docs/phase-b-form-audit.md",
+        "server/api/submissions.ts",
+        "server/utils/submission-storage.ts",
+        "shared/submission-contracts.ts",
+        "tests/frontend-browser.mjs",
+        "tests/submission-storage.test.mjs",
+        "tests/submission-zod.test.mjs"
+      ],
+      "byteIdenticalToBaseline": [
+        "package.json",
+        "Dockerfile",
+        "compose.yaml",
+        ".dockerignore",
+        ".github/workflows/deploy-production.yml",
+        "prisma/schema.prisma",
+        "prisma/migrations/migration_lock.toml",
+        "prisma/migrations/20261024000000_initial_submissions/migration.sql"
+      ],
+      "preExistingGitChanges": "Other editorial/layout changes against HEAD already exist in the supplied baseline and are not attributed to removal or this correction"
+    },
+    "filesModifiedThisCorrection": [
+      "app/composables/useFormSubmission.ts",
+      "tests/frontend-submission.test.mjs",
+      "docs/phase-b-implementation.md",
+      "docs/phase-b-verification.json",
+      "README.md"
+    ],
+    "verification": {
+      "runtime": "Node 24.18.0; built-in modules only; no dependencies installed",
+      "composableBehavior": {
+        "status": "PASS",
+        "command": "node --experimental-vm-modules --input-type=module (inline harness)",
+        "assertions": 28,
+        "method": "Execute actual TypeScript composable and payload mapper after built-in type stripping; Vue ref and validator imports stubbed. Not a full Vue/Zod integration test.",
+        "coverage": "Approved TOO_MANY_REQUESTS message, unknown/missing-code HTTP 429 fallbacks, other error messages, retry identity, fresh key after success, pending duplicate prevention and release"
+      },
+      "guardBehavior": {
+        "status": "PASS",
+        "command": "node --experimental-strip-types --input-type=module (inline harness)",
+        "coverage": "Actual guard: 16 in-flight capacity, retryAfter 1, immediate/idempotent release, 24 sequential admissions within one minute. No HTTP or database integration exercised."
+      },
+      "frontendTestSyntax": {
+        "status": "PASS",
+        "command": "node --check tests/frontend-submission.test.mjs"
+      },
+      "documentationJsonParsing": "PASS",
+      "documentationConsistencyAndMarkdownReview": "PASS",
+      "baselineAndTaskScopeComparison": "PASS: only the five listed existing files changed; backend, guard, validation, schema, dependencies, environment and deployment files untouched",
+      "notRun": {
+        "npm test": "NOT RUN: project dependencies intentionally uninstalled; focused frontend regression was updated but the full suite was not rerun",
+        "node tests/frontend-browser.mjs": "NOT RUN: project/browser dependencies intentionally uninstalled",
+        "vue-tsc --build --pretty false": "NOT RUN: project/type-check dependencies intentionally uninstalled",
+        "npm run db:validate": "NOT RUN: Prisma dependency intentionally uninstalled",
+        "npm run build": "NOT RUN: project dependencies intentionally uninstalled",
+        "liveDatabaseAndProductionChecks": "NOT RUN: no database provisioned; no production access authorized"
+      },
+      "dependenciesInstalled": false,
+      "databaseAccessed": false,
+      "migrationsExecuted": false,
+      "archiveGenerated": false,
+      "deployedOrCommitted": false
+    }
+  }
+}
