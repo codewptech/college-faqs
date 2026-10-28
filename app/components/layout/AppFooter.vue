@@ -7,7 +7,7 @@ import {
 
 // Change only this URL when you want to replace the footer logo.
 // The initial URL matches the current Header logo.
-const footerLogoUrl = "https://assets.collegefaqs.com/header/logo.jpeg";
+const footerLogoUrl = "https://assets.collegefaqs.com/logo.jpeg";
 
 // Keep the brand usable if the image URL fails to load.
 const footerLogoFailed = ref(false);

@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
         <span class="site-brand__mark" aria-hidden="true">
           <img
             class="site-brand__logo"
-            src="https://assets.collegefaqs.com/header/logo.jpeg"
+            src="https://assets.collegefaqs.com/logo.jpeg"
             alt="CF"
             width="40"
             height="40"
