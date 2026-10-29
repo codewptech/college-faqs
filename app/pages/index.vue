@@ -90,7 +90,10 @@ const resources = [
         <div class="home-hero__content flow">
           <p class="home-eyebrow">Your College Repository</p>
 
-          <h1>Practical guidance for your next college decision.</h1>
+          <h1>
+            Practical guidance for your
+            <span class="home-hero__highlight">next college decision.</span>
+          </h1>
 
           <p class="home-hero__lead">
             Explore MBA, Engineering, and Study Abroad pathways, understand your
@@ -258,25 +261,23 @@ const resources = [
 }
 
 .home-eyebrow {
-  color: var(--color-primary-700);
+  color: var(--color-brand-red);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .home-eyebrow--light {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
 }
 
 .home-hero {
-  background:
-    radial-gradient(
-      circle at 85% 15%,
-      rgb(219 234 254 / 0.9),
-      transparent 32rem
-    ),
-    linear-gradient(180deg, var(--color-white), var(--color-gray-50));
+  background: var(--color-white);
+}
+
+.home-hero__highlight {
+  color: var(--color-brand-red);
 }
 
 .home-hero__grid {
@@ -309,6 +310,7 @@ const resources = [
 .home-hero__visual {
   max-width: 38rem;
   justify-self: center;
+  background: var(--color-white);
 }
 
 .home-hero__visual img {
@@ -332,8 +334,12 @@ const resources = [
   gap: var(--space-6);
 }
 
-.home-support {
+.home-programs {
   background: var(--color-surface-subtle);
+}
+
+.home-support {
+  background: var(--color-surface);
 }
 
 .home-support__layout {
@@ -347,9 +353,8 @@ const resources = [
 
 .home-support__intro p:last-child,
 .home-support__item p,
-.home-resource-card p,
-.home-cta p {
-  color: var(--color-text-muted);
+.home-resource-card p {
+  color: var(--color-text-secondary);
 }
 
 .home-support__list {
@@ -365,7 +370,8 @@ const resources = [
   padding: var(--space-6);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  background: var(--color-surface-subtle);
+  box-shadow: var(--shadow-sm);
 }
 
 .home-support__number {
@@ -387,18 +393,18 @@ const resources = [
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-text);
+  box-shadow: var(--shadow-sm);
   text-decoration: none;
   transition:
     border-color var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
+    box-shadow var(--duration-fast) var(--ease-standard);
 }
 
-.home-resource-card:hover {
-  border-color: var(--color-gray-400);
+.home-resource-card:hover,
+.home-resource-card:focus-visible {
+  border-color: var(--color-primary-600);
   color: var(--color-text);
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
 }
 
 .home-resource-card__arrow {
@@ -407,27 +413,34 @@ const resources = [
   line-height: 1;
 }
 
+.home-resources,
+.home-cta {
+  background: var(--color-surface-subtle);
+}
+
 .home-cta {
   padding-top: 0;
 }
 
 .home-cta__panel {
+  --color-focus: var(--color-gray-200);
+
   display: grid;
   gap: var(--space-8);
   padding: var(--space-8);
+  border-top: 3px solid var(--color-brand-red);
   border-radius: var(--radius-xl);
-  background: var(--color-gray-900);
+  background: var(--color-surface-dark);
   color: var(--color-white);
   box-shadow: var(--shadow-lg);
 }
 
-.home-cta__panel h2,
-.home-cta__panel p {
+.home-cta__panel h2 {
   color: inherit;
 }
 
 .home-cta__panel p {
-  opacity: 0.78;
+  color: var(--color-gray-200);
 }
 
 .home-cta__actions {
@@ -447,7 +460,7 @@ const resources = [
 }
 
 .home-cta__text-link:hover {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
   text-decoration: underline;
 }
 
@@ -463,17 +476,20 @@ const resources = [
   }
 
   .home-cta__panel {
+    padding: var(--space-10);
+  }
+}
+
+@include respond-to(lg) {
+  .home-cta__panel {
     grid-template-columns: minmax(0, 1.4fr) auto;
     align-items: center;
-    padding: var(--space-10);
   }
 
   .home-cta__actions {
     justify-content: flex-end;
   }
-}
 
-@include respond-to(lg) {
   .home-hero__grid {
     grid-template-columns: minmax(0, 1.05fr) minmax(24rem, 0.95fr);
     gap: var(--space-16);

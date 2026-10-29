@@ -238,24 +238,18 @@ const decisionPoints = [
   overflow: clip;
 }
 .mba-eyebrow {
-  color: var(--color-primary-700);
+  color: var(--color-brand-red);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .mba-eyebrow--light {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
 }
 
 .mba-hero {
-  background:
-    radial-gradient(
-      circle at 88% 18%,
-      rgb(219 234 254 / 0.9),
-      transparent 30rem
-    ),
-    linear-gradient(180deg, var(--color-white), var(--color-gray-50));
+  background: var(--color-white);
 }
 .mba-hero__grid {
   display: grid;
@@ -283,6 +277,7 @@ const decisionPoints = [
 .mba-hero__visual {
   max-width: 39rem;
   margin-inline: auto;
+  background: var(--color-white);
 }
 .mba-hero__visual img {
   width: 100%;
@@ -325,8 +320,9 @@ const decisionPoints = [
   font-weight: var(--font-weight-semibold);
   text-decoration: none;
 }
-.mba-quick-link:hover {
-  border-color: var(--color-primary-100);
+.mba-quick-link:hover,
+.mba-quick-link:focus-visible {
+  border-color: var(--color-primary-600);
   background: var(--color-primary-50);
   color: var(--color-text);
   text-decoration: none;
@@ -361,11 +357,7 @@ const decisionPoints = [
   padding: var(--space-8);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  background: linear-gradient(
-    135deg,
-    var(--color-white),
-    var(--color-primary-50)
-  );
+  background: var(--color-gray-50);
   box-shadow: var(--shadow-sm);
 }
 .mba-choice__content {
@@ -406,13 +398,13 @@ const decisionPoints = [
   background: var(--color-gray-50);
 }
 .mba-final-cta__panel {
+  --color-focus: var(--color-gray-100);
   display: grid;
   gap: var(--space-8);
   padding: var(--space-8);
+  border-top: 3px solid var(--color-brand-red);
   border-radius: var(--radius-xl);
-  background:
-    radial-gradient(circle at 90% 0%, rgb(96 165 250 / 0.3), transparent 22rem),
-    var(--color-primary-800);
+  background: var(--color-surface-dark);
   color: var(--color-white);
 }
 .mba-final-cta__panel > div:first-child {
@@ -422,7 +414,7 @@ const decisionPoints = [
   color: var(--color-white);
 }
 .mba-final-cta__panel p:not(.mba-eyebrow) {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
 }
 .mba-final-cta__actions {
   display: flex;
@@ -466,13 +458,16 @@ const decisionPoints = [
     padding: var(--space-10);
   }
   .mba-final-cta__panel {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
     padding: var(--space-10);
   }
 }
 
 @include respond-to(lg) {
+  .mba-final-cta__panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
   .mba-hero__grid {
     gap: var(--space-16);
   }

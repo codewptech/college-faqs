@@ -39,13 +39,7 @@ defineProps<{
 
 .explore-hero {
   border-bottom: 1px solid var(--color-border);
-  background:
-    radial-gradient(
-      circle at 88% 15%,
-      rgb(219 234 254 / 0.82),
-      transparent 30rem
-    ),
-    linear-gradient(180deg, var(--color-white), var(--color-gray-50));
+  background: var(--color-white);
 }
 
 .explore-hero__grid {
@@ -63,9 +57,9 @@ defineProps<{
 }
 
 .explore-hero__eyebrow {
-  color: var(--color-primary-700);
+  color: var(--color-brand-red);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -79,11 +73,13 @@ defineProps<{
 .explore-hero__visual {
   max-width: 36rem;
   margin-inline: auto;
+  background: var(--color-white);
 }
 
 .explore-hero__visual img {
   width: 100%;
   height: auto;
+  object-fit: contain;
 }
 
 @include respond-to(md) {

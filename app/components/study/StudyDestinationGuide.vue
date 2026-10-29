@@ -138,11 +138,7 @@ useSeoMeta({
 @use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .destination-guide__hero {
-  background: linear-gradient(
-    180deg,
-    var(--color-primary-50),
-    var(--color-white)
-  );
+  background: var(--color-white);
 }
 
 .destination-guide__breadcrumb {
@@ -174,7 +170,9 @@ useSeoMeta({
   img {
     width: 100%;
     height: auto;
+    background: var(--color-white);
     border-radius: var(--radius-xl);
+    object-fit: contain;
   }
 }
 

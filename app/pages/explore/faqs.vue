@@ -168,7 +168,7 @@ useSeoMeta({
 }
 
 .faq-eyebrow--light {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
 }
 
 .faq-hero-actions {
@@ -271,13 +271,13 @@ useSeoMeta({
 }
 
 .faq-next__panel {
+  --color-focus: var(--color-white);
+
   display: grid;
   gap: var(--space-8);
   padding: var(--space-8);
   border-radius: var(--radius-xl);
-  background:
-    radial-gradient(circle at 90% 0%, rgb(96 165 250 / 0.3), transparent 22rem),
-    var(--color-primary-800);
+  background: var(--color-surface-dark);
   color: var(--color-white);
 }
 
@@ -286,7 +286,7 @@ useSeoMeta({
 }
 
 .faq-next__panel p:not(.faq-eyebrow) {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
 }
 
 .faq-next__actions {

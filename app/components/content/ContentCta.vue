@@ -28,7 +28,7 @@ const links = computed(() =>
         <NuxtLink
           v-if="isInternalHref(link.to)"
           :class="
-            index === 0 ? 'btn btn--secondary btn--lg' : 'content-cta__link'
+            index === 0 ? 'btn btn--primary btn--lg' : 'content-cta__link'
           "
           :to="link.to"
         >
@@ -37,7 +37,7 @@ const links = computed(() =>
         <a
           v-else
           :class="
-            index === 0 ? 'btn btn--secondary btn--lg' : 'content-cta__link'
+            index === 0 ? 'btn btn--primary btn--lg' : 'content-cta__link'
           "
           :href="link.to"
         >
@@ -52,13 +52,13 @@ const links = computed(() =>
 @use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .content-cta {
+  --color-focus: var(--color-white);
   display: grid;
   gap: var(--space-8);
   padding: var(--space-8);
+  border-top: 3px solid var(--color-brand-red);
   border-radius: var(--radius-xl);
-  background:
-    radial-gradient(circle at 90% 0%, rgb(96 165 250 / 0.3), transparent 22rem),
-    var(--color-primary-800);
+  background: var(--color-surface-dark);
   color: var(--color-white);
 }
 
@@ -71,11 +71,15 @@ const links = computed(() =>
 }
 
 .content-cta__copy > p:not(.content-cta__eyebrow) {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
+}
+
+.content-cta__copy :deep(a) {
+  color: var(--color-white);
 }
 
 .content-cta__eyebrow {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.08em;
@@ -103,7 +107,7 @@ const links = computed(() =>
   text-decoration: underline;
 }
 
-@include respond-to(md) {
+@include respond-to(lg) {
   .content-cta {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;

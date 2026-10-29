@@ -467,21 +467,15 @@ async function submitForm() {
 }
 
 .engineering-eyebrow {
-  color: var(--color-primary-700);
+  color: var(--color-brand-red);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .engineering-hero {
-  background:
-    radial-gradient(
-      circle at 88% 12%,
-      rgb(219 234 254 / 0.85),
-      transparent 30rem
-    ),
-    linear-gradient(180deg, var(--color-white), var(--color-gray-50));
+  background: var(--color-white);
 }
 
 .engineering-hero__grid {
@@ -517,6 +511,7 @@ async function submitForm() {
 .engineering-hero__visual {
   max-width: 38rem;
   margin-inline: auto;
+  background: var(--color-white);
 }
 
 .engineering-hero__visual img {
@@ -565,9 +560,9 @@ async function submitForm() {
 
 .engineering-support-card p,
 .engineering-decision-card p,
-.engineering-process__content p,
+.engineering-process__content p:not(.engineering-eyebrow),
 .engineering-process-step p,
-.engineering-enquiry__intro > p {
+.engineering-enquiry__intro > p:not(.engineering-eyebrow) {
   color: var(--color-text-secondary);
 }
 
@@ -657,7 +652,7 @@ async function submitForm() {
 }
 
 .engineering-enquiry {
-  background: linear-gradient(180deg, var(--color-gray-50), var(--color-white));
+  background: var(--color-gray-50);
 }
 
 .engineering-enquiry__grid {

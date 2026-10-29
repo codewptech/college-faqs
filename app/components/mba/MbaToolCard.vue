@@ -39,30 +39,28 @@ defineProps<{
   color: var(--color-text);
   text-decoration: none;
   box-shadow: var(--shadow-sm);
-  @include interactive-transition(
-    border-color,
-    box-shadow,
-    transform,
-    background-color
-  );
+  @include interactive-transition(border-color, box-shadow, background-color);
 }
 
-.mba-tool-card:hover {
-  border-color: var(--color-primary-100);
-  background: var(--color-primary-50);
+.mba-tool-card:hover,
+.mba-tool-card:focus-visible {
+  border-color: var(--color-primary-600);
+  background: var(--color-surface-subtle);
   box-shadow: var(--shadow-md);
   color: var(--color-text);
   text-decoration: none;
-  transform: translateY(-2px);
 }
 
 .mba-tool-card--featured {
-  border-color: var(--color-primary-100);
-  background: linear-gradient(
-    145deg,
-    var(--color-white),
-    var(--color-primary-50)
-  );
+  border-top: 3px solid var(--color-brand-red);
+  background: var(--color-surface-dark);
+  color: var(--color-white);
+}
+
+.mba-tool-card--featured:hover,
+.mba-tool-card--featured:focus-visible {
+  background: var(--color-gray-800);
+  color: var(--color-white);
 }
 
 .mba-tool-card__icon {
@@ -88,5 +86,18 @@ defineProps<{
   color: var(--color-primary-700);
   font-size: var(--font-size-xl);
   line-height: 1;
+}
+
+.mba-tool-card--featured .mba-tool-card__content p {
+  color: var(--color-gray-200);
+}
+
+.mba-tool-card--featured .mba-tool-card__icon {
+  background: var(--color-white);
+  color: var(--color-brand-red);
+}
+
+.mba-tool-card--featured .mba-tool-card__arrow {
+  color: var(--color-white);
 }
 </style>

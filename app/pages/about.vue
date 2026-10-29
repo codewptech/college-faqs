@@ -430,23 +430,17 @@ useSeoMeta({
   overflow-wrap: anywhere;
 }
 .about-eyebrow {
-  color: var(--color-primary-700);
+  color: var(--color-brand-red);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .about-eyebrow--light {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
 }
 .about-hero {
-  background:
-    radial-gradient(
-      circle at 88% 12%,
-      rgb(219 234 254 / 0.9),
-      transparent 31rem
-    ),
-    linear-gradient(180deg, var(--color-white), var(--color-gray-50));
+  background: var(--color-white);
 }
 .about-hero__grid {
   display: grid;
@@ -468,19 +462,9 @@ useSeoMeta({
   gap: var(--space-3);
 }
 .about-hero__visual {
-  position: relative;
   max-width: 38rem;
   margin-inline: auto;
-}
-.about-hero__visual::before {
-  position: absolute;
-  z-index: -1;
-  inset: 12% 8%;
-  border-radius: 50%;
-  background: var(--color-primary-100);
-  content: "";
-  filter: blur(4rem);
-  opacity: 0.65;
+  background: var(--color-white);
 }
 .about-hero__visual img {
   width: 100%;
@@ -582,7 +566,7 @@ useSeoMeta({
   background: var(--color-primary-600);
 }
 .about-journey {
-  background: linear-gradient(180deg, var(--color-gray-50), var(--color-white));
+  background: var(--color-gray-50);
 }
 .about-journey__layout {
   display: grid;
@@ -621,22 +605,23 @@ useSeoMeta({
 }
 .about-cta {
   padding-top: 0;
+  background: var(--color-gray-50);
 }
 .about-cta__panel {
+  --color-focus: var(--color-gray-100);
   display: grid;
   gap: var(--space-8);
   padding: var(--space-8);
+  border-top: 3px solid var(--color-brand-red);
   border-radius: var(--radius-xl);
-  background:
-    radial-gradient(circle at 90% 0%, rgb(96 165 250 / 0.3), transparent 22rem),
-    var(--color-primary-800);
+  background: var(--color-surface-dark);
   color: var(--color-white);
 }
 .about-cta__panel > div:first-child {
   max-width: 44rem;
 }
 .about-cta__panel p:not(.about-eyebrow) {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
 }
 .about-cta__panel :deep(p a) {
   color: inherit;

@@ -8,14 +8,13 @@
 .card--interactive {
   transition:
     border-color var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
+    box-shadow var(--duration-fast) var(--ease-standard);
 }
 
-.card--interactive:hover {
-  border-color: var(--color-gray-400);
+.card--interactive:hover,
+.card--interactive:focus-within {
+  border-color: var(--color-primary-600);
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
 }
 
 .card__body {

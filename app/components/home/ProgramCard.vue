@@ -53,7 +53,7 @@ const props = defineProps<{
 .program-card__media {
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: var(--color-primary-50);
+  background: var(--color-white);
 }
 
 .program-card__image {
@@ -68,6 +68,7 @@ const props = defineProps<{
   flex-direction: column;
   gap: var(--space-4);
   padding: var(--space-6);
+  border-top: 1px solid var(--color-border);
 }
 
 .program-card__title {
@@ -75,7 +76,7 @@ const props = defineProps<{
 }
 
 .program-card__description {
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .program-card__link {
@@ -84,7 +85,7 @@ const props = defineProps<{
   gap: var(--space-2);
   width: fit-content;
   margin-top: auto;
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   text-decoration: none;
 }
 

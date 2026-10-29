@@ -843,7 +843,7 @@ async function submitMentorForm() {
             />
             <div class="form-actions">
               <button
-                class="btn btn--secondary btn--lg"
+                class="btn btn--primary btn--lg"
                 type="submit"
                 :disabled="mentorPending"
               >
@@ -872,25 +872,19 @@ async function submitMentorForm() {
 }
 
 .study-eyebrow {
-  color: var(--color-primary-700);
+  color: var(--color-brand-red);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .study-eyebrow--light {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
 }
 
 .study-hero {
-  background:
-    radial-gradient(
-      circle at 86% 16%,
-      rgb(219 234 254 / 0.9),
-      transparent 30rem
-    ),
-    linear-gradient(180deg, var(--color-white), var(--color-gray-50));
+  background: var(--color-white);
 }
 
 .study-hero__grid {
@@ -925,6 +919,7 @@ async function submitMentorForm() {
 .study-hero__visual {
   max-width: 39rem;
   margin-inline: auto;
+  background: var(--color-white);
 }
 
 .study-hero__visual img {
@@ -1124,6 +1119,7 @@ async function submitMentorForm() {
   > img {
     width: 100%;
     height: auto;
+    background: var(--color-white);
   }
 }
 
@@ -1166,7 +1162,8 @@ async function submitMentorForm() {
   padding: var(--space-6);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  background: var(--color-gray-50);
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm);
 }
 
 .study-form-grid {
@@ -1184,17 +1181,13 @@ async function submitMentorForm() {
 }
 
 .study-mentor__panel {
+  --color-focus: var(--color-gray-100);
   display: grid;
   gap: var(--space-8);
   padding: var(--space-8);
+  border-top: 3px solid var(--color-brand-red);
   border-radius: var(--radius-xl);
-  background:
-    radial-gradient(
-      circle at 90% 0%,
-      rgb(96 165 250 / 0.28),
-      transparent 24rem
-    ),
-    var(--color-primary-900);
+  background: var(--color-surface-dark);
   color: var(--color-white);
 }
 
@@ -1203,7 +1196,7 @@ async function submitMentorForm() {
 }
 
 .study-mentor__content p:not(.study-eyebrow) {
-  color: var(--color-primary-100);
+  color: var(--color-gray-200);
 }
 
 .study-mentor__form-wrap {
@@ -1215,13 +1208,21 @@ async function submitMentorForm() {
   gap: var(--space-4);
 }
 
+.study-mentor__form .form-control {
+  --color-focus: var(--color-primary-600);
+}
+
+.study-mentor__form .form-control:focus {
+  outline-color: var(--color-white);
+}
+
 .study-mentor__label {
   color: var(--color-white);
 }
 
 .study-mentor__label .form-label__required,
-.study-mentor__form .form-error {
-  color: var(--color-primary-100);
+.study-mentor__form :deep(.form-error) {
+  color: var(--color-danger-light);
 }
 
 @include respond-to(sm) {
