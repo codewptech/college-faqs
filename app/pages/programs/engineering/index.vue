@@ -117,7 +117,7 @@ async function submitForm() {
 
         <div class="engineering-hero__visual" aria-hidden="true">
           <img
-            src="/placeholders/engineering-guidance.svg"
+            src="https://assets.collegefaqs.com/engineering/hero-image.png"
             alt=""
             width="760"
             height="600"

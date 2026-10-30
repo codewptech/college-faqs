@@ -173,7 +173,7 @@ async function submitMentorForm() {
 
         <div class="study-hero__visual" aria-hidden="true">
           <img
-            src="/placeholders/study-abroad-guidance.svg"
+            src="https://assets.collegefaqs.com/study-abroad/hero-image.png"
             alt=""
             width="760"
             height="600"

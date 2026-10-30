@@ -93,7 +93,7 @@ const decisionPoints = [
 
         <div class="mba-hero__visual" aria-hidden="true">
           <img
-            src="/placeholders/mba-guidance.svg"
+            src="https://assets.collegefaqs.com/mba/hero-image.png"
             alt=""
             width="760"
             height="600"
