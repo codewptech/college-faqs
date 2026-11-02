@@ -1,4 +1,3 @@
-// Prisma ORM 6.19.3: credentials remain server-only. No driver adapter required.
 generator client {
   provider = "prisma-client-js"
 }

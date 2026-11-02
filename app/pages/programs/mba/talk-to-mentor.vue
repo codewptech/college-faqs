@@ -3,6 +3,7 @@ import SubmissionFeedback from "~~/app/components/ui/SubmissionFeedback.vue";
 import { useFormSubmission } from "~~/app/composables/useFormSubmission";
 import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
 import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
+import FormAvailability from "~~/app/components/ui/FormAvailability.vue";
 import { useFormPreview } from "~~/app/composables/useFormPreview";
 import MbaSubpageHero from "~~/app/components/mba/MbaSubpageHero.vue";
 
@@ -43,6 +44,8 @@ async function submitForm() {
             </div>
 
             <form
+              method="post"
+              action="/api/submissions"
               ref="formRef"
               class="mba-form-grid"
               :aria-busy="pending"
@@ -51,149 +54,162 @@ async function submitForm() {
               @change="clearError"
               @submit.prevent="submitForm"
             >
-              <FormDisclosure />
-              <div class="mba-form-row mba-form-row--2">
-                <div class="form-field">
-                  <label class="form-label" for="mentor-name"
-                    >Full name
-                    <span class="form-label__required">*</span></label
-                  >
-                  <input
-                    id="mentor-name"
-                    class="form-control"
-                    type="text"
-                    autocomplete="name"
-                    required
-                    placeholder="Your name"
-                    name="fullName"
-                    :aria-invalid="errors['mentor-name'] ? 'true' : undefined"
-                    :aria-describedby="
-                      errors['mentor-name'] ? 'mentor-name-error' : undefined
-                    "
-                  />
-                  <p
-                    v-if="errors['mentor-name']"
-                    id="mentor-name-error"
-                    class="form-error"
-                    role="alert"
-                  >
-                    {{ errors["mentor-name"] }}
-                  </p>
+              <FormAvailability>
+                <FormDisclosure />
+                <div class="mba-form-row mba-form-row--2">
+                  <div class="form-field">
+                    <label class="form-label" for="mentor-name"
+                      >Full name
+                      <span class="form-label__required">*</span></label
+                    >
+                    <input
+                      id="mentor-name"
+                      class="form-control"
+                      type="text"
+                      autocomplete="name"
+                      required
+                      placeholder="Your name"
+                      name="fullName"
+                      :aria-invalid="errors['mentor-name'] ? 'true' : undefined"
+                      :aria-describedby="
+                        errors['mentor-name'] ? 'mentor-name-error' : undefined
+                      "
+                    />
+                    <p
+                      v-if="errors['mentor-name']"
+                      id="mentor-name-error"
+                      class="form-error"
+                      role="alert"
+                    >
+                      {{ errors["mentor-name"] }}
+                    </p>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" for="mentor-phone"
+                      >Phone number
+                      <span class="form-label__required">*</span></label
+                    >
+                    <input
+                      id="mentor-phone"
+                      class="form-control"
+                      name="phone"
+                      type="tel"
+                      autocomplete="tel"
+                      required
+                      placeholder="Your phone number"
+                      :aria-invalid="
+                        errors['mentor-phone'] ? 'true' : undefined
+                      "
+                      :aria-describedby="
+                        errors['mentor-phone']
+                          ? 'mentor-phone-error'
+                          : undefined
+                      "
+                    />
+                    <p
+                      v-if="errors['mentor-phone']"
+                      id="mentor-phone-error"
+                      class="form-error"
+                      role="alert"
+                    >
+                      {{ errors["mentor-phone"] }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="mba-form-row mba-form-row--2">
+                  <div class="form-field">
+                    <label class="form-label" for="mentor-email">Email</label>
+                    <input
+                      id="mentor-email"
+                      class="form-control"
+                      name="email"
+                      type="email"
+                      autocomplete="email"
+                      placeholder="you@example.com"
+                      :aria-invalid="
+                        errors['mentor-email'] ? 'true' : undefined
+                      "
+                      :aria-describedby="
+                        errors['mentor-email']
+                          ? 'mentor-email-error'
+                          : undefined
+                      "
+                    />
+                    <p
+                      v-if="errors['mentor-email']"
+                      id="mentor-email-error"
+                      class="form-error"
+                      role="alert"
+                    >
+                      {{ errors["mentor-email"] }}
+                    </p>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" for="mentor-course"
+                      >Program
+                      <span class="form-label__required">*</span></label
+                    >
+                    <select
+                      id="mentor-course"
+                      class="form-control"
+                      required
+                      name="program"
+                      :aria-invalid="
+                        errors['mentor-course'] ? 'true' : undefined
+                      "
+                      :aria-describedby="
+                        errors['mentor-course']
+                          ? 'mentor-course-error'
+                          : undefined
+                      "
+                    >
+                      <option value="">Choose a program</option>
+                      <option value="mba" selected>MBA</option>
+                      <option value="engineering">Engineering</option>
+                      <option value="study-abroad">Study Abroad</option>
+                    </select>
+                    <p
+                      v-if="errors['mentor-course']"
+                      id="mentor-course-error"
+                      class="form-error"
+                      role="alert"
+                    >
+                      {{ errors["mentor-course"] }}
+                    </p>
+                  </div>
                 </div>
 
                 <div class="form-field">
-                  <label class="form-label" for="mentor-phone"
-                    >Phone number
-                    <span class="form-label__required">*</span></label
+                  <label class="form-label" for="mentor-message"
+                    >What would you like to discuss?</label
                   >
-                  <input
-                    id="mentor-phone"
+                  <textarea
+                    id="mentor-message"
                     class="form-control"
-                    name="phone"
-                    type="tel"
-                    autocomplete="tel"
-                    required
-                    placeholder="Your phone number"
-                    :aria-invalid="errors['mentor-phone'] ? 'true' : undefined"
-                    :aria-describedby="
-                      errors['mentor-phone'] ? 'mentor-phone-error' : undefined
-                    "
-                  />
-                  <p
-                    v-if="errors['mentor-phone']"
-                    id="mentor-phone-error"
-                    class="form-error"
-                    role="alert"
-                  >
-                    {{ errors["mentor-phone"] }}
-                  </p>
-                </div>
-              </div>
-
-              <div class="mba-form-row mba-form-row--2">
-                <div class="form-field">
-                  <label class="form-label" for="mentor-email">Email</label>
-                  <input
-                    id="mentor-email"
-                    class="form-control"
-                    name="email"
-                    type="email"
-                    autocomplete="email"
-                    placeholder="you@example.com"
-                    :aria-invalid="errors['mentor-email'] ? 'true' : undefined"
-                    :aria-describedby="
-                      errors['mentor-email'] ? 'mentor-email-error' : undefined
-                    "
-                  />
-                  <p
-                    v-if="errors['mentor-email']"
-                    id="mentor-email-error"
-                    class="form-error"
-                    role="alert"
-                  >
-                    {{ errors["mentor-email"] }}
-                  </p>
+                    name="message"
+                    placeholder="Tell us about your exams, preferred colleges, application stage, or questions."
+                    rows="4"
+                  ></textarea>
                 </div>
 
-                <div class="form-field">
-                  <label class="form-label" for="mentor-course"
-                    >Program <span class="form-label__required">*</span></label
+                <SubmissionFeedback
+                  :pending="pending"
+                  :error="submissionError"
+                  :issues="submissionIssues"
+                />
+                <div class="form-actions">
+                  <button
+                    class="btn btn--primary btn--lg"
+                    type="submit"
+                    :disabled="pending"
                   >
-                  <select
-                    id="mentor-course"
-                    class="form-control"
-                    required
-                    name="program"
-                    :aria-invalid="errors['mentor-course'] ? 'true' : undefined"
-                    :aria-describedby="
-                      errors['mentor-course']
-                        ? 'mentor-course-error'
-                        : undefined
-                    "
-                  >
-                    <option value="">Choose a program</option>
-                    <option value="mba" selected>MBA</option>
-                    <option value="engineering">Engineering</option>
-                    <option value="study-abroad">Study Abroad</option>
-                  </select>
-                  <p
-                    v-if="errors['mentor-course']"
-                    id="mentor-course-error"
-                    class="form-error"
-                    role="alert"
-                  >
-                    {{ errors["mentor-course"] }}
-                  </p>
+                    Request callback
+                  </button>
                 </div>
-              </div>
-
-              <div class="form-field">
-                <label class="form-label" for="mentor-message"
-                  >What would you like to discuss?</label
-                >
-                <textarea
-                  id="mentor-message"
-                  class="form-control"
-                  name="message"
-                  placeholder="Tell us about your exams, preferred colleges, application stage, or questions."
-                  rows="4"
-                ></textarea>
-              </div>
-
-              <SubmissionFeedback
-                :pending="pending"
-                :error="submissionError"
-                :issues="submissionIssues"
-              />
-              <div class="form-actions">
-                <button
-                  class="btn btn--primary btn--lg"
-                  type="submit"
-                  :disabled="pending"
-                >
-                  Request callback
-                </button>
-              </div>
+              </FormAvailability>
             </form>
           </div>
         </div>

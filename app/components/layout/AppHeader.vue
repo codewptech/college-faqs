@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { brandLogoUrl } from "~~/app/data/brandAssets";
 import MobileNavigation from "~~/app/components/navigation/MobileNavigation.vue";
 import NavDropdown from "~~/app/components/navigation/NavDropdown.vue";
 import { navigationGroups, primaryNavigation } from "~~/app/data/navigation";
@@ -118,8 +119,8 @@ onBeforeUnmount(() => {
         <span class="site-brand__mark" aria-hidden="true">
           <img
             class="site-brand__logo"
-            src="https://assets.collegefaqs.com/logo.jpeg"
-            alt="CF"
+            :src="brandLogoUrl"
+            alt=""
             width="40"
             height="40"
           />

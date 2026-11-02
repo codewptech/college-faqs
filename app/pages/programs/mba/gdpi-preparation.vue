@@ -3,6 +3,7 @@ import SubmissionFeedback from "~~/app/components/ui/SubmissionFeedback.vue";
 import { useFormSubmission } from "~~/app/composables/useFormSubmission";
 import MbaSubpageHero from "~~/app/components/mba/MbaSubpageHero.vue";
 import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
+import FormAvailability from "~~/app/components/ui/FormAvailability.vue";
 import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
 import { useFormPreview } from "~~/app/composables/useFormPreview";
 
@@ -135,6 +136,8 @@ async function submitForm() {
       <div class="container mba-page-grid">
         <div class="mba-page-main">
           <form
+            method="post"
+            action="/api/submissions"
             ref="formRef"
             class="mba-panel mba-form-grid"
             :aria-busy="pending"
@@ -143,79 +146,83 @@ async function submitForm() {
             @change="clearError"
             @submit.prevent="submitForm"
           >
-            <div class="flow">
-              <p class="mba-page-eyebrow">Your preparation plans</p>
-              <h2>Organize your GDPI preparation</h2>
-              <FormDisclosure />
-            </div>
-            <div class="mba-form-row mba-form-row--2">
-              <div
-                v-for="field in contactFields"
-                :key="field.id"
-                class="form-field"
-              >
-                <label class="form-label" :for="field.id">
-                  {{ field.label }}
-                  <span v-if="field.required" class="form-label__required"
-                    >*</span
-                  >
-                </label>
-                <input
-                  :id="field.id"
-                  class="form-control"
-                  :name="field.name"
-                  :type="field.type"
-                  :autocomplete="field.autocomplete"
-                  :required="field.required"
-                  :aria-invalid="errors[field.id] ? 'true' : undefined"
-                  :aria-describedby="
-                    errors[field.id] ? `${field.id}-error` : undefined
-                  "
-                />
-                <p
-                  v-if="errors[field.id]"
-                  :id="`${field.id}-error`"
-                  class="form-error"
-                  role="alert"
-                >
-                  {{ errors[field.id] }}
-                </p>
+            <FormAvailability>
+              <div class="flow">
+                <p class="mba-page-eyebrow">Your preparation plans</p>
+                <h2>Organize your GDPI preparation</h2>
+                <FormDisclosure />
               </div>
-            </div>
-            <fieldset
-              v-for="group in collegeGroups"
-              :key="group.id"
-              class="gdpi-college-group"
-            >
-              <legend>{{ group.label }}</legend>
-              <div class="mba-form-row mba-form-row--3">
-                <div v-for="number in 3" :key="number" class="form-field">
-                  <label class="form-label" :for="`gdpi-${group.id}-${number}`"
-                    >College {{ number }}</label
-                  >
+              <div class="mba-form-row mba-form-row--2">
+                <div
+                  v-for="field in contactFields"
+                  :key="field.id"
+                  class="form-field"
+                >
+                  <label class="form-label" :for="field.id">
+                    {{ field.label }}
+                    <span v-if="field.required" class="form-label__required"
+                      >*</span
+                    >
+                  </label>
                   <input
-                    :id="`gdpi-${group.id}-${number}`"
+                    :id="field.id"
                     class="form-control"
-                    :name="`${group.name}[${number - 1}]`"
-                    type="text"
+                    :name="field.name"
+                    :type="field.type"
+                    :autocomplete="field.autocomplete"
+                    :required="field.required"
+                    :aria-invalid="errors[field.id] ? 'true' : undefined"
+                    :aria-describedby="
+                      errors[field.id] ? `${field.id}-error` : undefined
+                    "
                   />
+                  <p
+                    v-if="errors[field.id]"
+                    :id="`${field.id}-error`"
+                    class="form-error"
+                    role="alert"
+                  >
+                    {{ errors[field.id] }}
+                  </p>
                 </div>
               </div>
-            </fieldset>
-            <SubmissionFeedback
-              :pending="pending"
-              :error="submissionError"
-              :issues="submissionIssues"
-            />
-            <div class="form-actions">
-              <button
-                class="btn btn--primary btn--lg"
-                type="submit"
-                :disabled="pending"
+              <fieldset
+                v-for="group in collegeGroups"
+                :key="group.id"
+                class="gdpi-college-group"
               >
-                Submit preparation details
-              </button>
-            </div>
+                <legend>{{ group.label }}</legend>
+                <div class="mba-form-row mba-form-row--3">
+                  <div v-for="number in 3" :key="number" class="form-field">
+                    <label
+                      class="form-label"
+                      :for="`gdpi-${group.id}-${number}`"
+                      >College {{ number }}</label
+                    >
+                    <input
+                      :id="`gdpi-${group.id}-${number}`"
+                      class="form-control"
+                      :name="`${group.name}[${number - 1}]`"
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </fieldset>
+              <SubmissionFeedback
+                :pending="pending"
+                :error="submissionError"
+                :issues="submissionIssues"
+              />
+              <div class="form-actions">
+                <button
+                  class="btn btn--primary btn--lg"
+                  type="submit"
+                  :disabled="pending"
+                >
+                  Submit preparation details
+                </button>
+              </div>
+            </FormAvailability>
           </form>
         </div>
 

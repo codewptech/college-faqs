@@ -1,3 +1,10 @@
+export type EditorialTimestamps = {
+  /** Offset-aware ISO 8601 timestamp; editorially maintained, not file mtime. */
+  publishedAt?: string | null;
+  lastUpdated?: string | null;
+  effectiveAt?: string | null;
+};
+
 export type SeoContent = {
   title: string;
   description: string;
@@ -34,12 +41,31 @@ export type TableBlock = {
   rows: ContentText[][];
 };
 
+export type ImageBlock = {
+  type: "image";
+  src: string;
+  alt: string;
+  caption?: string | null;
+  width: number;
+  height: number;
+};
+
+/** Page-owned responsive media; URLs remain explicit in the consuming page. */
+export type ResponsiveImage = Pick<
+  ImageBlock,
+  "src" | "alt" | "width" | "height"
+> & {
+  srcset: string;
+  sizes: string;
+};
+
 export type NoteBlock = {
   type: "note";
   text: ContentText;
 };
 
-export type ContentBlock = ParagraphBlock | ListBlock | TableBlock | NoteBlock;
+export type ContentBlock =
+  ParagraphBlock | ListBlock | TableBlock | NoteBlock | ImageBlock;
 
 export type ContentSection = {
   id?: string;
@@ -55,10 +81,11 @@ export type ContentCta = {
   links: ContentLink[];
 };
 
-export type CountryGuideContent = {
+export type CountryGuideContent = EditorialTimestamps & {
   ready: boolean;
   slug: string;
   country: string;
+  heroImage?: Omit<ImageBlock, "type">;
   seo: SeoContent;
   eyebrow: string;
   title: string;
@@ -71,11 +98,10 @@ export type CountryGuideContent = {
   cta?: ContentCta;
 };
 
-export type LegalPageContent = {
+export type LegalPageContent = EditorialTimestamps & {
   ready: boolean;
   seo: SeoContent;
   title: string;
-  lastUpdated: string;
   intro: ContentText[];
   sections: ContentSection[];
   notice?: ContentText;

@@ -1,13 +1,16 @@
 <script setup lang="ts">
+import type { ResponsiveImage } from "~~/app/data/content/types";
 import SubmissionFeedback from "~~/app/components/ui/SubmissionFeedback.vue";
 import { useFormSubmission } from "~~/app/composables/useFormSubmission";
 import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
 import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
+import FormAvailability from "~~/app/components/ui/FormAvailability.vue";
 import { useFormPreview } from "~~/app/composables/useFormPreview";
 import {
   studyDestinations as destinations,
   type StudyDestination,
 } from "~~/app/data/studyDestinations";
+import { isCountryGuidePublished } from "~~/app/data/resourceCatalog";
 import ContentText from "~~/app/components/content/ContentText.vue";
 import ContentSections from "~~/app/components/content/ContentSections.vue";
 import ContentCta from "~~/app/components/content/ContentCta.vue";
@@ -65,8 +68,33 @@ const considerations = computed(
     selectedDestination.value.considerations?.filter((item) => item.trim()) ??
     [],
 );
-const profileDialogOpen = ref(false);
-const mentorDialogOpen = ref(false);
+type SavedEnquiry = { id: number; kind: "profile" | "mentor" };
+const savedEnquiries = ref<SavedEnquiry[]>([]);
+let nextSavedEnquiryId = 1;
+const savedEnquiry = computed(() => savedEnquiries.value[0]);
+const successDialogOpen = computed(() => Boolean(savedEnquiry.value));
+const savedEnquiryMessage = computed(() =>
+  savedEnquiry.value?.kind === "profile"
+    ? "Your profile evaluation enquiry has been saved successfully."
+    : "Your mentor callback enquiry has been saved successfully.",
+);
+
+function queueSavedEnquiry(kind: SavedEnquiry["kind"]) {
+  savedEnquiries.value.push({ id: nextSavedEnquiryId++, kind });
+}
+
+function closeSavedEnquiry() {
+  const completed = savedEnquiries.value.shift();
+  if (completed && !savedEnquiries.value.length) {
+    // Pending submit buttons may have lost focus before the response arrived.
+    // Restore an intentional form target after the last queued modal unmounts.
+    nextTick(() => {
+      const form =
+        completed.kind === "profile" ? profileForm.value : mentorForm.value;
+      form?.querySelector<HTMLButtonElement>('button[type="submit"]')?.focus();
+    });
+  }
+}
 const studyLevel = ref("");
 const otherStudyLevel = ref("");
 const {
@@ -114,12 +142,22 @@ function onStudyLevelChange() {
 
 async function submitProfileForm() {
   if (validateProfile() && (await submitProfile()))
-    profileDialogOpen.value = true;
+    queueSavedEnquiry("profile");
 }
 
 async function submitMentorForm() {
-  if (validateMentor() && (await submitMentor())) mentorDialogOpen.value = true;
+  if (validateMentor() && (await submitMentor())) queueSavedEnquiry("mentor");
 }
+const heroImage: ResponsiveImage = {
+  src: "/editorial/landing-study-hero-768.webp",
+  srcset:
+    "/editorial/landing-study-hero-480.webp 480w, /editorial/landing-study-hero-768.webp 768w, /editorial/landing-study-hero-1024.webp 1024w, /editorial/landing-study-hero-1448.webp 1448w",
+  sizes:
+    "(min-width: 1280px) 548px, (min-width: 1024px) calc((100vw - 128px) * 0.475), (min-width: 768px) calc((100vw - 88px) * 0.475), calc(100vw - 32px)",
+  width: 1448,
+  height: 1086,
+  alt: "",
+};
 </script>
 
 <template>
@@ -173,10 +211,12 @@ async function submitMentorForm() {
 
         <div class="study-hero__visual" aria-hidden="true">
           <img
-            src="https://assets.collegefaqs.com/study-abroad/hero-image.png"
-            alt=""
-            width="760"
-            height="600"
+            :src="heroImage.src"
+            :srcset="heroImage.srcset"
+            :sizes="heroImage.sizes"
+            :alt="heroImage.alt"
+            :width="heroImage.width"
+            :height="heroImage.height"
           />
         </div>
       </div>
@@ -184,7 +224,7 @@ async function submitMentorForm() {
 
     <section
       v-if="supportAreas.length"
-      class="section section--compact study-support"
+      class="section study-support"
       :aria-labelledby="
         content.support.title.trim() ? 'study-support-title' : undefined
       "
@@ -309,33 +349,61 @@ async function submitMentorForm() {
           </button>
         </div>
 
-        <div
+        <article
           id="study-destination-panel"
           class="study-destination-panel"
-          :class="{ 'study-destination-panel--single': !considerations.length }"
           role="region"
           aria-labelledby="study-selected-destination-title"
         >
-          <div class="study-destination-panel__content flow">
+          <header class="study-destination-panel__heading flow">
             <p class="study-eyebrow">{{ selectedDestination.name }}</p>
             <h3 id="study-selected-destination-title">
               {{ selectedDestination.shortName }} Study Guide
             </h3>
-            <p v-if="selectedDestination.description?.trim()">
+          </header>
+
+          <figure
+            v-if="selectedDestination.overviewImage"
+            class="study-destination-panel__map"
+          >
+            <img
+              :src="selectedDestination.overviewImage.src"
+              :alt="selectedDestination.overviewImage.alt"
+              :width="selectedDestination.overviewImage.width"
+              :height="selectedDestination.overviewImage.height"
+              decoding="async"
+              loading="lazy"
+            />
+          </figure>
+
+          <div class="study-destination-panel__content">
+            <p
+              v-if="selectedDestination.description?.trim()"
+              class="study-destination-panel__description"
+            >
               {{ selectedDestination.description }}
             </p>
-            <NuxtLink :to="`/programs/study-abroad/${selectedDestination.id}`">
+            <NuxtLink
+              class="study-destination-panel__guide"
+              :to="`/programs/study-abroad/${selectedDestination.id}`"
+            >
               View the {{ selectedDestination.shortName }} guide
             </NuxtLink>
-          </div>
 
-          <ul v-if="considerations.length" class="study-checklist" role="list">
-            <li v-for="item in considerations" :key="item">
-              <span aria-hidden="true">✓</span>
-              {{ item }}
-            </li>
-          </ul>
-        </div>
+            <div
+              v-if="considerations.length"
+              class="study-destination-panel__considerations"
+            >
+              <h4>Key considerations</h4>
+              <ul class="study-checklist" role="list">
+                <li v-for="item in considerations" :key="item">
+                  <span aria-hidden="true">✓</span>
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -375,8 +443,6 @@ async function submitMentorForm() {
         </p>
         <div
           class="study-guides__scroller"
-          role="region"
-          aria-label="Destination guides"
           aria-describedby="study-guides-scroll-note"
           tabindex="0"
         >
@@ -387,20 +453,27 @@ async function submitMentorForm() {
                 :to="`/programs/study-abroad/${destination.id}`"
               >
                 <img
-                  src="/placeholders/study-destination-guide.svg"
-                  alt=""
-                  width="640"
-                  height="360"
+                  v-if="destination.image"
+                  :src="destination.image.src"
+                  :alt="destination.image.alt"
+                  :width="destination.image.width"
+                  :height="destination.image.height"
                   loading="lazy"
+                  decoding="async"
                 />
                 <div class="study-guide-card__content flow">
                   <h3>{{ destination.shortName }}</h3>
                   <p v-if="destination.description?.trim()">
                     {{ destination.description }}
                   </p>
-                  <span class="study-guide-card__link"
-                    >Explore guide <span aria-hidden="true">→</span></span
-                  >
+                  <span class="study-guide-card__link">
+                    {{
+                      isCountryGuidePublished(destination.id)
+                        ? "Read guide"
+                        : "Guide coming soon"
+                    }}
+                    <span aria-hidden="true">→</span>
+                  </span>
                 </div>
               </NuxtLink>
             </li>
@@ -471,6 +544,8 @@ async function submitMentorForm() {
 
         <div class="study-form-panel">
           <form
+            method="post"
+            action="/api/submissions"
             ref="profileForm"
             :aria-busy="profilePending"
             class="study-form-grid"
@@ -479,253 +554,255 @@ async function submitMentorForm() {
             @input="clearProfileError"
             @change="clearProfileError"
           >
-            <FormDisclosure />
-            <div class="study-form-row study-form-row--2">
-              <div class="form-field">
-                <label class="form-label" for="profile-name">
-                  Full name
-                  <span class="form-label__required">*</span>
-                </label>
-                <input
-                  id="profile-name"
-                  class="form-control"
-                  name="name"
-                  type="text"
-                  autocomplete="name"
-                  :aria-invalid="Boolean(profileErrors['profile-name'])"
-                  :aria-describedby="
-                    profileErrors['profile-name']
-                      ? 'profile-name-error'
-                      : undefined
-                  "
-                  required
-                  placeholder="Your name"
-                />
-                <p
-                  v-if="profileErrors['profile-name']"
-                  id="profile-name-error"
-                  class="form-error"
-                >
-                  {{ profileErrors["profile-name"] }}
-                </p>
-              </div>
-
-              <div class="form-field">
-                <label class="form-label" for="profile-phone">
-                  Phone number
-                  <span class="form-label__required">*</span>
-                </label>
-                <input
-                  id="profile-phone"
-                  class="form-control"
-                  name="phone"
-                  type="tel"
-                  autocomplete="tel"
-                  :aria-invalid="Boolean(profileErrors['profile-phone'])"
-                  :aria-describedby="
-                    profileErrors['profile-phone']
-                      ? 'profile-phone-error'
-                      : undefined
-                  "
-                  required
-                  placeholder="Your phone number"
-                />
-                <p
-                  v-if="profileErrors['profile-phone']"
-                  id="profile-phone-error"
-                  class="form-error"
-                >
-                  {{ profileErrors["profile-phone"] }}
-                </p>
-              </div>
-            </div>
-
-            <div class="study-form-row study-form-row--2">
-              <div class="form-field">
-                <label class="form-label" for="profile-email"> Email </label>
-                <input
-                  id="profile-email"
-                  class="form-control"
-                  name="email"
-                  type="email"
-                  autocomplete="email"
-                  :aria-invalid="Boolean(profileErrors['profile-email'])"
-                  :aria-describedby="
-                    profileErrors['profile-email']
-                      ? 'profile-email-error'
-                      : undefined
-                  "
-                  placeholder="you@example.com"
-                />
-                <p
-                  v-if="profileErrors['profile-email']"
-                  id="profile-email-error"
-                  class="form-error"
-                >
-                  {{ profileErrors["profile-email"] }}
-                </p>
-              </div>
-
-              <div class="form-field">
-                <label class="form-label" for="profile-qualification">
-                  Current qualification
-                  <span class="form-label__required">*</span>
-                </label>
-                <input
-                  id="profile-qualification"
-                  class="form-control"
-                  name="qualification"
-                  type="text"
-                  :aria-invalid="
-                    Boolean(profileErrors['profile-qualification'])
-                  "
-                  :aria-describedby="
-                    profileErrors['profile-qualification']
-                      ? 'profile-qualification-error'
-                      : undefined
-                  "
-                  required
-                  placeholder="e.g. B.Tech, B.Com, Class 12"
-                />
-                <p
-                  v-if="profileErrors['profile-qualification']"
-                  id="profile-qualification-error"
-                  class="form-error"
-                >
-                  {{ profileErrors["profile-qualification"] }}
-                </p>
-              </div>
-            </div>
-
-            <div class="study-form-row study-form-row--2">
-              <div class="form-field">
-                <label class="form-label" for="profile-level">
-                  Intended study level
-                </label>
-                <select
-                  id="profile-level"
-                  class="form-control"
-                  name="studyLevel"
-                  v-model="studyLevel"
-                  @change="onStudyLevelChange"
-                >
-                  <option value="">Choose a level</option>
-                  <option value="undergraduate">Undergraduate</option>
-                  <option value="postgraduate">Postgraduate</option>
-                  <option value="mba">MBA / Management</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div class="form-field">
-                <label class="form-label" for="profile-destination">
-                  Preferred destination
-                </label>
-                <select
-                  id="profile-destination"
-                  class="form-control"
-                  name="destination"
-                >
-                  <option value="">Not decided yet</option>
-                  <option
-                    v-for="destination in destinations"
-                    :key="destination.id"
-                    :value="destination.id"
+            <FormAvailability>
+              <FormDisclosure />
+              <div class="study-form-row study-form-row--2">
+                <div class="form-field">
+                  <label class="form-label" for="profile-name">
+                    Full name
+                    <span class="form-label__required">*</span>
+                  </label>
+                  <input
+                    id="profile-name"
+                    class="form-control"
+                    name="name"
+                    type="text"
+                    autocomplete="name"
+                    :aria-invalid="Boolean(profileErrors['profile-name'])"
+                    :aria-describedby="
+                      profileErrors['profile-name']
+                        ? 'profile-name-error'
+                        : undefined
+                    "
+                    required
+                    placeholder="Your name"
+                  />
+                  <p
+                    v-if="profileErrors['profile-name']"
+                    id="profile-name-error"
+                    class="form-error"
                   >
-                    {{ destination.name }}
-                  </option>
-                </select>
+                    {{ profileErrors["profile-name"] }}
+                  </p>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="profile-phone">
+                    Phone number
+                    <span class="form-label__required">*</span>
+                  </label>
+                  <input
+                    id="profile-phone"
+                    class="form-control"
+                    name="phone"
+                    type="tel"
+                    autocomplete="tel"
+                    :aria-invalid="Boolean(profileErrors['profile-phone'])"
+                    :aria-describedby="
+                      profileErrors['profile-phone']
+                        ? 'profile-phone-error'
+                        : undefined
+                    "
+                    required
+                    placeholder="Your phone number"
+                  />
+                  <p
+                    v-if="profileErrors['profile-phone']"
+                    id="profile-phone-error"
+                    class="form-error"
+                  >
+                    {{ profileErrors["profile-phone"] }}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div v-if="studyLevel === 'other'" class="form-field">
-              <label class="form-label" for="profile-level-other"
-                >Specify study level
-                <span class="form-label__required">*</span></label
-              >
-              <input
-                id="profile-level-other"
-                v-model="otherStudyLevel"
-                class="form-control"
-                name="otherStudyLevel"
-                type="text"
-                maxlength="150"
-                required
-                placeholder="Enter your intended study level"
-                :aria-invalid="
-                  profileErrors['profile-level-other'] ? 'true' : undefined
-                "
-                :aria-describedby="
-                  profileErrors['profile-level-other']
-                    ? 'profile-level-other-error'
-                    : undefined
-                "
-              />
-              <p
-                v-if="profileErrors['profile-level-other']"
-                id="profile-level-other-error"
-                class="form-error"
-                role="alert"
-              >
-                {{ profileErrors["profile-level-other"] }}
-              </p>
-            </div>
+              <div class="study-form-row study-form-row--2">
+                <div class="form-field">
+                  <label class="form-label" for="profile-email"> Email </label>
+                  <input
+                    id="profile-email"
+                    class="form-control"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    :aria-invalid="Boolean(profileErrors['profile-email'])"
+                    :aria-describedby="
+                      profileErrors['profile-email']
+                        ? 'profile-email-error'
+                        : undefined
+                    "
+                    placeholder="you@example.com"
+                  />
+                  <p
+                    v-if="profileErrors['profile-email']"
+                    id="profile-email-error"
+                    class="form-error"
+                  >
+                    {{ profileErrors["profile-email"] }}
+                  </p>
+                </div>
 
-            <div class="study-form-row study-form-row--2">
-              <div class="form-field">
-                <label class="form-label" for="profile-course">
-                  Course or subject of interest
-                </label>
+                <div class="form-field">
+                  <label class="form-label" for="profile-qualification">
+                    Current qualification
+                    <span class="form-label__required">*</span>
+                  </label>
+                  <input
+                    id="profile-qualification"
+                    class="form-control"
+                    name="qualification"
+                    type="text"
+                    :aria-invalid="
+                      Boolean(profileErrors['profile-qualification'])
+                    "
+                    :aria-describedby="
+                      profileErrors['profile-qualification']
+                        ? 'profile-qualification-error'
+                        : undefined
+                    "
+                    required
+                    placeholder="e.g. B.Tech, B.Com, Class 12"
+                  />
+                  <p
+                    v-if="profileErrors['profile-qualification']"
+                    id="profile-qualification-error"
+                    class="form-error"
+                  >
+                    {{ profileErrors["profile-qualification"] }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="study-form-row study-form-row--2">
+                <div class="form-field">
+                  <label class="form-label" for="profile-level">
+                    Intended study level
+                  </label>
+                  <select
+                    id="profile-level"
+                    class="form-control"
+                    name="studyLevel"
+                    v-model="studyLevel"
+                    @change="onStudyLevelChange"
+                  >
+                    <option value="">Choose a level</option>
+                    <option value="undergraduate">Undergraduate</option>
+                    <option value="postgraduate">Postgraduate</option>
+                    <option value="mba">MBA / Management</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="profile-destination">
+                    Preferred destination
+                  </label>
+                  <select
+                    id="profile-destination"
+                    class="form-control"
+                    name="destination"
+                  >
+                    <option value="">Not decided yet</option>
+                    <option
+                      v-for="destination in destinations"
+                      :key="destination.id"
+                      :value="destination.id"
+                    >
+                      {{ destination.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div v-if="studyLevel === 'other'" class="form-field">
+                <label class="form-label" for="profile-level-other"
+                  >Specify study level
+                  <span class="form-label__required">*</span></label
+                >
                 <input
-                  id="profile-course"
+                  id="profile-level-other"
+                  v-model="otherStudyLevel"
                   class="form-control"
-                  name="course"
+                  name="otherStudyLevel"
                   type="text"
-                  placeholder="e.g. Data Science, Finance, Engineering"
+                  maxlength="150"
+                  required
+                  placeholder="Enter your intended study level"
+                  :aria-invalid="
+                    profileErrors['profile-level-other'] ? 'true' : undefined
+                  "
+                  :aria-describedby="
+                    profileErrors['profile-level-other']
+                      ? 'profile-level-other-error'
+                      : undefined
+                  "
+                />
+                <p
+                  v-if="profileErrors['profile-level-other']"
+                  id="profile-level-other-error"
+                  class="form-error"
+                  role="alert"
+                >
+                  {{ profileErrors["profile-level-other"] }}
+                </p>
+              </div>
+
+              <div class="study-form-row study-form-row--2">
+                <div class="form-field">
+                  <label class="form-label" for="profile-course">
+                    Course or subject of interest
+                  </label>
+                  <input
+                    id="profile-course"
+                    class="form-control"
+                    name="course"
+                    type="text"
+                    placeholder="e.g. Data Science, Finance, Engineering"
+                  />
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="profile-intake">
+                    Preferred intake
+                  </label>
+                  <input
+                    id="profile-intake"
+                    class="form-control"
+                    name="intake"
+                    type="text"
+                    placeholder="e.g. Fall 2027"
+                  />
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="profile-message">
+                  Anything else we should know?
+                </label>
+                <textarea
+                  id="profile-message"
+                  class="form-control"
+                  name="message"
+                  rows="5"
+                  placeholder="Tell us about your goals, budget, preferred locations, or questions."
                 />
               </div>
 
-              <div class="form-field">
-                <label class="form-label" for="profile-intake">
-                  Preferred intake
-                </label>
-                <input
-                  id="profile-intake"
-                  class="form-control"
-                  name="intake"
-                  type="text"
-                  placeholder="e.g. Fall 2027"
-                />
-              </div>
-            </div>
-
-            <div class="form-field">
-              <label class="form-label" for="profile-message">
-                Anything else we should know?
-              </label>
-              <textarea
-                id="profile-message"
-                class="form-control"
-                name="message"
-                rows="5"
-                placeholder="Tell us about your goals, budget, preferred locations, or questions."
+              <SubmissionFeedback
+                :pending="profilePending"
+                :error="profileSubmissionError"
+                :issues="profileSubmissionIssues"
               />
-            </div>
-
-            <SubmissionFeedback
-              :pending="profilePending"
-              :error="profileSubmissionError"
-              :issues="profileSubmissionIssues"
-            />
-            <div class="form-actions">
-              <button
-                class="btn btn--primary btn--lg"
-                type="submit"
-                :disabled="profilePending"
-              >
-                Submit for evaluation
-              </button>
-            </div>
+              <div class="form-actions">
+                <button
+                  class="btn btn--primary btn--lg"
+                  type="submit"
+                  :disabled="profilePending"
+                >
+                  Submit for evaluation
+                </button>
+              </div>
+            </FormAvailability>
           </form>
         </div>
       </div>
@@ -733,7 +810,7 @@ async function submitMentorForm() {
 
     <section
       id="talk-to-mentor"
-      class="section study-mentor"
+      class="section section--continued-surface study-mentor"
       aria-labelledby="study-mentor-title"
     >
       <div class="container study-mentor__panel">
@@ -763,6 +840,8 @@ async function submitMentorForm() {
 
         <div class="study-mentor__form-wrap">
           <form
+            method="post"
+            action="/api/submissions"
             ref="mentorForm"
             :aria-busy="mentorPending"
             class="study-mentor__form"
@@ -771,95 +850,98 @@ async function submitMentorForm() {
             @input="clearMentorError"
             @change="clearMentorError"
           >
-            <FormDisclosure />
-            <div class="form-field">
-              <label
-                class="form-label study-mentor__label"
-                for="study-mentor-name"
-              >
-                Name
-                <span class="form-label__required">*</span>
-              </label>
-              <input
-                id="study-mentor-name"
-                class="form-control"
-                name="name"
-                type="text"
-                autocomplete="name"
-                :aria-invalid="Boolean(mentorErrors['study-mentor-name'])"
-                :aria-describedby="
-                  mentorErrors['study-mentor-name']
-                    ? 'study-mentor-name-error'
-                    : undefined
-                "
-                required
-                placeholder="Your name"
-              />
-              <p
-                v-if="mentorErrors['study-mentor-name']"
-                id="study-mentor-name-error"
-                class="form-error"
-              >
-                {{ mentorErrors["study-mentor-name"] }}
-              </p>
-            </div>
+            <FormAvailability>
+              <FormDisclosure />
+              <div class="form-field">
+                <label
+                  class="form-label study-mentor__label"
+                  for="study-mentor-name"
+                >
+                  Name
+                  <span class="form-label__required">*</span>
+                </label>
+                <input
+                  id="study-mentor-name"
+                  class="form-control"
+                  name="name"
+                  type="text"
+                  autocomplete="name"
+                  :aria-invalid="Boolean(mentorErrors['study-mentor-name'])"
+                  :aria-describedby="
+                    mentorErrors['study-mentor-name']
+                      ? 'study-mentor-name-error'
+                      : undefined
+                  "
+                  required
+                  placeholder="Your name"
+                />
+                <p
+                  v-if="mentorErrors['study-mentor-name']"
+                  id="study-mentor-name-error"
+                  class="form-error"
+                >
+                  {{ mentorErrors["study-mentor-name"] }}
+                </p>
+              </div>
 
-            <div class="form-field">
-              <label
-                class="form-label study-mentor__label"
-                for="study-mentor-phone"
-              >
-                Phone number
-                <span class="form-label__required">*</span>
-              </label>
-              <input
-                id="study-mentor-phone"
-                class="form-control"
-                name="phone"
-                type="tel"
-                autocomplete="tel"
-                :aria-invalid="Boolean(mentorErrors['study-mentor-phone'])"
-                :aria-describedby="
-                  mentorErrors['study-mentor-phone']
-                    ? 'study-mentor-phone-error'
-                    : undefined
-                "
-                required
-                placeholder="Your phone number"
-              />
-              <p
-                v-if="mentorErrors['study-mentor-phone']"
-                id="study-mentor-phone-error"
-                class="form-error"
-              >
-                {{ mentorErrors["study-mentor-phone"] }}
-              </p>
-            </div>
+              <div class="form-field">
+                <label
+                  class="form-label study-mentor__label"
+                  for="study-mentor-phone"
+                >
+                  Phone number
+                  <span class="form-label__required">*</span>
+                </label>
+                <input
+                  id="study-mentor-phone"
+                  class="form-control"
+                  name="phone"
+                  type="tel"
+                  autocomplete="tel"
+                  :aria-invalid="Boolean(mentorErrors['study-mentor-phone'])"
+                  :aria-describedby="
+                    mentorErrors['study-mentor-phone']
+                      ? 'study-mentor-phone-error'
+                      : undefined
+                  "
+                  required
+                  placeholder="Your phone number"
+                />
+                <p
+                  v-if="mentorErrors['study-mentor-phone']"
+                  id="study-mentor-phone-error"
+                  class="form-error"
+                >
+                  {{ mentorErrors["study-mentor-phone"] }}
+                </p>
+              </div>
 
-            <SubmissionFeedback
-              :pending="mentorPending"
-              :error="mentorSubmissionError"
-              :issues="mentorSubmissionIssues"
-            />
-            <div class="form-actions">
-              <button
-                class="btn btn--primary btn--lg"
-                type="submit"
-                :disabled="mentorPending"
-              >
-                Request callback
-              </button>
-            </div>
+              <SubmissionFeedback
+                :pending="mentorPending"
+                :error="mentorSubmissionError"
+                :issues="mentorSubmissionIssues"
+              />
+              <div class="form-actions">
+                <button
+                  class="btn btn--primary btn--lg"
+                  type="submit"
+                  :disabled="mentorPending"
+                >
+                  Request callback
+                </button>
+              </div>
+            </FormAvailability>
           </form>
         </div>
       </div>
     </section>
     <SuccessDialog
-      :open="profileDialogOpen"
-      @close="profileDialogOpen = false"
+      v-if="savedEnquiry"
+      :key="savedEnquiry.id"
+      :open="successDialogOpen"
+      :message="savedEnquiryMessage"
+      @close="closeSavedEnquiry"
     />
-
-    <SuccessDialog :open="mentorDialogOpen" @close="mentorDialogOpen = false" />
   </div>
 </template>
 
@@ -917,14 +999,18 @@ async function submitMentorForm() {
 }
 
 .study-hero__visual {
+  width: 100%;
+  aspect-ratio: 4 / 3;
   max-width: 39rem;
   margin-inline: auto;
   background: var(--color-white);
 }
 
 .study-hero__visual img {
+  display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
 }
 
 .study-section-heading {
@@ -1024,20 +1110,60 @@ async function submitMentorForm() {
 
 .study-destination-panel {
   display: grid;
-  gap: var(--space-8);
-  padding: var(--space-7, var(--space-6));
+  min-width: 0;
+  max-width: 72rem;
+  gap: var(--space-6);
+  margin-inline: auto;
+  padding: var(--space-6);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   background: var(--color-white);
-  box-shadow: var(--shadow-sm);
+}
+
+.study-destination-panel__heading {
+  --flow-space: var(--space-3);
+  min-width: 0;
 }
 
 .study-destination-panel__content {
-  max-width: 43rem;
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  gap: var(--space-5);
 }
 
-.study-destination-panel__content p:last-child {
+.study-destination-panel__description {
   color: var(--color-text-secondary);
+}
+
+.study-destination-panel__guide {
+  justify-self: start;
+  font-weight: var(--font-weight-semibold);
+}
+
+.study-destination-panel__considerations {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.study-destination-panel__considerations h4 {
+  font-size: var(--font-size-base);
+}
+
+.study-destination-panel__map {
+  width: 100%;
+  max-width: 37.5rem;
+  margin: 0;
+  justify-self: center;
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+}
+
+.study-destination-panel__map img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .study-checklist {
@@ -1118,7 +1244,9 @@ async function submitMentorForm() {
 
   > img {
     width: 100%;
+    aspect-ratio: 16 / 10;
     height: auto;
+    object-fit: cover;
     background: var(--color-white);
   }
 }
@@ -1174,10 +1302,6 @@ async function submitMentorForm() {
 .study-form-row {
   display: grid;
   gap: var(--space-4);
-}
-
-.study-mentor {
-  padding-top: 0;
 }
 
 .study-mentor__panel {
@@ -1250,16 +1374,6 @@ async function submitMentorForm() {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .study-destination-panel {
-    grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
-    align-items: center;
-    padding: var(--space-8);
-  }
-
-  .study-destination-panel--single {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .study-profile__grid {
     grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
     align-items: start;
@@ -1277,6 +1391,33 @@ async function submitMentorForm() {
 }
 
 @include respond-to(lg) {
+  .study-destination-panel {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-8);
+    padding: var(--space-8);
+  }
+
+  .study-destination-panel__heading {
+    grid-column: 1 / -1;
+  }
+
+  .study-destination-panel__content {
+    grid-template-areas: "description" "considerations" "guide";
+  }
+
+  .study-destination-panel__description {
+    grid-area: description;
+  }
+
+  .study-destination-panel__considerations {
+    grid-area: considerations;
+  }
+
+  .study-destination-panel__guide {
+    grid-area: guide;
+  }
+
   .study-guides__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

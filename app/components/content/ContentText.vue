@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import type { ContentText, TextSegment } from "~~/app/data/content/types";
+import type {
+  ContentText as EditorialText,
+  TextSegment,
+} from "~~/app/data/content/types";
 import { isInternalHref, isSafeHref } from "~~/app/data/content/helpers";
 
-const props = defineProps<{ value: ContentText }>();
-
+const props = defineProps<{ value: EditorialText }>();
 const segments = computed<TextSegment[]>(() => {
-  if (typeof props.value === "string") return [{ text: props.value }];
-  return props.value.filter((segment) => segment?.text?.trim());
+  const source: TextSegment[] =
+    typeof props.value === "string" ? [{ text: props.value }] : props.value;
+  return source
+    .filter((segment) => Boolean(segment?.text?.trim()))
+    .map((segment) => ({ ...segment, href: segment.href?.trim() }));
 });
 </script>
 

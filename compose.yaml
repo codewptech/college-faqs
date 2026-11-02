@@ -11,6 +11,10 @@ services:
       NODE_ENV: production
       NITRO_HOST: 0.0.0.0
       NITRO_PORT: 3002
+      # Server-only runtime settings. A host .env is interpolation input, not
+      # container environment; require both explicitly before starting Compose.
+      DATABASE_URL: ${DATABASE_URL:?Set the server-only DATABASE_URL}
+      SUBMISSIONS_ORIGIN: ${SUBMISSIONS_ORIGIN:?Set the public browser origin}
 
     restart: unless-stopped
     init: true

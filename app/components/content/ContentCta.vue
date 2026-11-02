@@ -14,7 +14,7 @@ const links = computed(() =>
 </script>
 
 <template>
-  <div class="content-cta">
+  <div class="content-cta editorial-prose">
     <div class="content-cta__copy flow">
       <p v-if="cta.eyebrow?.trim()" class="content-cta__eyebrow">
         {{ cta.eyebrow }}
@@ -52,34 +52,38 @@ const links = computed(() =>
 @use "~~/app/assets/scss/abstracts/mixins" as *;
 
 .content-cta {
-  --color-focus: var(--color-white);
   display: grid;
-  gap: var(--space-8);
-  padding: var(--space-8);
+  width: 100%;
+  min-width: 0;
+  max-width: 64rem;
+  gap: var(--space-6);
+  margin-inline: auto;
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
   border-top: 3px solid var(--color-brand-red);
-  border-radius: var(--radius-xl);
-  background: var(--color-surface-dark);
-  color: var(--color-white);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  color: var(--color-text);
+  overflow-wrap: anywhere;
 }
 
 .content-cta__copy {
+  --flow-space: var(--space-4);
+  min-width: 0;
   max-width: 44rem;
 }
 
 .content-cta__copy h2 {
-  color: var(--color-white);
+  color: var(--color-text);
+  text-wrap: pretty;
 }
 
 .content-cta__copy > p:not(.content-cta__eyebrow) {
-  color: var(--color-gray-200);
-}
-
-.content-cta__copy :deep(a) {
-  color: var(--color-white);
+  color: var(--color-text-secondary);
 }
 
 .content-cta__eyebrow {
-  color: var(--color-gray-200);
+  color: var(--color-brand-red);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.08em;
@@ -90,28 +94,34 @@ const links = computed(() =>
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-5);
+  gap: var(--space-3) var(--space-6);
+  min-width: 0;
+}
+
+.content-cta__actions > a {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .content-cta__link {
   display: inline-flex;
+  min-height: 2.75rem;
   align-items: center;
   gap: var(--space-2);
-  color: var(--color-white);
+  color: var(--color-link);
   font-weight: var(--font-weight-semibold);
   text-decoration: none;
 }
 
 .content-cta__link:hover {
-  color: var(--color-white);
+  color: var(--color-link-hover);
   text-decoration: underline;
 }
 
-@include respond-to(lg) {
+@include respond-to(md) {
   .content-cta {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
-    padding: var(--space-10);
+    padding: var(--space-8);
   }
 }
 </style>

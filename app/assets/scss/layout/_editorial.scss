@@ -1,0 +1,272 @@
+@use "../abstracts/mixins" as *;
+
+// Reading surfaces are opt-in: programme cards, forms and landing sections keep
+// their own layouts. An article section is not a full-width page section.
+.editorial-layout__body {
+  display: grid;
+  align-content: start;
+  gap: clamp(var(--space-10), 4vw, var(--space-16));
+}
+
+.editorial-prose {
+  min-width: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.editorial-prose :where(h2) {
+  color: var(--color-text);
+  font-size: clamp(var(--font-size-2xl), 2.5vw, var(--font-size-3xl));
+  line-height: 1.3;
+}
+
+.editorial-prose :where(h3) {
+  color: var(--color-text);
+  font-size: var(--font-size-xl);
+  line-height: 1.4;
+}
+
+.editorial-prose :where(p, li) {
+  color: var(--color-text-secondary);
+}
+
+.editorial-section {
+  min-width: 0;
+}
+
+.editorial-section-heading {
+  display: grid;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.editorial-section-heading > .flow {
+  --flow-space: var(--space-3);
+}
+
+.editorial-eyebrow {
+  color: var(--color-primary-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.editorial-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  align-items: start;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editorial-card {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: var(--space-4);
+  padding: clamp(var(--space-5), 2vw, var(--space-6));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+}
+
+.editorial-card :where(h2, h3) {
+  font-size: var(--font-size-lg);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.editorial-card > .flow {
+  --flow-space: var(--space-3);
+}
+
+.editorial-card--icon {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+}
+
+.editorial-card__mark {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-semibold);
+}
+
+.editorial-number {
+  display: inline-grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-self: start;
+  justify-self: start;
+  place-items: center;
+  border: 1px solid var(--color-primary-100);
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.editorial-steps {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editorial-step {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-4);
+  padding-block: var(--space-6);
+}
+
+.editorial-step:first-child {
+  padding-top: 0;
+}
+
+.editorial-step:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.editorial-step .editorial-number {
+  border-radius: 50%;
+}
+
+.editorial-step > .flow {
+  --flow-space: var(--space-3);
+}
+
+.editorial-checklist {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editorial-checklist li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.editorial-checklist li > span:first-child {
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.content-sections {
+  display: grid;
+  min-width: 0;
+  gap: clamp(var(--space-10), 4vw, var(--space-16));
+}
+
+.content-section {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-5);
+}
+
+.content-section__header {
+  gap: var(--space-3);
+}
+
+.editorial-card .content-section,
+.editorial-step .content-section {
+  gap: var(--space-3);
+}
+
+.content-list {
+  display: grid;
+  gap: var(--space-3);
+  max-width: var(--content-max);
+  margin: 0;
+  padding-left: var(--space-6);
+}
+
+.content-note,
+.editorial-note {
+  max-width: var(--content-max);
+  padding: var(--space-4) var(--space-5);
+  border-left: 2px solid var(--color-primary-600);
+  background: var(--color-surface-subtle);
+  color: var(--color-text-secondary);
+}
+
+.content-figure {
+  max-width: 48rem;
+  margin: 0;
+}
+
+.content-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+
+.content-figure figcaption {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.content-table-wrap {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  @include focus-ring;
+}
+
+.content-table {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: collapse;
+  background: var(--color-white);
+}
+
+.content-table caption {
+  padding: var(--space-4);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  text-align: left;
+}
+
+.content-table th,
+.content-table td {
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.content-table th {
+  background: var(--color-surface-subtle);
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+}

@@ -9,26 +9,26 @@ defineProps<{
 </script>
 
 <template>
-  <section class="explore-hero section">
+  <section class="explore-hero section" aria-labelledby="explore-hero-title">
     <div class="container explore-hero__grid">
       <div class="explore-hero__content flow">
-        <p v-if="eyebrow.trim()" class="explore-hero__eyebrow">
-          {{ eyebrow }}
-        </p>
-
-        <h1>
-          {{ title }}
-        </h1>
-
+        <p v-if="eyebrow.trim()" class="explore-hero__eyebrow">{{ eyebrow }}</p>
+        <h1 id="explore-hero-title">{{ title }}</h1>
         <p v-if="description?.trim()" class="explore-hero__lead">
           {{ description }}
         </p>
-
         <slot name="actions" />
+        <!-- The metadata renders its own root only when eligible dates exist. -->
+        <slot name="metadata" />
       </div>
-
-      <div class="explore-hero__visual">
-        <img :src="image" :alt="imageAlt" width="760" height="600" />
+      <div v-if="image.trim()" class="explore-hero__visual">
+        <img
+          :src="image"
+          :alt="imageAlt"
+          width="760"
+          height="600"
+          decoding="async"
+        />
       </div>
     </div>
   </section>
@@ -49,8 +49,7 @@ defineProps<{
 }
 
 .explore-hero__content {
-  --flow-space: var(--space-6);
-
+  --flow-space: var(--space-5);
   min-width: 0;
   max-width: 47rem;
   overflow-wrap: anywhere;
@@ -70,13 +69,22 @@ defineProps<{
   font-size: var(--font-size-lg);
 }
 
+/* Metadata belongs to the introduction, not a separate padded page section. */
+.explore-hero__content :deep(.content-editorial-dates) {
+  width: 100%;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
 .explore-hero__visual {
+  min-width: 0;
   max-width: 36rem;
   margin-inline: auto;
   background: var(--color-white);
 }
 
 .explore-hero__visual img {
+  display: block;
   width: 100%;
   height: auto;
   object-fit: contain;
@@ -84,9 +92,7 @@ defineProps<{
 
 @include respond-to(md) {
   .explore-hero__grid {
-    grid-template-columns:
-      minmax(0, 1.05fr)
-      minmax(20rem, 0.95fr);
+    grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
   }
 }
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ResponsiveImage } from "~~/app/data/content/types";
 import MbaToolCard from "~~/app/components/mba/MbaToolCard.vue";
 
 useSeoMeta({
@@ -61,6 +62,16 @@ const decisionPoints = [
   "Location, campus environment, and peer group",
   "Placement context and career opportunities",
 ];
+const heroImage: ResponsiveImage = {
+  src: "/editorial/landing-mba-hero-768.webp",
+  srcset:
+    "/editorial/landing-mba-hero-480.webp 480w, /editorial/landing-mba-hero-768.webp 768w, /editorial/landing-mba-hero-1024.webp 1024w, /editorial/landing-mba-hero-1448.webp 1448w",
+  sizes:
+    "(min-width: 1280px) 548px, (min-width: 1024px) calc((100vw - 128px) * 0.475), (min-width: 768px) calc((100vw - 88px) * 0.475), calc(100vw - 32px)",
+  width: 1448,
+  height: 1086,
+  alt: "",
+};
 </script>
 
 <template>
@@ -93,19 +104,18 @@ const decisionPoints = [
 
         <div class="mba-hero__visual" aria-hidden="true">
           <img
-            src="https://assets.collegefaqs.com/mba/hero-image.png"
-            alt=""
-            width="760"
-            height="600"
+            :src="heroImage.src"
+            :srcset="heroImage.srcset"
+            :sizes="heroImage.sizes"
+            :alt="heroImage.alt"
+            :width="heroImage.width"
+            :height="heroImage.height"
           />
         </div>
       </div>
     </section>
 
-    <section
-      class="mba-quick section section--compact"
-      aria-labelledby="quick-actions-title"
-    >
+    <section class="mba-quick section" aria-labelledby="quick-actions-title">
       <div class="container">
         <div class="mba-section-heading mba-section-heading--compact">
           <div class="flow">
@@ -275,13 +285,17 @@ const decisionPoints = [
   font-size: var(--font-size-sm);
 }
 .mba-hero__visual {
+  width: 100%;
+  aspect-ratio: 4 / 3;
   max-width: 39rem;
   margin-inline: auto;
   background: var(--color-white);
 }
 .mba-hero__visual img {
+  display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
 }
 
 .mba-section-heading {
@@ -394,7 +408,6 @@ const decisionPoints = [
 }
 
 .mba-final-cta {
-  padding-top: 0;
   background: var(--color-gray-50);
 }
 .mba-final-cta__panel {

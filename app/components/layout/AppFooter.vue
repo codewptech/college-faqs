@@ -1,13 +1,10 @@
 <script setup lang="ts">
+import { brandLogoUrl } from "~~/app/data/brandAssets";
 import {
   legalNavigation,
   navigationGroups,
   primaryNavigation,
 } from "~~/app/data/navigation";
-
-// Change only this URL when you want to replace the footer logo.
-// The initial URL matches the current Header logo.
-const footerLogoUrl = "https://assets.collegefaqs.com/logo.jpeg";
 
 // Keep the brand usable if the image URL fails to load.
 const footerLogoFailed = ref(false);
@@ -47,7 +44,7 @@ const explore = computed(() => {
             <img
               v-else
               class="site-footer__brand-logo"
-              :src="footerLogoUrl"
+              :src="brandLogoUrl"
               alt=""
               width="40"
               height="40"

@@ -4,6 +4,7 @@ import { useFormSubmission } from "~~/app/composables/useFormSubmission";
 import MbaNotice from "~~/app/components/mba/MbaNotice.vue";
 import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
 import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
+import FormAvailability from "~~/app/components/ui/FormAvailability.vue";
 import {
   useFormPreview,
   hasNumericValue,
@@ -121,6 +122,8 @@ async function submitForm() {
       <div class="container mba-page-grid">
         <div class="mba-page-main">
           <form
+            method="post"
+            action="/api/submissions"
             ref="formRef"
             class="mba-panel mba-form-grid"
             :aria-busy="pending"
@@ -129,444 +132,454 @@ async function submitForm() {
             @change="clearError"
             @submit.prevent="submitForm"
           >
-            <FormDisclosure />
-            <div class="mba-form-section">
-              <div class="mba-form-section__heading">
-                <h2>Your details</h2>
-                <p>Basic contact information for the predictor request.</p>
-              </div>
-
-              <div class="mba-form-row mba-form-row--2">
-                <div class="form-field">
-                  <label class="form-label" for="predictor-name"
-                    >Full name
-                    <span class="form-label__required">*</span></label
-                  >
-                  <input
-                    id="predictor-name"
-                    class="form-control"
-                    type="text"
-                    required
-                    autocomplete="name"
-                    placeholder="Your name"
-                    name="fullName"
-                    :aria-invalid="
-                      errors['predictor-name'] ? 'true' : undefined
-                    "
-                    :aria-describedby="
-                      errors['predictor-name']
-                        ? 'predictor-name-error'
-                        : undefined
-                    "
-                  />
-                  <p
-                    v-if="errors['predictor-name']"
-                    id="predictor-name-error"
-                    class="form-error"
-                    role="alert"
-                  >
-                    {{ errors["predictor-name"] }}
-                  </p>
+            <FormAvailability>
+              <FormDisclosure />
+              <div class="mba-form-section">
+                <div class="mba-form-section__heading">
+                  <h2>Your details</h2>
+                  <p>Basic contact information for the predictor request.</p>
                 </div>
-                <div class="form-field">
-                  <label class="form-label" for="predictor-phone"
-                    >Phone number
-                    <span class="form-label__required">*</span></label
-                  >
-                  <input
-                    id="predictor-phone"
-                    class="form-control"
-                    type="tel"
-                    required
-                    autocomplete="tel"
-                    placeholder="Your phone number"
-                    name="phone"
-                    :aria-invalid="
-                      errors['predictor-phone'] ? 'true' : undefined
-                    "
-                    :aria-describedby="
-                      errors['predictor-phone']
-                        ? 'predictor-phone-error'
-                        : undefined
-                    "
-                  />
-                  <p
-                    v-if="errors['predictor-phone']"
-                    id="predictor-phone-error"
-                    class="form-error"
-                    role="alert"
-                  >
-                    {{ errors["predictor-phone"] }}
-                  </p>
-                </div>
-              </div>
 
-              <div class="mba-form-row mba-form-row--2">
-                <div class="form-field">
-                  <label class="form-label" for="predictor-email">Email</label>
-                  <input
-                    id="predictor-email"
-                    class="form-control"
-                    type="email"
-                    autocomplete="email"
-                    placeholder="you@example.com"
-                    name="email"
-                    :aria-invalid="
-                      errors['predictor-email'] ? 'true' : undefined
-                    "
-                    :aria-describedby="
-                      errors['predictor-email']
-                        ? 'predictor-email-error'
-                        : undefined
-                    "
-                  />
-                  <p
-                    v-if="errors['predictor-email']"
-                    id="predictor-email-error"
-                    class="form-error"
-                    role="alert"
-                  >
-                    {{ errors["predictor-email"] }}
-                  </p>
-                </div>
-                <div class="form-field">
-                  <label class="form-label" for="predictor-city"
-                    >Current city</label
-                  >
-                  <input
-                    id="predictor-city"
-                    class="form-control"
-                    type="text"
-                    autocomplete="address-level2"
-                    placeholder="City"
-                    name="currentCity"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="mba-form-section">
-              <div class="mba-form-section__heading">
-                <h2>Entrance exams</h2>
-                <p>
-                  Add each exam separately and provide at least a score or
-                  percentile. You can include up to five exams.
-                </p>
-              </div>
-
-              <div class="mba-record-list">
-                <fieldset
-                  v-for="(entry, index) in exams"
-                  :key="entry.id"
-                  class="mba-record"
-                  @input="clearRowErrors(entry.id)"
-                  @change="clearRowErrors(entry.id)"
-                >
-                  <legend class="form-label">Exam {{ index + 1 }}</legend>
-
-                  <div class="mba-form-row mba-form-row--3">
-                    <div class="form-field">
-                      <label class="form-label" :for="`exam-name-${entry.id}`"
-                        >Entrance exam
-                        <span class="form-label__required">*</span></label
-                      >
-                      <select
-                        :id="`exam-name-${entry.id}`"
-                        v-model="entry.exam"
-                        @change="onExamChange(entry)"
-                        :name="`exams[${index}][exam]`"
-                        class="form-control"
-                        required
-                        :aria-invalid="
-                          errors[`exam-name-${entry.id}`] ? 'true' : undefined
-                        "
-                        :aria-describedby="
-                          errors[`exam-name-${entry.id}`]
-                            ? `exam-name-error-${entry.id}`
-                            : undefined
-                        "
-                      >
-                        <option value="">Select exam</option>
-                        <option value="cat">CAT</option>
-                        <option value="xat">XAT</option>
-                        <option value="cmat">CMAT</option>
-                        <option value="mat">MAT</option>
-                        <option value="nmat">NMAT</option>
-                        <option value="snap">SNAP</option>
-                        <option value="mah-mba-cet">MAH MBA CET</option>
-                        <option value="other">Other</option>
-                      </select>
-                      <p
-                        v-if="errors[`exam-name-${entry.id}`]"
-                        :id="`exam-name-error-${entry.id}`"
-                        class="form-error"
-                        role="alert"
-                      >
-                        {{ errors[`exam-name-${entry.id}`] }}
-                      </p>
-                    </div>
-
-                    <div class="form-field">
-                      <label class="form-label" :for="`exam-score-${entry.id}`"
-                        >Score</label
-                      >
-                      <input
-                        :id="`exam-score-${entry.id}`"
-                        v-model="entry.score"
-                        :name="`exams[${index}][score]`"
-                        class="form-control"
-                        type="number"
-                        step="any"
-                        inputmode="decimal"
-                        placeholder="Score"
-                        :aria-invalid="
-                          errors[`exam-score-${entry.id}`] ? 'true' : undefined
-                        "
-                        :aria-describedby="
-                          errors[`exam-score-${entry.id}`]
-                            ? `exam-score-error-${entry.id}`
-                            : undefined
-                        "
-                      />
-                      <p
-                        v-if="errors[`exam-score-${entry.id}`]"
-                        :id="`exam-score-error-${entry.id}`"
-                        class="form-error"
-                        role="alert"
-                      >
-                        {{ errors[`exam-score-${entry.id}`] }}
-                      </p>
-                    </div>
-
-                    <div class="form-field">
-                      <label
-                        class="form-label"
-                        :for="`exam-percentile-${entry.id}`"
-                        >Percentile</label
-                      >
-                      <input
-                        :id="`exam-percentile-${entry.id}`"
-                        v-model="entry.percentile"
-                        :name="`exams[${index}][percentile]`"
-                        class="form-control"
-                        type="number"
-                        min="0"
-                        max="100"
-                        step="any"
-                        inputmode="decimal"
-                        placeholder="0 to 100"
-                        :aria-invalid="
-                          errors[`exam-percentile-${entry.id}`]
-                            ? 'true'
-                            : undefined
-                        "
-                        :aria-describedby="
-                          errors[`exam-percentile-${entry.id}`]
-                            ? `exam-percentile-error-${entry.id}`
-                            : `exam-percentile-help-${entry.id}`
-                        "
-                      />
-                      <p
-                        :id="`exam-percentile-help-${entry.id}`"
-                        class="form-help"
-                      >
-                        Percentile, if available: 0 to 100.
-                      </p>
-                      <p
-                        v-if="errors[`exam-percentile-${entry.id}`]"
-                        :id="`exam-percentile-error-${entry.id}`"
-                        class="form-error"
-                        role="alert"
-                      >
-                        {{ errors[`exam-percentile-${entry.id}`] }}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div v-if="entry.exam === 'other'" class="form-field">
-                    <label class="form-label" :for="`exam-other-${entry.id}`"
-                      >Specify entrance exam
+                <div class="mba-form-row mba-form-row--2">
+                  <div class="form-field">
+                    <label class="form-label" for="predictor-name"
+                      >Full name
                       <span class="form-label__required">*</span></label
                     >
                     <input
-                      :id="`exam-other-${entry.id}`"
-                      v-model="entry.otherExamName"
-                      :name="`exams[${index}][otherExamName]`"
+                      id="predictor-name"
                       class="form-control"
                       type="text"
-                      maxlength="150"
                       required
-                      placeholder="Enter the examination name"
+                      autocomplete="name"
+                      placeholder="Your name"
+                      name="fullName"
                       :aria-invalid="
-                        errors[`exam-other-${entry.id}`] ? 'true' : undefined
+                        errors['predictor-name'] ? 'true' : undefined
                       "
                       :aria-describedby="
-                        errors[`exam-other-${entry.id}`]
-                          ? `exam-other-error-${entry.id}`
+                        errors['predictor-name']
+                          ? 'predictor-name-error'
                           : undefined
                       "
                     />
                     <p
-                      v-if="errors[`exam-other-${entry.id}`]"
-                      :id="`exam-other-error-${entry.id}`"
+                      v-if="errors['predictor-name']"
+                      id="predictor-name-error"
                       class="form-error"
                       role="alert"
                     >
-                      {{ errors[`exam-other-${entry.id}`] }}
+                      {{ errors["predictor-name"] }}
                     </p>
                   </div>
-
-                  <div class="form-actions">
-                    <button
-                      class="btn btn--ghost btn--sm"
-                      type="button"
-                      :disabled="exams.length === 1"
-                      @click="removeExam(entry.id)"
+                  <div class="form-field">
+                    <label class="form-label" for="predictor-phone"
+                      >Phone number
+                      <span class="form-label__required">*</span></label
                     >
-                      Remove exam
-                    </button>
+                    <input
+                      id="predictor-phone"
+                      class="form-control"
+                      type="tel"
+                      required
+                      autocomplete="tel"
+                      placeholder="Your phone number"
+                      name="phone"
+                      :aria-invalid="
+                        errors['predictor-phone'] ? 'true' : undefined
+                      "
+                      :aria-describedby="
+                        errors['predictor-phone']
+                          ? 'predictor-phone-error'
+                          : undefined
+                      "
+                    />
+                    <p
+                      v-if="errors['predictor-phone']"
+                      id="predictor-phone-error"
+                      class="form-error"
+                      role="alert"
+                    >
+                      {{ errors["predictor-phone"] }}
+                    </p>
                   </div>
-                </fieldset>
-              </div>
-
-              <div class="form-actions">
-                <button
-                  class="btn btn--secondary"
-                  type="button"
-                  :disabled="exams.length >= 5"
-                  @click="addExam"
-                >
-                  + Add another exam
-                </button>
-                <p class="form-help" aria-live="polite">
-                  {{ exams.length }} of 5 exams added.
-                </p>
-              </div>
-            </div>
-
-            <div class="mba-form-section">
-              <div class="mba-form-section__heading">
-                <h2>Preferences</h2>
-                <p>Tell us what matters to your college shortlist.</p>
-              </div>
-
-              <div class="mba-form-row mba-form-row--3">
-                <div class="form-field">
-                  <label class="form-label" for="predictor-specialization"
-                    >Preferred specialization</label
-                  >
-                  <select
-                    id="predictor-specialization"
-                    v-model="specialization"
-                    class="form-control"
-                    name="preferredSpecialization"
-                    @change="onSpecializationChange"
-                  >
-                    <option value="">No preference yet</option>
-                    <option value="marketing">Marketing</option>
-                    <option value="finance">Finance</option>
-                    <option value="human-resources">Human Resources</option>
-                    <option value="operations">Operations</option>
-                    <option value="business-analytics">
-                      Business Analytics
-                    </option>
-                    <option value="other">Other</option>
-                    <option value="undecided">Undecided</option>
-                  </select>
                 </div>
-                <div class="form-field">
-                  <label class="form-label" for="predictor-location"
-                    >Preferred location</label
-                  >
-                  <input
-                    id="predictor-location"
-                    class="form-control"
-                    type="text"
-                    placeholder="City, state, or flexible"
-                    name="preferredLocation"
-                  />
+
+                <div class="mba-form-row mba-form-row--2">
+                  <div class="form-field">
+                    <label class="form-label" for="predictor-email"
+                      >Email</label
+                    >
+                    <input
+                      id="predictor-email"
+                      class="form-control"
+                      type="email"
+                      autocomplete="email"
+                      placeholder="you@example.com"
+                      name="email"
+                      :aria-invalid="
+                        errors['predictor-email'] ? 'true' : undefined
+                      "
+                      :aria-describedby="
+                        errors['predictor-email']
+                          ? 'predictor-email-error'
+                          : undefined
+                      "
+                    />
+                    <p
+                      v-if="errors['predictor-email']"
+                      id="predictor-email-error"
+                      class="form-error"
+                      role="alert"
+                    >
+                      {{ errors["predictor-email"] }}
+                    </p>
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label" for="predictor-city"
+                      >Current city</label
+                    >
+                    <input
+                      id="predictor-city"
+                      class="form-control"
+                      type="text"
+                      autocomplete="address-level2"
+                      placeholder="City"
+                      name="currentCity"
+                    />
+                  </div>
                 </div>
-                <div class="form-field">
-                  <label class="form-label" for="predictor-budget"
-                    >Budget (in lakhs)</label
+              </div>
+
+              <div class="mba-form-section">
+                <div class="mba-form-section__heading">
+                  <h2>Entrance exams</h2>
+                  <p>
+                    Add each exam separately and provide at least a score or
+                    percentile. You can include up to five exams.
+                  </p>
+                </div>
+
+                <div class="mba-record-list">
+                  <fieldset
+                    v-for="(entry, index) in exams"
+                    :key="entry.id"
+                    class="mba-record"
+                    @input="clearRowErrors(entry.id)"
+                    @change="clearRowErrors(entry.id)"
                   >
-                  <input
-                    id="predictor-budget"
-                    class="form-control"
-                    type="number"
-                    min="0"
-                    step="any"
-                    inputmode="decimal"
-                    name="budgetLakhs"
-                    placeholder="Optional"
-                    :aria-invalid="
-                      errors['predictor-budget'] ? 'true' : undefined
-                    "
-                    :aria-describedby="
-                      errors['predictor-budget']
-                        ? 'predictor-budget-error'
-                        : undefined
-                    "
-                  />
-                  <p
-                    v-if="errors['predictor-budget']"
-                    id="predictor-budget-error"
-                    class="form-error"
-                    role="alert"
+                    <legend class="form-label">Exam {{ index + 1 }}</legend>
+
+                    <div class="mba-form-row mba-form-row--3">
+                      <div class="form-field">
+                        <label class="form-label" :for="`exam-name-${entry.id}`"
+                          >Entrance exam
+                          <span class="form-label__required">*</span></label
+                        >
+                        <select
+                          :id="`exam-name-${entry.id}`"
+                          v-model="entry.exam"
+                          @change="onExamChange(entry)"
+                          :name="`exams[${index}][exam]`"
+                          class="form-control"
+                          required
+                          :aria-invalid="
+                            errors[`exam-name-${entry.id}`] ? 'true' : undefined
+                          "
+                          :aria-describedby="
+                            errors[`exam-name-${entry.id}`]
+                              ? `exam-name-error-${entry.id}`
+                              : undefined
+                          "
+                        >
+                          <option value="">Select exam</option>
+                          <option value="cat">CAT</option>
+                          <option value="xat">XAT</option>
+                          <option value="cmat">CMAT</option>
+                          <option value="mat">MAT</option>
+                          <option value="nmat">NMAT</option>
+                          <option value="snap">SNAP</option>
+                          <option value="mah-mba-cet">MAH MBA CET</option>
+                          <option value="other">Other</option>
+                        </select>
+                        <p
+                          v-if="errors[`exam-name-${entry.id}`]"
+                          :id="`exam-name-error-${entry.id}`"
+                          class="form-error"
+                          role="alert"
+                        >
+                          {{ errors[`exam-name-${entry.id}`] }}
+                        </p>
+                      </div>
+
+                      <div class="form-field">
+                        <label
+                          class="form-label"
+                          :for="`exam-score-${entry.id}`"
+                          >Score</label
+                        >
+                        <input
+                          :id="`exam-score-${entry.id}`"
+                          v-model="entry.score"
+                          :name="`exams[${index}][score]`"
+                          class="form-control"
+                          type="number"
+                          step="any"
+                          inputmode="decimal"
+                          placeholder="Score"
+                          :aria-invalid="
+                            errors[`exam-score-${entry.id}`]
+                              ? 'true'
+                              : undefined
+                          "
+                          :aria-describedby="
+                            errors[`exam-score-${entry.id}`]
+                              ? `exam-score-error-${entry.id}`
+                              : undefined
+                          "
+                        />
+                        <p
+                          v-if="errors[`exam-score-${entry.id}`]"
+                          :id="`exam-score-error-${entry.id}`"
+                          class="form-error"
+                          role="alert"
+                        >
+                          {{ errors[`exam-score-${entry.id}`] }}
+                        </p>
+                      </div>
+
+                      <div class="form-field">
+                        <label
+                          class="form-label"
+                          :for="`exam-percentile-${entry.id}`"
+                          >Percentile</label
+                        >
+                        <input
+                          :id="`exam-percentile-${entry.id}`"
+                          v-model="entry.percentile"
+                          :name="`exams[${index}][percentile]`"
+                          class="form-control"
+                          type="number"
+                          min="0"
+                          max="100"
+                          step="any"
+                          inputmode="decimal"
+                          placeholder="0 to 100"
+                          :aria-invalid="
+                            errors[`exam-percentile-${entry.id}`]
+                              ? 'true'
+                              : undefined
+                          "
+                          :aria-describedby="
+                            errors[`exam-percentile-${entry.id}`]
+                              ? `exam-percentile-error-${entry.id}`
+                              : `exam-percentile-help-${entry.id}`
+                          "
+                        />
+                        <p
+                          :id="`exam-percentile-help-${entry.id}`"
+                          class="form-help"
+                        >
+                          Percentile, if available: 0 to 100.
+                        </p>
+                        <p
+                          v-if="errors[`exam-percentile-${entry.id}`]"
+                          :id="`exam-percentile-error-${entry.id}`"
+                          class="form-error"
+                          role="alert"
+                        >
+                          {{ errors[`exam-percentile-${entry.id}`] }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div v-if="entry.exam === 'other'" class="form-field">
+                      <label class="form-label" :for="`exam-other-${entry.id}`"
+                        >Specify entrance exam
+                        <span class="form-label__required">*</span></label
+                      >
+                      <input
+                        :id="`exam-other-${entry.id}`"
+                        v-model="entry.otherExamName"
+                        :name="`exams[${index}][otherExamName]`"
+                        class="form-control"
+                        type="text"
+                        maxlength="150"
+                        required
+                        placeholder="Enter the examination name"
+                        :aria-invalid="
+                          errors[`exam-other-${entry.id}`] ? 'true' : undefined
+                        "
+                        :aria-describedby="
+                          errors[`exam-other-${entry.id}`]
+                            ? `exam-other-error-${entry.id}`
+                            : undefined
+                        "
+                      />
+                      <p
+                        v-if="errors[`exam-other-${entry.id}`]"
+                        :id="`exam-other-error-${entry.id}`"
+                        class="form-error"
+                        role="alert"
+                      >
+                        {{ errors[`exam-other-${entry.id}`] }}
+                      </p>
+                    </div>
+
+                    <div class="form-actions">
+                      <button
+                        class="btn btn--ghost btn--sm"
+                        type="button"
+                        :disabled="exams.length === 1"
+                        @click="removeExam(entry.id)"
+                      >
+                        Remove exam
+                      </button>
+                    </div>
+                  </fieldset>
+                </div>
+
+                <div class="form-actions">
+                  <button
+                    class="btn btn--secondary"
+                    type="button"
+                    :disabled="exams.length >= 5"
+                    @click="addExam"
                   >
-                    {{ errors["predictor-budget"] }}
+                    + Add another exam
+                  </button>
+                  <p class="form-help" aria-live="polite">
+                    {{ exams.length }} of 5 exams added.
                   </p>
                 </div>
               </div>
-            </div>
 
-            <div v-if="specialization === 'other'" class="form-field">
-              <label class="form-label" for="predictor-specialization-other"
-                >Specify specialization
-                <span class="form-label__required">*</span></label
-              >
-              <input
-                id="predictor-specialization-other"
-                v-model="otherSpecialization"
-                class="form-control"
-                name="otherSpecialization"
-                type="text"
-                maxlength="150"
-                required
-                placeholder="Enter your preferred specialization"
-                :aria-invalid="
-                  errors['predictor-specialization-other'] ? 'true' : undefined
-                "
-                :aria-describedby="
-                  errors['predictor-specialization-other']
-                    ? 'predictor-specialization-other-error'
-                    : undefined
-                "
+              <div class="mba-form-section">
+                <div class="mba-form-section__heading">
+                  <h2>Preferences</h2>
+                  <p>Tell us what matters to your college shortlist.</p>
+                </div>
+
+                <div class="mba-form-row mba-form-row--3">
+                  <div class="form-field">
+                    <label class="form-label" for="predictor-specialization"
+                      >Preferred specialization</label
+                    >
+                    <select
+                      id="predictor-specialization"
+                      v-model="specialization"
+                      class="form-control"
+                      name="preferredSpecialization"
+                      @change="onSpecializationChange"
+                    >
+                      <option value="">No preference yet</option>
+                      <option value="marketing">Marketing</option>
+                      <option value="finance">Finance</option>
+                      <option value="human-resources">Human Resources</option>
+                      <option value="operations">Operations</option>
+                      <option value="business-analytics">
+                        Business Analytics
+                      </option>
+                      <option value="other">Other</option>
+                      <option value="undecided">Undecided</option>
+                    </select>
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label" for="predictor-location"
+                      >Preferred location</label
+                    >
+                    <input
+                      id="predictor-location"
+                      class="form-control"
+                      type="text"
+                      placeholder="City, state, or flexible"
+                      name="preferredLocation"
+                    />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label" for="predictor-budget"
+                      >Budget (in lakhs)</label
+                    >
+                    <input
+                      id="predictor-budget"
+                      class="form-control"
+                      type="number"
+                      min="0"
+                      step="any"
+                      inputmode="decimal"
+                      name="budgetLakhs"
+                      placeholder="Optional"
+                      :aria-invalid="
+                        errors['predictor-budget'] ? 'true' : undefined
+                      "
+                      :aria-describedby="
+                        errors['predictor-budget']
+                          ? 'predictor-budget-error'
+                          : undefined
+                      "
+                    />
+                    <p
+                      v-if="errors['predictor-budget']"
+                      id="predictor-budget-error"
+                      class="form-error"
+                      role="alert"
+                    >
+                      {{ errors["predictor-budget"] }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="specialization === 'other'" class="form-field">
+                <label class="form-label" for="predictor-specialization-other"
+                  >Specify specialization
+                  <span class="form-label__required">*</span></label
+                >
+                <input
+                  id="predictor-specialization-other"
+                  v-model="otherSpecialization"
+                  class="form-control"
+                  name="otherSpecialization"
+                  type="text"
+                  maxlength="150"
+                  required
+                  placeholder="Enter your preferred specialization"
+                  :aria-invalid="
+                    errors['predictor-specialization-other']
+                      ? 'true'
+                      : undefined
+                  "
+                  :aria-describedby="
+                    errors['predictor-specialization-other']
+                      ? 'predictor-specialization-other-error'
+                      : undefined
+                  "
+                />
+                <p
+                  v-if="errors['predictor-specialization-other']"
+                  id="predictor-specialization-other-error"
+                  class="form-error"
+                  role="alert"
+                >
+                  {{ errors["predictor-specialization-other"] }}
+                </p>
+              </div>
+
+              <SubmissionFeedback
+                :pending="pending"
+                :error="submissionError"
+                :issues="submissionIssues"
               />
-              <p
-                v-if="errors['predictor-specialization-other']"
-                id="predictor-specialization-other-error"
-                class="form-error"
-                role="alert"
-              >
-                {{ errors["predictor-specialization-other"] }}
-              </p>
-            </div>
-
-            <SubmissionFeedback
-              :pending="pending"
-              :error="submissionError"
-              :issues="submissionIssues"
-            />
-            <div class="form-actions">
-              <button
-                class="btn btn--primary btn--lg"
-                type="submit"
-                :disabled="pending"
-              >
-                Check college possibilities
-              </button>
-            </div>
+              <div class="form-actions">
+                <button
+                  class="btn btn--primary btn--lg"
+                  type="submit"
+                  :disabled="pending"
+                >
+                  Check college possibilities
+                </button>
+              </div>
+            </FormAvailability>
           </form>
         </div>
 

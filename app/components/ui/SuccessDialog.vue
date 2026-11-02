@@ -24,6 +24,18 @@ const dialogId = useId();
 const titleId = `${dialogId}-title`;
 const messageId = `${dialogId}-message`;
 let returnFocus: HTMLElement | null = null;
+let submitter: HTMLElement | null = null;
+
+function rememberSubmitter(event: SubmitEvent) {
+  const form = event.target;
+  if (!(form instanceof HTMLFormElement)) return;
+  if (form.getAttribute("aria-busy") === "true") return;
+  submitter = event.submitter instanceof HTMLElement ? event.submitter : null;
+}
+
+function forgetSubmitter(event: Event) {
+  if (event.target !== submitter) submitter = null;
+}
 
 function syncDialog() {
   const dialog = dialogRef.value;
@@ -32,9 +44,11 @@ function syncDialog() {
 
   if (props.open && !dialog.open) {
     returnFocus =
-      document.activeElement instanceof HTMLElement
+      document.activeElement instanceof HTMLElement &&
+      document.activeElement !== document.body
         ? document.activeElement
-        : null;
+        : submitter;
+    submitter = null;
     dialog.showModal();
     document.body.classList.add("dialog-open");
     return;
@@ -49,13 +63,13 @@ function closeDialog() {
   if (dialogRef.value?.open) {
     dialogRef.value.close();
   }
-
-  emit("close");
 }
 
 function handleNativeClose() {
   document.body.classList.remove("dialog-open");
-  if (returnFocus?.isConnected) returnFocus.focus();
+  if (!document.querySelector("dialog[open]") && returnFocus?.isConnected) {
+    returnFocus.focus();
+  }
   returnFocus = null;
   emit("close");
 }
@@ -73,9 +87,18 @@ watch(
   },
 );
 
-onMounted(syncDialog);
+onMounted(() => {
+  document.addEventListener("submit", rememberSubmitter, true);
+  document.addEventListener("focusin", forgetSubmitter, true);
+  document.addEventListener("pointerdown", forgetSubmitter, true);
+  syncDialog();
+});
 
 onBeforeUnmount(() => {
+  document.removeEventListener("submit", rememberSubmitter, true);
+  document.removeEventListener("focusin", forgetSubmitter, true);
+  document.removeEventListener("pointerdown", forgetSubmitter, true);
+  submitter = null;
   if (dialogRef.value?.open) dialogRef.value.close();
   document.body.classList.remove("dialog-open");
 });

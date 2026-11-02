@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import ContentOnThisPage from "~~/app/components/content/ContentOnThisPage.vue";
+import ContentEditorialDates from "~~/app/components/content/ContentEditorialDates.vue";
 import ExploreHero from "~~/app/components/explore/ExploreHero.vue";
-import EmptyState from "~~/app/components/ui/EmptyState.vue";
+import PendingResource from "~~/app/components/content/PendingResource.vue";
 import ContentText from "~~/app/components/content/ContentText.vue";
 import ContentSections from "~~/app/components/content/ContentSections.vue";
 import ContentCta from "~~/app/components/content/ContentCta.vue";
@@ -22,14 +24,18 @@ const faqGroups = computed(() =>
     }))
     .filter((group) => group.items.length > 0),
 );
+const navigationEntries = computed(() =>
+  faqGroups.value.flatMap((group) =>
+    group.id && /^[A-Za-z][A-Za-z0-9_-]*$/.test(group.id)
+      ? [{ id: group.id, label: group.title.trim() || "General questions" }]
+      : [],
+  ),
+);
 const hasIntro = computed(
   () => content.introTitle.trim() || content.intro.some(hasText),
 );
 const hasContent = computed(
-  () =>
-    content.intro.some(hasText) ||
-    faqGroups.value.length > 0 ||
-    hasCtaContent(content.cta),
+  () => content.intro.some(hasText) || faqGroups.value.length > 0,
 );
 
 useSeoMeta({
@@ -43,112 +49,126 @@ useSeoMeta({
 
 <template>
   <div class="faq-page">
-    <ExploreHero
-      :eyebrow="content.eyebrow"
-      :title="content.title.trim() || 'FAQs'"
-      :description="content.ready ? content.subtitle : undefined"
-      image="/placeholders/faqs.svg"
-      image-alt=""
-    >
-      <template #actions>
-        <div class="faq-hero-actions">
-          <a
-            v-if="content.ready && faqGroups.length"
-            class="btn btn--primary btn--lg"
-            href="#faq-list"
-          >
-            Browse questions
-          </a>
-          <NuxtLink
-            class="btn btn--secondary btn--lg"
-            to="/explore/admission-guide"
-            >Admission Guide</NuxtLink
-          >
-        </div>
-      </template>
-    </ExploreHero>
-
-    <template v-if="content.ready && hasContent">
-      <section
-        v-if="faqGroups.length || content.intro.some(hasText)"
-        id="faq-list"
-        class="section faq-content"
-        :aria-labelledby="
-          content.introTitle.trim() ? 'faq-content-title' : undefined
-        "
+    <PendingResource
+      v-if="!content.ready || !hasContent"
+      title="FAQs"
+      message="Answers to common admission questions are being prepared. You can explore programmes or connect with a mentor."
+      action-to="/programs/mba/talk-to-mentor"
+      action-label="Talk to Mentor"
+    />
+    <template v-else>
+      <ExploreHero
+        :eyebrow="content.eyebrow"
+        :title="content.title.trim() || 'FAQs'"
+        :description="content.ready ? content.subtitle : undefined"
+        image="/placeholders/faqs.svg"
+        image-alt=""
       >
-        <div
-          class="container faq-content__layout"
-          :class="{
-            'faq-content__layout--single': !hasIntro || !faqGroups.length,
-          }"
+        <template #actions>
+          <div class="faq-hero-actions">
+            <a
+              v-if="content.ready && faqGroups.length"
+              class="btn btn--primary btn--lg"
+              href="#faq-list"
+            >
+              Browse questions
+            </a>
+            <NuxtLink
+              class="btn btn--secondary btn--lg"
+              to="/explore/admission-guide"
+              >Admission Guide</NuxtLink
+            >
+          </div>
+        </template>
+        <template #metadata>
+          <ContentEditorialDates
+            :published-at="content.publishedAt"
+            :last-updated="content.lastUpdated"
+            :effective-at="content.effectiveAt"
+          />
+        </template>
+      </ExploreHero>
+
+      <template v-if="content.ready && hasContent">
+        <section
+          v-if="faqGroups.length || content.intro.some(hasText)"
+          id="faq-list"
+          class="section section--editorial-opening faq-content"
+          :aria-labelledby="
+            content.introTitle.trim() ? 'faq-content-title' : undefined
+          "
         >
-          <div v-if="hasIntro" class="faq-content__intro flow">
-            <h2 v-if="content.introTitle.trim()" id="faq-content-title">
-              {{ content.introTitle }}
-            </h2>
-            <p
-              v-for="(paragraph, index) in content.intro.filter(hasText)"
-              :key="index"
-            >
-              <ContentText :value="paragraph" />
-            </p>
-          </div>
-          <div v-if="faqGroups.length" class="faq-groups">
-            <section
-              v-for="(group, groupIndex) in faqGroups"
-              :key="group.id || groupIndex"
-              class="faq-group"
-              :aria-labelledby="
-                group.title?.trim() ? `faq-group-${groupIndex}` : undefined
-              "
-            >
-              <component
-                :is="content.introTitle.trim() ? 'h3' : 'h2'"
-                v-if="group.title?.trim()"
-                :id="`faq-group-${groupIndex}`"
-              >
-                {{ group.title }}
-              </component>
-              <div class="faq-group__items">
-                <details
-                  v-for="(item, itemIndex) in group.items"
-                  :key="itemIndex"
-                  class="faq-item"
+          <div
+            class="container faq-content__layout"
+            :class="{
+              'editorial-layout--with-nav': navigationEntries.length > 1,
+            }"
+          >
+            <ContentOnThisPage :entries="navigationEntries" />
+            <div class="editorial-layout__body editorial-prose">
+              <div v-if="hasIntro" class="faq-content__intro flow">
+                <h2 v-if="content.introTitle.trim()" id="faq-content-title">
+                  {{ content.introTitle }}
+                </h2>
+                <p
+                  v-for="(paragraph, index) in content.intro.filter(hasText)"
+                  :key="index"
                 >
-                  <summary>
-                    <span>{{ item.question }}</span>
-                    <span class="faq-item__icon" aria-hidden="true">+</span>
-                  </summary>
-                  <div class="faq-item__answer">
-                    <ContentSections
-                      :sections="[{ blocks: item.answer }]"
-                      :heading-level="
-                        group.title?.trim() && content.introTitle.trim()
-                          ? 4
-                          : group.title?.trim() || content.introTitle.trim()
-                            ? 3
-                            : 2
-                      "
-                    />
-                  </div>
-                </details>
+                  <ContentText :value="paragraph" />
+                </p>
               </div>
-            </section>
+              <div v-if="faqGroups.length" class="faq-groups">
+                <section
+                  v-for="(group, groupIndex) in faqGroups"
+                  :key="group.id || groupIndex"
+                  :id="group.id"
+                  class="faq-group"
+                  :aria-labelledby="
+                    group.title?.trim() ? `faq-group-${groupIndex}` : undefined
+                  "
+                >
+                  <component
+                    :is="content.introTitle.trim() ? 'h3' : 'h2'"
+                    v-if="group.title?.trim()"
+                    :id="`faq-group-${groupIndex}`"
+                  >
+                    {{ group.title }}
+                  </component>
+                  <div class="faq-group__items">
+                    <details
+                      v-for="(item, itemIndex) in group.items"
+                      :key="itemIndex"
+                      class="faq-item"
+                    >
+                      <summary>
+                        <span>{{ item.question }}</span>
+                        <span class="faq-item__icon" aria-hidden="true">+</span>
+                      </summary>
+                      <div class="faq-item__answer">
+                        <ContentSections
+                          :sections="[{ blocks: item.answer }]"
+                          :heading-level="
+                            group.title?.trim() && content.introTitle.trim()
+                              ? 4
+                              : group.title?.trim() || content.introTitle.trim()
+                                ? 3
+                                : 2
+                          "
+                        />
+                      </div>
+                    </details>
+                  </div>
+                </section>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section v-if="hasCtaContent(content.cta)" class="section faq-next">
-        <div class="container"><ContentCta :cta="content.cta" /></div>
-      </section>
+        <section v-if="hasCtaContent(content.cta)" class="section faq-next">
+          <div class="container"><ContentCta :cta="content.cta" /></div>
+        </section>
+      </template>
     </template>
-
-    <div v-else class="section section--pending">
-      <div class="container">
-        <EmptyState variant="editorial" message="FAQs are being prepared." />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -182,9 +202,7 @@ useSeoMeta({
 }
 
 .faq-content__layout {
-  display: grid;
-  gap: var(--space-10);
-  align-items: start;
+  @include editorial-layout;
 }
 
 .faq-content__intro {
@@ -264,75 +282,6 @@ useSeoMeta({
 .faq-item__answer :deep(p) {
   max-width: 52rem;
   color: var(--color-text-secondary);
-}
-
-.faq-next {
-  padding-top: 0;
-}
-
-.faq-next__panel {
-  --color-focus: var(--color-white);
-
-  display: grid;
-  gap: var(--space-8);
-  padding: var(--space-8);
-  border-radius: var(--radius-xl);
-  background: var(--color-surface-dark);
-  color: var(--color-white);
-}
-
-.faq-next__panel h2 {
-  color: var(--color-white);
-}
-
-.faq-next__panel p:not(.faq-eyebrow) {
-  color: var(--color-gray-200);
-}
-
-.faq-next__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-5);
-}
-
-.faq-next__link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--color-white);
-  font-weight: var(--font-weight-semibold);
-  text-decoration: none;
-}
-
-.faq-next__link:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-@include respond-to(md) {
-  .faq-content__layout {
-    grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.35fr);
-    gap: var(--space-12);
-  }
-
-  .faq-content__intro {
-    position: sticky;
-    top: calc(var(--header-height) + var(--space-6));
-  }
-
-  .faq-next__panel {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
-    padding: var(--space-10);
-  }
-}
-.faq-content__layout--single {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.faq-content__layout--single .faq-content__intro {
-  position: static;
 }
 
 .faq-content__intro,

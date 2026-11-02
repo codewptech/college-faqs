@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import ContentText from "~~/app/components/content/ContentText.vue";
-import {
-  hasBlockContent,
-  hasSectionContent,
-  hasText,
-} from "~~/app/data/content/helpers";
+import { getRenderableSections, hasText } from "~~/app/data/content/helpers";
 import type { ContentSection } from "~~/app/data/content/types";
 
 const props = withDefaults(
@@ -12,43 +8,37 @@ const props = withDefaults(
     sections: ContentSection[];
     headingLevel?: number;
   }>(),
-  {
-    headingLevel: 2,
-  },
+  { headingLevel: 2 },
 );
 
-const visibleSections = computed(() =>
-  props.sections.filter(hasSectionContent),
-);
+// The guide TOC and every other consumer use the same section interpretation.
+const entries = computed(() => getRenderableSections(props.sections));
 const headingTag = computed(
   () => `h${Math.min(6, Math.max(2, props.headingLevel))}`,
 );
 </script>
 
 <template>
-  <div class="content-sections">
+  <div v-if="entries.length" class="content-sections editorial-prose">
     <section
-      v-for="(section, sectionIndex) in visibleSections"
-      :id="section.id"
-      :key="section.id || sectionIndex"
+      v-for="(entry, sectionIndex) in entries"
+      :id="entry.anchorId"
+      :key="entry.anchorId || sectionIndex"
       class="content-section flow"
     >
       <header
-        v-if="section.eyebrow?.trim() || section.title?.trim()"
+        v-if="entry.section.eyebrow?.trim() || entry.section.title?.trim()"
         class="content-section__header flow"
       >
-        <p v-if="section.eyebrow?.trim()" class="content-section__eyebrow">
-          {{ section.eyebrow }}
+        <p v-if="entry.section.eyebrow?.trim()" class="editorial-eyebrow">
+          {{ entry.section.eyebrow }}
         </p>
-        <component :is="headingTag" v-if="section.title?.trim()">{{
-          section.title
-        }}</component>
+        <component :is="headingTag" v-if="entry.section.title?.trim()">
+          {{ entry.section.title }}
+        </component>
       </header>
 
-      <template
-        v-for="(block, blockIndex) in section.blocks.filter(hasBlockContent)"
-        :key="blockIndex"
-      >
+      <template v-for="(block, blockIndex) in entry.blocks" :key="blockIndex">
         <p v-if="block.type === 'paragraph'">
           <ContentText :value="block.text" />
         </p>
@@ -80,8 +70,8 @@ const headingTag = computed(
             <thead v-if="block.headers.some(hasText)">
               <tr>
                 <th
-                  v-for="(header, cellIndex) in block.headers"
-                  :key="cellIndex"
+                  v-for="(header, index) in block.headers"
+                  :key="index"
                   scope="col"
                 >
                   <ContentText v-if="hasText(header)" :value="header" />
@@ -98,6 +88,20 @@ const headingTag = computed(
           </table>
         </div>
 
+        <figure v-else-if="block.type === 'image'" class="content-figure">
+          <img
+            :src="block.src"
+            :alt="block.alt"
+            :width="block.width"
+            :height="block.height"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption v-if="block.caption?.trim()">
+            {{ block.caption }}
+          </figcaption>
+        </figure>
+
         <aside v-else-if="block.type === 'note'" class="content-note">
           <ContentText :value="block.text" />
         </aside>
@@ -105,87 +109,3 @@ const headingTag = computed(
     </section>
   </div>
 </template>
-
-<style scoped lang="scss">
-.content-sections,
-.content-section {
-  display: grid;
-  min-width: 0;
-  gap: var(--space-8);
-}
-
-.content-section__header {
-  --flow-space: var(--space-3);
-}
-
-.content-section__eyebrow {
-  color: var(--color-primary-700);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.content-section > p,
-.content-list,
-.content-note {
-  color: var(--color-text-secondary);
-}
-
-.content-list {
-  display: grid;
-  gap: var(--space-3);
-  max-width: var(--content-max);
-  margin: 0;
-  padding-left: var(--space-6);
-}
-
-.content-note {
-  max-width: var(--content-max);
-  padding: var(--space-4) var(--space-5);
-  border-left: 3px solid var(--color-primary-600);
-  background: var(--color-primary-50);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-}
-
-.content-table-wrap {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
-.content-table-wrap:focus-visible {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 2px;
-}
-
-.content-table {
-  width: 100%;
-  min-width: 36rem;
-  border-collapse: collapse;
-  background: var(--color-white);
-}
-
-.content-table caption {
-  padding: var(--space-4);
-  color: var(--color-text-secondary);
-  font-weight: var(--font-weight-semibold);
-  text-align: left;
-}
-
-.content-table th,
-.content-table td {
-  padding: var(--space-4);
-  border-top: 1px solid var(--color-border);
-  vertical-align: top;
-  text-align: left;
-}
-
-.content-table th {
-  background: var(--color-gray-50);
-  color: var(--color-text);
-  font-weight: var(--font-weight-semibold);
-}
-</style>

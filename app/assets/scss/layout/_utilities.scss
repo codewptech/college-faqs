@@ -113,3 +113,14 @@
 .section--pending {
   padding-block: var(--space-8);
 }
+
+/* Only when the preceding section shares the same continuous surface. */
+.section--continued-surface {
+  padding-top: 0;
+}
+
+/* Compact transition only for the first content region after an editorial hero.
+ * Subsequent sections retain the established global section spacing. */
+.section--editorial-opening {
+  padding-top: var(--space-8);
+}

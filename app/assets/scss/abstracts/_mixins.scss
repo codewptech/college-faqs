@@ -31,3 +31,23 @@
   transition-property: $properties;
   transition-timing-function: var(--ease-standard);
 }
+
+// A navigation rail shares the reading region's height, so sticky positioning
+// ends before a concluding CTA or related-page links outside this wrapper.
+@mixin editorial-layout {
+  display: grid;
+  min-width: 0;
+  max-width: 72rem;
+  gap: clamp(var(--space-6), 3vw, var(--space-12));
+  align-items: start;
+
+  > .editorial-layout__body {
+    min-width: 0;
+  }
+
+  @include respond-to(lg) {
+    &.editorial-layout--with-nav {
+      grid-template-columns: 13rem minmax(0, 1fr);
+    }
+  }
+}

@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { ResponsiveImage } from "~~/app/data/content/types";
 import SubmissionFeedback from "~~/app/components/ui/SubmissionFeedback.vue";
 import { useFormSubmission } from "~~/app/composables/useFormSubmission";
 import SuccessDialog from "~~/app/components/ui/SuccessDialog.vue";
 import FormDisclosure from "~~/app/components/ui/FormDisclosure.vue";
+import FormAvailability from "~~/app/components/ui/FormAvailability.vue";
 import { useFormPreview } from "~~/app/composables/useFormPreview";
 useSeoMeta({
   title: "Engineering Admission Guidance | College FAQs",
@@ -81,6 +83,16 @@ const { pending, submissionError, submissionIssues, submit } =
 async function submitForm() {
   if (validate() && (await submit())) successDialogOpen.value = true;
 }
+const heroImage: ResponsiveImage = {
+  src: "/editorial/landing-engineering-hero-768.webp",
+  srcset:
+    "/editorial/landing-engineering-hero-480.webp 480w, /editorial/landing-engineering-hero-768.webp 768w, /editorial/landing-engineering-hero-1024.webp 1024w, /editorial/landing-engineering-hero-1448.webp 1448w",
+  sizes:
+    "(min-width: 1280px) 548px, (min-width: 1024px) calc((100vw - 128px) * 0.475), (min-width: 768px) calc((100vw - 88px) * 0.475), calc(100vw - 32px)",
+  width: 1448,
+  height: 1086,
+  alt: "",
+};
 </script>
 
 <template>
@@ -117,17 +129,19 @@ async function submitForm() {
 
         <div class="engineering-hero__visual" aria-hidden="true">
           <img
-            src="https://assets.collegefaqs.com/engineering/hero-image.png"
-            alt=""
-            width="760"
-            height="600"
+            :src="heroImage.src"
+            :srcset="heroImage.srcset"
+            :sizes="heroImage.sizes"
+            :alt="heroImage.alt"
+            :width="heroImage.width"
+            :height="heroImage.height"
           />
         </div>
       </div>
     </section>
 
     <section
-      class="section section--compact engineering-support"
+      class="section engineering-support"
       aria-labelledby="engineering-support-title"
     >
       <div class="container">
@@ -298,6 +312,8 @@ async function submitForm() {
 
         <div class="engineering-enquiry__panel">
           <form
+            method="post"
+            action="/api/submissions"
             ref="formRef"
             class="engineering-form"
             :aria-busy="pending"
@@ -306,150 +322,152 @@ async function submitForm() {
             @change="clearError"
             @submit.prevent="submitForm"
           >
-            <FormDisclosure />
-            <div class="engineering-form__row">
+            <FormAvailability>
+              <FormDisclosure />
+              <div class="engineering-form__row">
+                <div class="form-field">
+                  <label class="form-label" for="engineering-name">
+                    Full name
+                    <span class="form-label__required">*</span>
+                  </label>
+
+                  <input
+                    id="engineering-name"
+                    name="fullName"
+                    class="form-control"
+                    type="text"
+                    autocomplete="name"
+                    required
+                    placeholder="Your name"
+                    :aria-invalid="
+                      errors['engineering-name'] ? 'true' : undefined
+                    "
+                    :aria-describedby="
+                      errors['engineering-name']
+                        ? 'engineering-name-error'
+                        : undefined
+                    "
+                  />
+                  <p
+                    v-if="errors['engineering-name']"
+                    id="engineering-name-error"
+                    class="form-error"
+                    role="alert"
+                  >
+                    {{ errors["engineering-name"] }}
+                  </p>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="engineering-phone">
+                    Phone number
+                    <span class="form-label__required">*</span>
+                  </label>
+
+                  <input
+                    id="engineering-phone"
+                    name="phone"
+                    class="form-control"
+                    type="tel"
+                    autocomplete="tel"
+                    required
+                    placeholder="Your phone number"
+                    :aria-invalid="
+                      errors['engineering-phone'] ? 'true' : undefined
+                    "
+                    :aria-describedby="
+                      errors['engineering-phone']
+                        ? 'engineering-phone-error'
+                        : undefined
+                    "
+                  />
+                  <p
+                    v-if="errors['engineering-phone']"
+                    id="engineering-phone-error"
+                    class="form-error"
+                    role="alert"
+                  >
+                    {{ errors["engineering-phone"] }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="engineering-form__row">
+                <div class="form-field">
+                  <label class="form-label" for="engineering-email">
+                    Email
+                  </label>
+
+                  <input
+                    id="engineering-email"
+                    name="email"
+                    class="form-control"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="you@example.com"
+                    :aria-invalid="
+                      errors['engineering-email'] ? 'true' : undefined
+                    "
+                    :aria-describedby="
+                      errors['engineering-email']
+                        ? 'engineering-email-error'
+                        : undefined
+                    "
+                  />
+                  <p
+                    v-if="errors['engineering-email']"
+                    id="engineering-email-error"
+                    class="form-error"
+                    role="alert"
+                  >
+                    {{ errors["engineering-email"] }}
+                  </p>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="engineering-branch">
+                    Preferred branch or field
+                  </label>
+
+                  <input
+                    id="engineering-branch"
+                    name="preferredBranch"
+                    class="form-control"
+                    type="text"
+                    placeholder="If you already have one in mind"
+                  />
+                </div>
+              </div>
+
               <div class="form-field">
-                <label class="form-label" for="engineering-name">
-                  Full name
-                  <span class="form-label__required">*</span>
+                <label class="form-label" for="engineering-message">
+                  What would you like help with?
                 </label>
 
-                <input
-                  id="engineering-name"
-                  name="fullName"
+                <textarea
+                  id="engineering-message"
+                  name="message"
                   class="form-control"
-                  type="text"
-                  autocomplete="name"
-                  required
-                  placeholder="Your name"
-                  :aria-invalid="
-                    errors['engineering-name'] ? 'true' : undefined
-                  "
-                  :aria-describedby="
-                    errors['engineering-name']
-                      ? 'engineering-name-error'
-                      : undefined
-                  "
-                />
-                <p
-                  v-if="errors['engineering-name']"
-                  id="engineering-name-error"
-                  class="form-error"
-                  role="alert"
+                  rows="4"
+                  placeholder="Tell us about your current options, preferences, or questions."
+                ></textarea>
+              </div>
+
+              <SubmissionFeedback
+                :pending="pending"
+                :error="submissionError"
+                :issues="submissionIssues"
+              />
+              <div class="form-actions">
+                <button
+                  class="btn btn--primary btn--lg"
+                  type="submit"
+                  :disabled="pending"
                 >
-                  {{ errors["engineering-name"] }}
-                </p>
+                  Request guidance
+                </button>
               </div>
-
-              <div class="form-field">
-                <label class="form-label" for="engineering-phone">
-                  Phone number
-                  <span class="form-label__required">*</span>
-                </label>
-
-                <input
-                  id="engineering-phone"
-                  name="phone"
-                  class="form-control"
-                  type="tel"
-                  autocomplete="tel"
-                  required
-                  placeholder="Your phone number"
-                  :aria-invalid="
-                    errors['engineering-phone'] ? 'true' : undefined
-                  "
-                  :aria-describedby="
-                    errors['engineering-phone']
-                      ? 'engineering-phone-error'
-                      : undefined
-                  "
-                />
-                <p
-                  v-if="errors['engineering-phone']"
-                  id="engineering-phone-error"
-                  class="form-error"
-                  role="alert"
-                >
-                  {{ errors["engineering-phone"] }}
-                </p>
-              </div>
-            </div>
-
-            <div class="engineering-form__row">
-              <div class="form-field">
-                <label class="form-label" for="engineering-email">
-                  Email
-                </label>
-
-                <input
-                  id="engineering-email"
-                  name="email"
-                  class="form-control"
-                  type="email"
-                  autocomplete="email"
-                  placeholder="you@example.com"
-                  :aria-invalid="
-                    errors['engineering-email'] ? 'true' : undefined
-                  "
-                  :aria-describedby="
-                    errors['engineering-email']
-                      ? 'engineering-email-error'
-                      : undefined
-                  "
-                />
-                <p
-                  v-if="errors['engineering-email']"
-                  id="engineering-email-error"
-                  class="form-error"
-                  role="alert"
-                >
-                  {{ errors["engineering-email"] }}
-                </p>
-              </div>
-
-              <div class="form-field">
-                <label class="form-label" for="engineering-branch">
-                  Preferred branch or field
-                </label>
-
-                <input
-                  id="engineering-branch"
-                  name="preferredBranch"
-                  class="form-control"
-                  type="text"
-                  placeholder="If you already have one in mind"
-                />
-              </div>
-            </div>
-
-            <div class="form-field">
-              <label class="form-label" for="engineering-message">
-                What would you like help with?
-              </label>
-
-              <textarea
-                id="engineering-message"
-                name="message"
-                class="form-control"
-                rows="4"
-                placeholder="Tell us about your current options, preferences, or questions."
-              ></textarea>
-            </div>
-
-            <SubmissionFeedback
-              :pending="pending"
-              :error="submissionError"
-              :issues="submissionIssues"
-            />
-            <div class="form-actions">
-              <button
-                class="btn btn--primary btn--lg"
-                type="submit"
-                :disabled="pending"
-              >
-                Request guidance
-              </button>
-            </div>
+            </FormAvailability>
           </form>
         </div>
       </div>
@@ -509,14 +527,18 @@ async function submitForm() {
 }
 
 .engineering-hero__visual {
+  width: 100%;
+  aspect-ratio: 4 / 3;
   max-width: 38rem;
   margin-inline: auto;
   background: var(--color-white);
 }
 
 .engineering-hero__visual img {
+  display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
 }
 
 .engineering-section-heading {

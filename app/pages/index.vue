@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import type { ResponsiveImage } from "~~/app/data/content/types";
 import ProgramCard from "~~/app/components/home/ProgramCard.vue";
+import { getExploreResources } from "~~/app/data/resourceCatalog";
 
 useSeoMeta({
   title: "College FAQs | MBA, Engineering & Study Abroad Guidance",
@@ -7,30 +9,65 @@ useSeoMeta({
     "Explore practical guidance for MBA, Engineering, and Study Abroad decisions with College FAQs — Your College Repository.",
 });
 
+const heroImage: ResponsiveImage = {
+  src: "/editorial/landing-home-hero-768.webp",
+  srcset:
+    "/editorial/landing-home-hero-480.webp 480w, /editorial/landing-home-hero-768.webp 768w, /editorial/landing-home-hero-1024.webp 1024w, /editorial/landing-home-hero-1448.webp 1448w",
+  sizes:
+    "(min-width: 1280px) 548px, (min-width: 1024px) calc((100vw - 128px) * 0.475), (min-width: 768px) 608px, calc(100vw - 32px)",
+  width: 1448,
+  height: 1086,
+  alt: "",
+};
+
 const programs = [
   {
     title: "MBA",
     description:
       "Explore MBA options, admission support, application guidance, and resources for making a confident management education decision.",
     to: "/programs/mba",
-    image: "https://assets.collegefaqs.com/home/mba-section.png",
-    imageAlt: "MBA Section Image",
+    image: {
+      src: "/editorial/landing-home-mba-768.webp",
+      srcset:
+        "/editorial/landing-home-mba-480.webp 480w, /editorial/landing-home-mba-768.webp 768w, /editorial/landing-home-mba-1024.webp 1024w, /editorial/landing-home-mba-1448.webp 1448w",
+      sizes:
+        "(min-width: 1280px) 390px, (min-width: 1024px) calc((100vw - 112px) / 3), (min-width: 768px) calc((100vw - 96px) / 3), calc(100vw - 34px)",
+      width: 1448,
+      height: 1086,
+      alt: "Illustration of management education and business learning",
+    } satisfies ResponsiveImage,
   },
   {
     title: "Engineering",
     description:
       "Understand engineering pathways, compare options, and explore the information you need before making an admission decision.",
     to: "/programs/engineering",
-    image: "https://assets.collegefaqs.com/home/engineering-section.png",
-    imageAlt: "Engineering Section Image",
+    image: {
+      src: "/editorial/landing-home-engineering-768.webp",
+      srcset:
+        "/editorial/landing-home-engineering-480.webp 480w, /editorial/landing-home-engineering-768.webp 768w, /editorial/landing-home-engineering-1024.webp 1024w, /editorial/landing-home-engineering-1448.webp 1448w",
+      sizes:
+        "(min-width: 1280px) 390px, (min-width: 1024px) calc((100vw - 112px) / 3), (min-width: 768px) calc((100vw - 96px) / 3), calc(100vw - 34px)",
+      width: 1448,
+      height: 1086,
+      alt: "Illustration of engineering and technology studies",
+    } satisfies ResponsiveImage,
   },
   {
     title: "Study Abroad",
     description:
       "Start with practical guidance on destinations, profile evaluation, applications, and planning your study abroad journey.",
     to: "/programs/study-abroad",
-    image: "https://assets.collegefaqs.com/home/study-abroad-section.png",
-    imageAlt: "Study Abroad Section Image",
+    image: {
+      src: "/editorial/landing-home-study-768.webp",
+      srcset:
+        "/editorial/landing-home-study-480.webp 480w, /editorial/landing-home-study-768.webp 768w, /editorial/landing-home-study-1024.webp 1024w, /editorial/landing-home-study-1448.webp 1448w",
+      sizes:
+        "(min-width: 1280px) 390px, (min-width: 1024px) calc((100vw - 112px) / 3), (min-width: 768px) calc((100vw - 96px) / 3), calc(100vw - 34px)",
+      width: 1448,
+      height: 1086,
+      alt: "Illustration of international education and study abroad",
+    } satisfies ResponsiveImage,
   },
 ];
 
@@ -61,26 +98,7 @@ const supportItems = [
   },
 ];
 
-const resources = [
-  {
-    title: "Admission Guide",
-    description:
-      "A practical starting point for understanding the admission journey and the decisions involved.",
-    to: "/explore/admission-guide",
-  },
-  {
-    title: "Education Loan",
-    description:
-      "Explore the role of education loans and the key points to consider while planning your finances.",
-    to: "/explore/education-loan",
-  },
-  {
-    title: "FAQs",
-    description:
-      "Find clear answers to common questions students and families ask during the admission process.",
-    to: "/explore/faqs",
-  },
-];
+const resources = getExploreResources();
 </script>
 
 <template>
@@ -117,10 +135,12 @@ const resources = [
 
         <div class="home-hero__visual" aria-hidden="true">
           <img
-            src="https://assets.collegefaqs.com/home/hero-image.png"
-            alt="Hero Image"
-            width="760"
-            height="600"
+            :src="heroImage.src"
+            :srcset="heroImage.srcset"
+            :sizes="heroImage.sizes"
+            :alt="heroImage.alt"
+            :width="heroImage.width"
+            :height="heroImage.height"
           />
         </div>
       </div>
@@ -214,6 +234,9 @@ const resources = [
           >
             <div class="flow">
               <h3>{{ resource.title }}</h3>
+              <span v-if="resource.pending" class="home-resource-card__status"
+                >Coming soon</span
+              >
               <p>{{ resource.description }}</p>
             </div>
             <span class="home-resource-card__arrow" aria-hidden="true">→</span>
@@ -222,7 +245,10 @@ const resources = [
       </div>
     </section>
 
-    <section class="section home-cta" aria-labelledby="home-cta-title">
+    <section
+      class="section section--continued-surface home-cta"
+      aria-labelledby="home-cta-title"
+    >
       <div class="container">
         <div class="home-cta__panel">
           <div class="flow">
@@ -308,14 +334,18 @@ const resources = [
 }
 
 .home-hero__visual {
+  width: 100%;
   max-width: 38rem;
+  aspect-ratio: 4 / 3;
   justify-self: center;
   background: var(--color-white);
 }
 
 .home-hero__visual img {
+  display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
 }
 
 .home-section-heading {
@@ -407,6 +437,12 @@ const resources = [
   box-shadow: var(--shadow-md);
 }
 
+.home-resource-card__status {
+  color: var(--color-primary-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
 .home-resource-card__arrow {
   color: var(--color-primary-700);
   font-size: var(--font-size-2xl);
@@ -416,10 +452,6 @@ const resources = [
 .home-resources,
 .home-cta {
   background: var(--color-surface-subtle);
-}
-
-.home-cta {
-  padding-top: 0;
 }
 
 .home-cta__panel {

@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import type { ResponsiveImage } from "~~/app/data/content/types";
+
 const props = defineProps<{
   title: string;
   description: string;
   to: string;
-  image: string;
-  imageAlt: string;
+  image: ResponsiveImage;
 }>();
 </script>
 
@@ -12,12 +13,14 @@ const props = defineProps<{
   <article class="program-card card card--interactive">
     <div class="program-card__media">
       <img
-        :src="props.image"
-        :alt="props.imageAlt"
+        :src="props.image.src"
+        :srcset="props.image.srcset"
+        :sizes="props.image.sizes"
+        :alt="props.image.alt"
         class="program-card__image"
         loading="lazy"
-        width="640"
-        height="420"
+        :width="props.image.width"
+        :height="props.image.height"
       />
     </div>
 

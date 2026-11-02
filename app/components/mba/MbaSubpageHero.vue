@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <section class="mba-subhero section section--compact">
+  <section class="mba-subhero section">
     <div class="container mba-subhero__inner">
       <NuxtLink class="mba-subhero__back" to="/programs/mba">
         <span aria-hidden="true">←</span>
